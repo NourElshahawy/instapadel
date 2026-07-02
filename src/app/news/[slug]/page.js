@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
-import NewsArticleHeader from "@/pages/news/NewsArticleHeader";
-import NewsArticleBody from "@/pages/news/NewsArticleBody";
-import NewsArticleSidebar from "@/pages/news/NewsArticleSidebar";
+import NewsArticleHeader from "@/_pages/news/NewsArticleHeader";
+import NewsArticleBody from "@/_pages/news/NewsArticleBody";
+import NewsArticleSidebar from "@/_pages/news/NewsArticleSidebar";
 import { getAllNews, getNewsBySlug } from "@/services/newsService";
 import "@/styles/pages/news.css";
 import Link from "next/link";

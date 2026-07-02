@@ -1,4 +1,4 @@
-import CourtsListing from "@/pages/courts/CourtsListing";
+import CourtsListing from "@/_pages/courts/CourtsListing";
 import { getAllCourts } from "@/services/courtService";
 
 export const metadata = {

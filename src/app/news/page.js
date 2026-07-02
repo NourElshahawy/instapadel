@@ -1,4 +1,4 @@
-import NewsListing from "@/pages/news/NewsListing";
+import NewsListing from "@/_pages/news/NewsListing";
 import { getAllNews } from "@/services/newsService";
 
 export const metadata = {

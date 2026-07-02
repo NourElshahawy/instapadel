@@ -7,6 +7,6 @@ export const metadata = {
 };
 
 export default async function CourtsPage() {
-  const courts = await getAllCourts();
+  const courts = (await getAllCourts()) ?? [];
   return <CourtsListing courts={courts} />;
 }

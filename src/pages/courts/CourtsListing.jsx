@@ -20,6 +20,7 @@ export default function CourtsListing({ courts }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredCourts = useMemo(() => {
+    console.log("courts received:", courts);
     let list = courts.filter((c) => {
       const matchesPrice = c.pricePerHour <= filters.maxPrice;
       const matchesRating = c.rating >= filters.minRating;

@@ -9,6 +9,7 @@ import Pagination from "@/components/shared/Pagination";
 import EmptyState from "@/components/shared/EmptyState";
 import "../../styles/home/news.css";
 import "@/styles/pages/news.css";
+import ParallaxBg from "@/components/ui/ParallaxBg";
 
 const PAGE_SIZE = 6;
 
@@ -37,6 +38,7 @@ export default function NewsListing({ news }) {
       <ListingHero titlehead="الاخبار" title="جميع أخبار البادل في المنصورة" count={news.length} />
 
       <section className="courts-section section" id="courts">
+        <ParallaxBg image="/assets/imgs/courts-bg.png" />
         <div className="courts-overlay" />
         <div className="container">
           <NewsFeatureBanner article={featured} />

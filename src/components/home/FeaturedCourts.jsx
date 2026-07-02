@@ -2,12 +2,14 @@ import Link from "next/link";
 import CourtCard from "@/components/courts/CourtCard";
 import { getFeaturedCourts } from "@/services/courtService";
 import "../../styles/home/featured-courts.css";
+import ParallaxBg from "../ui/ParallaxBg";
 
 export default async function FeaturedCourts() {
   const courts = await getFeaturedCourts();
 
   return (
     <section className="courts-section section" id="courts">
+      <ParallaxBg image="/assets/imgs/courts-bg.png" />
       <div className="courts-overlay" />
       <div className="container">
         <div className="section-head">

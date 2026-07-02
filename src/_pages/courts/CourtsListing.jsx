@@ -7,6 +7,7 @@ import ResultsToolbar from "./ResultsToolbar";
 import Pagination from "@/components/shared/Pagination";
 import EmptyState from "@/components/shared/EmptyState";
 import "@/styles/pages/courts.css";
+import ParallaxBg from "@/components/ui/ParallaxBg";
 
 const PAGE_SIZE = 6;
 const DEFAULT_FILTERS = { maxPrice: 300, minRating: 0 }; 
@@ -58,6 +59,7 @@ export default function CourtsListing({ courts }) {
       <ListingHero titlehead="الملاعب" title="جميع ملاعب البادل في المنصورة" count={filteredCourts.length} />
 
       <section className="courts-section section" id="courts">
+        <ParallaxBg image="/assets/imgs/courts-bg.png" />
         <div className="courts-overlay" />
         <div className="container">
           <button className="filter-toggle-mobile mb-4" onClick={() => setIsFilterOpen((v) => !v)}>

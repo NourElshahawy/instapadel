@@ -1,4 +1,5 @@
 import "../../styles/home/why-us.css";
+import ParallaxBg from "../ui/ParallaxBg";
 
 const FEATURES = [
   { icon: "bolt", title: "التوافر في الوقت الفعلي", text: "يتم تحديث الجداول فور حجز أي شخص، لذلك لن تحضر أبدًا إلى ملعب مشغول بالفعل." },
@@ -10,6 +11,7 @@ const FEATURES = [
 export default function WhyUs() {
   return (
     <section className="news-section section" id="how-it-works">
+      <ParallaxBg image="/assets/imgs/courts-bg.png" />
       <div className="container">
         <div className="text-center mx-auto" style={{ maxWidth: 620 }} data-aos="fade-up">
           <span className="eyebrow justify-content-center">لماذا InstaPadel</span>

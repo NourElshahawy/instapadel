@@ -5,7 +5,7 @@
     isolation: isolate;
 }
 
-.courts-section::before {
+/* .courts-section::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -14,7 +14,7 @@
     background-position: center;
     background-attachment: fixed;
     z-index: -3;
-}
+} */
 
 .courts-section::after {
     content: "";

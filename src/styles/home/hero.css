@@ -7,7 +7,7 @@
     min-height: 100vh;
 }
 
-.hero::before {
+/* .hero::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -16,7 +16,7 @@
     background-position: center;
     background-attachment: fixed;
     z-index: -3;
-}
+} */
 
 .hero::after {
     content: "";

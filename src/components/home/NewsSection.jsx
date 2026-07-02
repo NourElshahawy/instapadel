@@ -2,12 +2,14 @@ import Link from "next/link";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { getHomeNews } from "@/services/homeService";
 import "../../styles/home/news.css";
+import ParallaxBg from "../ui/ParallaxBg";
 
 export default async function NewsSection() {
   const news = await getHomeNews();
 
   return (
     <section className="news-section section" id="news">
+      <ParallaxBg image="/assets/imgs/courts-bg.png" />
       <div className="courts-overlay" />
       <div className="container">
         <div className="section-head" data-aos="fade-up">

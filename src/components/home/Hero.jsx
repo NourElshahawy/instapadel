@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import "../../styles/home/hero.css";
 import "../../styles/home/search.css";
+import ParallaxBg from "../ui/ParallaxBg";
 
 export default function Hero() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function Hero() {
       <span className="hero-shape s2" />
       <span className="hero-shape s3" />
       <span className="hero-shape s4" />
+      <ParallaxBg image="/assets/imgs/img1.jpg" />
 
       <div className="container hero-content">
         <span className="hero-badge" data-aos="fade-up">

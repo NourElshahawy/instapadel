@@ -349,3 +349,15 @@
     font-weight: 600;
     color: var(--white);
 }
+
+
+.parallax-bg {
+    position: absolute;
+    inset: -20% 0;
+    /* أكبر من حدود السكشن عشان الحركة متكشفش حواف فاضية */
+    /* background-size: cover; */
+    background-position: center;
+    will-change: transform;
+    z-index: -3;
+    pointer-events: none;
+}

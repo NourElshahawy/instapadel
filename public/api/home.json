@@ -1,0 +1,43 @@
+{
+    "news": {
+        "featured": {
+            "id": 101,
+            "tag": "tournament",
+            "tagLabel": "البطولة",
+            "title": "بطولة المنصورة المفتوحة 2026: 32 فريقًا، بطل واحد",
+            "excerpt": "التسجيل مفتوح لأكبر بطولة بادل للهواة في المدينة، والتي ستُقام في بادل أرينا المنصورة في شهر يوليو القادم.",
+            "date": "June 28, 2026",
+            "image": "/assets/imgs/padelgo/Image4.jpeg",
+            "href": "/news/101"
+        },
+        "items": [
+            {
+                "id": 102,
+                "tag": "announcement",
+                "tagLabel": "إعلان",
+                "title": "أضافت شركة Padel Go ثلاثة ملاعب داخلية جديدة",
+                "date": "25 يونيو 2026",
+                "image": "/assets/imgs/padelgo/Image5.jpeg",
+                "href": "/news/102"
+            },
+            {
+                "id": 103,
+                "tag": "maintenance",
+                "tagLabel": "صيانة",
+                "title": "تم إغلاق ملعب Padel Go لإعادة تبليطه، من 23 إلى 25 يونيو",
+                "date": "June 20, 2026",
+                "image": "/assets/imgs/padelgo/Image6.jpeg",
+                "href": "/news/103"
+            },
+            {
+                "id": 104,
+                "tag": "partnership",
+                "tagLabel": "شراكة",
+                "title": "تتعاون منصة InstaPadel مع نادي Ace Town لتقديم خصومات للطلاب",
+                "date": "15 يونيو 2026",
+                "image": "/assets/imgs/padelgo/Image8.jpeg",
+                "href": "/news/104"
+            }
+        ]
+    }
+}

@@ -1,0 +1,118 @@
+:root {
+    --bg-primary: #0b1020;
+    --bg-secondary: #141b2d;
+    --accent: #00d68f;
+    --white: #ffffff;
+    --light-gray: #eaeaea;
+
+    --accent-dark: #00b377;
+    --accent-soft: rgba(0, 214, 143, 0.14);
+    --accent-glow: rgba(0, 214, 143, 0.35);
+    --bg-elevated: #1b2438;
+    --bg-elevated-2: #202b43;
+    --border-glass: rgba(234, 234, 234, 0.1);
+    --border-glass-strong: rgba(234, 234, 234, 0.18);
+    --text-muted: rgba(234, 234, 234, 0.62);
+    --text-faint: rgba(234, 234, 234, 0.4);
+    --glass-fill: rgba(20, 27, 45, 0.55);
+    --glass-fill-light: rgba(255, 255, 255, 0.06);
+
+    --r-lg: 28px;
+    --r-md: 20px;
+    --r-sm: 14px;
+    --r-pill: 999px;
+
+    --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.35);
+    --shadow-lift: 0 30px 70px rgba(0, 0, 0, 0.45);
+    --shadow-glow: 0 10px 40px var(--accent-glow);
+
+    --font-display: "Poppins", sans-serif;
+    --font-body: "Inter", sans-serif;
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg-primary);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    direction: rtl;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+a {
+    text-decoration: none ;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button {
+    font-family: inherit;
+}
+i{
+    color: var(--accent);
+}
+::selection {
+    background: var(--accent);
+    color: var(--bg-primary);
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+[data-aos] {
+    transition-timing-function: var(--ease) !important;
+}

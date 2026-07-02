@@ -1,0 +1,121 @@
+[
+    {
+        "id": 1,
+        "slug": "padel-go-mansoura",
+        "name": "Padel Go Mansoura",
+        "image": "/assets/imgs/padelgo/Image2.jpeg",
+        "location": "المنصورة الطريق السريع",
+        "locationLink": "https://www.google.com/maps/dir//padel+go%D8%8C+%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9+(%D9%82%D8%B3%D9%85+2)%D8%8C+%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9+7662001%E2%80%AD/@31.0522674,31.408128,13z",
+        "isLive": true,
+        "rating": 4.9,
+        "pricePerHour": 300,
+        "courtsCount": 2,
+        "bookingsCount": "2.1k",
+        "featured": true,
+        "todaySlots": [
+            "5 PM",
+            "6 PM",
+            "8 PM",
+            "9 PM"
+        ]
+    },
+    {
+        "id": 2,
+        "slug": "padel-zone-mansoura",
+        "name": "Padel Zone Mansoura",
+        "image": "/assets/imgs/zone14/img1.jpg",
+        "location": "المنصورة - المشاية السفلية",
+        "locationLink": "https://www.google.com/maps/search/padel+zone+mansoura",
+        "isLive": true,
+        "rating": 4.8,
+        "pricePerHour": 280,
+        "courtsCount": 2,
+        "bookingsCount": "1.8k",
+        "featured": true,
+        "todaySlots": [
+            "4 PM",
+            "6 PM",
+            "7 PM",
+            "9 PM"
+        ]
+    },
+    {
+        "id": 3,
+        "slug": "padel-h-mansoura",
+        "name": "Padel H Club",
+        "image": "/assets/imgs/padelh/img1.jpg",
+        "location": "المنصورة - طريق الجامعة",
+        "locationLink": "https://www.google.com/maps/search/smash+padel+mansoura",
+        "isLive": true,
+        "rating": 4.7,
+        "pricePerHour": 250,
+        "courtsCount": 3,
+        "bookingsCount": "1.5k",
+        "featured": false,
+        "todaySlots": [
+            "3 PM",
+            "5 PM",
+            "7 PM",
+            "10 PM"
+        ]
+    },
+    {
+        "id": 4,
+        "slug": "elite-padel-mansoura",
+        "name": "Elite Padel Mansoura",
+        "image": "/assets/imgs/padelgo/Image5.jpeg",
+        "location": "المنصورة - حي الجامعة",
+        "locationLink": "https://www.google.com/maps/search/elite+padel+mansoura",
+        "isLive": true,
+        "rating": 4.6,
+        "pricePerHour": 270,
+        "courtsCount": 2,
+        "bookingsCount": "1.2k",
+        "featured": false,
+        "todaySlots": [
+            "4 PM",
+            "5 PM",
+            "8 PM",
+            "9 PM"
+        ]
+    },
+    {
+        "id": 5,
+        "slug": "champions-padel-mansoura",
+        "name": "Champions Padel Club",
+        "image": "/assets/imgs/padelgo/Image6.jpeg",
+        "location": "المنصورة - شارع الجمهورية",
+        "locationLink": "https://www.google.com/maps/search/champions+padel+mansoura",
+        "isLive": false,
+        "rating": 4.5,
+        "pricePerHour": 240,
+        "courtsCount": 2,
+        "bookingsCount": "980",
+        "featured": false,
+        "todaySlots": [
+            "2 PM",
+            "4 PM",
+            "6 PM"
+        ]
+    },
+    {
+        "id": 6,
+        "slug": "ace-town-mansoura",
+        "name": "Ace Town Mansoura",
+        "image": "/assets/imgs/acetown.jpg",
+        "location": "المنصورة - Ace Town",
+        "locationLink": "https://www.google.com/maps/place/Ace+Town/@31.0255147,31.3660707,17z",
+        "isLive": true,
+        "rating": 4.7,
+        "pricePerHour": 290,
+        "courtsCount": 2,
+        "bookingsCount": "1.3k",
+        "featured": true,
+        "todaySlots": [
+            "4 PM",
+            "6 PM",
+            "8 PM",
+            "10 PM"
+        ]
+    }
+]

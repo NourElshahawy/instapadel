@@ -61,6 +61,7 @@
 }
 
 .btn {
+    cursor: pointer;
     font-family: var(--font-body);
     font-weight: 600;
     border-radius: var(--r-pill);
@@ -292,7 +293,7 @@
     color: var(--accent);
 }
 
-.breadcrumb-ph .material-symbols-rounded {
+.breadcrumb-ph i {
     font-size: 16px;
 }
 
@@ -315,7 +316,7 @@
     color: var(--text-muted);
 }
 
-.details-meta .item .material-symbols-rounded {
+.details-meta .item i {
     font-size: 18px;
     color: var(--accent);
 }

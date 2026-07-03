@@ -34,7 +34,7 @@
     color: var(--accent);
 }
 
-.breadcrumb-ph .material-symbols-rounded {
+.breadcrumb-ph i {
     font-size: 16px;
     transform: rotate(180deg);
 }
@@ -206,7 +206,7 @@
     padding: 70px 20px;
 }
 
-.empty-state .material-symbols-rounded {
+.empty-state i {
     font-size: 48px;
     color: var(--text-faint);
 }

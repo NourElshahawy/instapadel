@@ -47,9 +47,15 @@ export default function Hero() {
         <div className="search-card" data-aos="fade-up" data-aos-delay="240">
           <div className="search-card-label">
             <span className="pulse-dot" />
-            ابحث عن ملعب متاح دلوقتي
+            ابحث عن ملعب متاح لبطولتك أو لمباراة ودية
           </div>
 
+          {/* <div className="search-grid tournament-cta">
+            <Link href="/tournaments/create" className="search-submit ">
+              <i className="fa-solid fa-trophy"></i>
+              <span className="submit-text">إنشاء بطولة</span>
+            </Link>
+          </div> */}
           <div className="search-grid">
             <div className="search-field">
               <label>

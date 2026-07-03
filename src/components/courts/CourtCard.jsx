@@ -14,7 +14,7 @@ export default function CourtCard({ court }) {
           <span className="pulse-dot" /> {court.isLive ? "Live" : "مغلق"}
         </span>
         <span className="court-rating">
-          <span className="material-symbols-rounded">star</span> {court.rating}
+          <i className="fa-solid fa-star"></i> {court.rating}
         </span>
         <ImageWithFallback src={court.image} alt={`${court.name} court`} />
         <span className="court-price-tag">
@@ -31,7 +31,7 @@ export default function CourtCard({ court }) {
           </a>
         ) : (
           <span className="court-loc">
-            <span className="material-symbols-rounded">location_on</span> {court.location}
+            <i className="fa-solid fa-location-dot"></i> {court.location}
           </span>
         )}
 

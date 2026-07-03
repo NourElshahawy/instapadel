@@ -1,0 +1,197 @@
+{
+    "padel-go-mansoura": {
+        "logo": "/assets/imgs/padelgo/Image1.jpeg",
+        "coverImage": "/assets/imgs/padelgo/Image1.jpeg",
+        "reviewsCount": "1.2k",
+        "amenities": [
+            {
+                "icon": "fa-car",
+                "label": "موقف سيارات"
+            },
+            {
+                "icon": "fa-mug-hot",
+                "label": "كافيه"
+            },
+            {
+                "icon": "fa-shower",
+                "label": "غرف تغيير"
+            }
+        ],
+        "heroImages": [
+            "/assets/imgs/padelgo/Image2.jpeg",
+            "/assets/imgs/padelgo/Image3.jpeg",
+            "/assets/imgs/padelgo/Image4.jpeg",
+            "/assets/imgs/padelgo/Image5.jpeg",
+            "/assets/imgs/padelgo/Image6.jpeg",
+            "/assets/imgs/padelgo/Image7.jpeg"
+        ],
+        "subCourts": [
+            {
+                "id": 1,
+                "name": "ملعب بانوراما",
+                "image": "/assets/imgs/padelgo/Image5.jpeg",
+                "description": "ملعب داخلي بإطلالة بانورامية وإضاءة احترافية مناسب لجميع المستويات.",
+                "tags": [
+                    {
+                        "icon": "fa-warehouse",
+                        "label": "Indoor"
+                    },
+                    {
+                        "icon": "fa-camera",
+                        "label": "بانوراما"
+                    },
+                    {
+                        "icon": "fa-lightbulb",
+                        "label": "LED"
+                    },
+                    {
+                        "icon": "fa-snowflake",
+                        "label": "مكيف"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "name": "ملعب Indoor",
+                "image": "/assets/imgs/padelgo/Image3.jpeg",
+                "description": "ملعب داخلي بإطلالة بانورامية وإضاءة احترافية مناسب لجميع المستويات.",
+                "tags": [
+                    {
+                        "icon": "fa-warehouse",
+                        "label": "Indoor"
+                    },
+                    {
+                        "icon": "fa-camera",
+                        "label": "بانوراما"
+                    },
+                    {
+                        "icon": "fa-lightbulb",
+                        "label": "LED"
+                    },
+                    {
+                        "icon": "fa-snowflake",
+                        "label": "مكيف"
+                    }
+                ]
+            }
+        ],
+        "days": [
+            {
+                "date": "2026-06-26",
+                "dow": "الأربع",
+                "dom": "26",
+                "month": "يونيو"
+            },
+            {
+                "date": "2026-06-27",
+                "dow": "الخميس",
+                "dom": "27",
+                "month": "يونيو"
+            },
+            {
+                "date": "2026-06-28",
+                "dow": "الجمعة",
+                "dom": "28",
+                "month": "يونيو"
+            },
+            {
+                "date": "2026-06-29",
+                "dow": "السبت",
+                "dom": "29",
+                "month": "يونيو"
+            },
+            {
+                "date": "2026-06-30",
+                "dow": "الأحد",
+                "dom": "30",
+                "month": "يونيو"
+            },
+            {
+                "date": "2026-07-01",
+                "dow": "الإثنين",
+                "dom": "1",
+                "month": "يوليو"
+            },
+            {
+                "date": "2026-07-02",
+                "dow": "الثلاثاء",
+                "dom": "2",
+                "month": "يوليو"
+            }
+        ],
+        "slots": [
+            {
+                "start": "12:00 م",
+                "end": "1:00 م",
+                "price": 150,
+                "status": "available"
+            },
+            {
+                "start": "1:00 م",
+                "end": "2:00 م",
+                "price": 150,
+                "status": "available"
+            },
+            {
+                "start": "2:00 م",
+                "end": "3:00 م",
+                "price": 150,
+                "status": "booked"
+            },
+            {
+                "start": "3:00 م",
+                "end": "4:00 م",
+                "price": 150,
+                "status": "available"
+            },
+            {
+                "start": "4:00 م",
+                "end": "5:00 م",
+                "price": 180,
+                "status": "booked"
+            },
+            {
+                "start": "5:00 م",
+                "end": "6:00 م",
+                "price": 180,
+                "status": "available"
+            },
+            {
+                "start": "6:00 م",
+                "end": "7:00 م",
+                "price": 180,
+                "status": "available"
+            },
+            {
+                "start": "7:00 م",
+                "end": "8:00 م",
+                "price": 180,
+                "status": "booked"
+            },
+            {
+                "start": "8:00 م",
+                "end": "9:00 م",
+                "price": 180,
+                "status": "available"
+            },
+            {
+                "start": "9:00 م",
+                "end": "10:00 م",
+                "price": 180,
+                "status": "available"
+            },
+            {
+                "start": "10:00 م",
+                "end": "11:00 م",
+                "price": 180,
+                "status": "booked"
+            },
+            {
+                "start": "11:00 م",
+                "end": "12:00 ص",
+                "price": 180,
+                "status": "available"
+            }
+        ]
+    }
+}

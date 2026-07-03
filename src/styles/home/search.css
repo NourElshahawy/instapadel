@@ -168,12 +168,22 @@
     color: var(--accent);
     white-space: nowrap;
 }
-
+.tournament-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 700;
+}
 @media (max-width: 768px) {
-    /* .search-grid {
+    .search-grid {
         flex-direction: column;
         border-radius: 16px;
-    } */
+        overflow: hidden;
+    }
+        .search-field {
+            width: 100%;
+        }
 
     .search-divider {
         width: auto;
@@ -187,6 +197,7 @@
         margin: 8px;
         padding: 16px;
         border-radius: 12px;
+        width: 100%;
     }
 
     .submit-icon {

@@ -50,7 +50,7 @@
 }
 
 .news-filter-row {
-    margin: 10px 0 ;
+    margin: 10px 0;
     padding: 20px 2px;
     overflow-x: auto;
     display: flex;
@@ -136,12 +136,12 @@
     color: var(--accent);
 }
 
-.read-more-link .material-symbols-rounded {
+.read-more-link i {
     font-size: 16px;
     transition: transform .3s var(--ease);
 }
 
-.news-card:hover .read-more-link .material-symbols-rounded {
+.news-card:hover .read-more-link i {
     transform: translateX(3px);
 }
 

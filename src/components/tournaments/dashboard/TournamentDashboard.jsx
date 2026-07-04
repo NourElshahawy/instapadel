@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { computeTimeline } from "@/services/tournamentLogic";
 import Hero from "./Hero";
 import Countdown from "./Countdown";
 import RegistrationProgress from "./RegistrationProgress";
@@ -11,24 +12,9 @@ import Bracket from "./Bracket";
 import StatsGrid from "./StatsGrid";
 import NewsFeed from "./NewsFeed";
 import FloatingActionButton from "./FloatingActionButton";
+import JoinTeamSheet from "../JoinTeamSheet";
 import "@/styles/pages/tournament-dashboard.css";
-
-/**
- * الشكل المتوقع لـ tournament القادم من الـ backend:
- * {
- *   id, name, status: "registration" | "ready" | "live" | "completed",
- *   date, venue, maxTeams,
- *   teams: [{ id, name, captainName, rating, status: "confirmed" | "pending" }],
- *   matches: [{ id, round, teamA, teamB, scoreA, scoreB, time, isLive, isDone }],
- *   rounds: ["Round 1", "Quarter Final", "Semi Final", "Final"],
- *   timeline: [{ label, done, active }],
- *   news: [{ id, text, date }],
- *   champion: { teamName } | null,
- *   topThree: [{ rank, teamName }],
- *   gallery: [url],
- *   startsAt, firstMatchAt
- * }
- */
+import "@/styles/pages/booking.css";
 
 function resolveStage(tournament) {
   if (tournament.status === "completed") return "completed";
@@ -38,25 +24,38 @@ function resolveStage(tournament) {
   return "registration";
 }
 
-export default function TournamentDashboard({ tournament, currentUser = {}, onJoin, onManage, onCreateNew }) {
+export default function TournamentDashboard({ tournament: initialTournament, currentUser = {}, onJoin, onManage, onCreateNew }) {
+  const [tournament, setTournament] = useState(initialTournament);
+  const [joinOpen, setJoinOpen] = useState(false);
+
   const stage = useMemo(() => resolveStage(tournament), [tournament]);
 
-  const fab = useMemo(() => {
-    if (stage === "completed") return { label: "أنشئ بطولة جديدة", action: onCreateNew, tone: "gold" };
-    if (currentUser.isOwner) return { label: "إدارة البطولة", action: onManage, tone: "court" };
-    if (currentUser.isRegistered) return { label: "أنت مشترك بالفعل", action: null, tone: "muted" };
-    if (stage === "registration") return { label: "اشترك الآن", action: onJoin, tone: "court" };
-    return null;
-  }, [stage, currentUser, onJoin, onManage, onCreateNew]);
+  const handleJoinSubmit = async (teamData) => {
+    await onJoin?.(teamData);
 
-  const handleJoin = async () => {
-    await fetch("/api/tournaments/" + tournament.id + "/join", {
-      method: "POST",
-    });
+    const newTeam = {
+      id: `team-${Date.now()}`,
+      name: teamData.partnerName ? `${teamData.captainName} & ${teamData.partnerName}` : teamData.captainName,
+      captainId: currentUser.id,
+      captainName: teamData.captainName,
+      captainPhone: teamData.captainPhone,
+      partnerName: teamData.partnerName || null,
+      status: "confirmed",
+      rating: 0,
+    };
 
-    router.refresh();
+    setTournament((t) => ({ ...t, teams: [...t.teams, newTeam] }));
+    setJoinOpen(false);
   };
-  
+
+  const fab = useMemo(() => {
+    if (stage === "completed") return { label: "أنشئ بطولة جديدة", href: onCreateNew, tone: "gold" };
+    if (currentUser.isOrganizer) return { label: "إدارة البطولة", href: onManage, tone: "court" };
+    if (currentUser.isRegistered) return { label: "أنت مشترك بالفعل", tone: "muted" };
+    if (stage === "registration") return { label: "اشترك الآن", action: () => setJoinOpen(true), tone: "court" };
+    return null;
+  }, [stage, currentUser, onManage, onCreateNew]);
+
   return (
     <div className={`td-page td-page--${stage}`} dir="rtl">
       <Hero tournament={tournament} stage={stage} />
@@ -100,11 +99,13 @@ export default function TournamentDashboard({ tournament, currentUser = {}, onJo
         </>
       )}
 
-      {stage !== "completed" && <StatusTimeline steps={tournament.timeline} />}
+      {stage !== "completed" && <StatusTimeline steps={computeTimeline(tournament)} />}
       <StatsGrid tournament={tournament} />
       {tournament.news?.length > 0 && <NewsFeed items={tournament.news} />}
 
-      {fab && <FloatingActionButton label={fab.label} onClick={fab.action} tone={fab.tone} disabled={!fab.action} />}
+      {fab && <FloatingActionButton label={fab.label} href={fab.href} onClick={fab.action} tone={fab.tone} disabled={!fab.action && !fab.href} />}
+
+      {joinOpen && <JoinTeamSheet tournament={tournament} onClose={() => setJoinOpen(false)} onSubmit={handleJoinSubmit} />}
     </div>
   );
 }

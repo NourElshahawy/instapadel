@@ -8,6 +8,7 @@ import { useStickyNavbar } from "@/hooks/useStickyNavbar";
 const NAV_LINKS = [
   { href: "/", label: "الرئيسية" },
   { href: "/courts", label: "الملاعب" },
+  { href: "/tournaments", label: "البطولات" },
   { href: "/find-partner", label: "دور على شريك" },
   { href: "/news", label: "اخبار البادل" },
   // { href: "/contact", label: "تواصل معنا" },

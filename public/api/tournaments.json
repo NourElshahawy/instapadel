@@ -1,0 +1,104 @@
+[
+  {
+    "id": "t1",
+    "name": "Summer Cup",
+    "organizerId": "u1",
+    "organizerName": "نور الشهاوي",
+    "type": "double",
+    "status": "registration",
+    "venue": "Padel Go Mansoura",
+    "courtId": "padel-go-mansoura",
+    "date": "2026-07-20",
+    "maxTeams": 8,
+    "entryFee": "100",
+    "registrationDeadline": "2026-07-15",
+    "teams": [
+        {
+            "id": "team1",
+            "name": "Ahmed & Omar",
+            "captainName": "Ahmed",
+            "captainPhone": "201012345678",
+            "partnerName": "Omar",
+            "status": "confirmed",
+            "rating": 4.2
+        },
+        {
+            "id": "team2",
+            "name": "Mostafa & Yousef",
+            "captainName": "Mostafa",
+            "captainPhone": "201012345679",
+            "partnerName": "Yousef",
+            "status": "confirmed",
+            "rating": 4.0
+        },
+        {
+            "id": "team3",
+            "name": "Karim & Adel",
+            "captainName": "Karim",
+            "captainPhone": "201012345680",
+            "partnerName": "Adel",
+            "status": "confirmed",
+            "rating": 4.5
+        },
+        {
+            "id": "team4",
+            "name": "Hesham & Amr",
+            "captainName": "Hesham",
+            "captainPhone": "201012345681",
+            "partnerName": "Amr",
+            "status": "confirmed",
+            "rating": 3.8
+        },
+        {
+            "id": "team5",
+            "name": "Sara & Nour",
+            "captainName": "Sara",
+            "captainPhone": "201012345682",
+            "partnerName": "Nour",
+            "status": "confirmed",
+            "rating": 4.1
+        },
+        {
+            "id": "team6",
+            "name": "Fady & Sherif",
+            "captainName": "Fady",
+            "captainPhone": "201012345683",
+            "partnerName": "Sherif",
+            "status": "confirmed",
+            "rating": 3.9
+        },
+        {
+            "id": "team7",
+            "name": "Youssef & Tamer",
+            "captainName": "Youssef",
+            "captainPhone": "201012345684",
+            "partnerName": "Tamer",
+            "status": "confirmed",
+            "rating": 4.3
+        },
+        {
+            "id": "team8",
+            "name": "Omar & Khaled",
+            "captainName": "Omar",
+            "captainPhone": "201012345685",
+            "partnerName": "Khaled",
+            "status": "confirmed",
+            "rating": 4.0
+        }
+    ],
+    "matches": [],
+    "rounds": [],
+    "timeline": [
+      { "label": "التسجيل مفتوح", "done": true, "active": true },
+      { "label": "توليد جدول المباريات", "done": false, "active": false },
+      { "label": "بداية البطولة", "done": false, "active": false },
+      { "label": "النهائي", "done": false, "active": false }
+    ],
+    "news": [],
+    "champion": null,
+    "topThree": [],
+    "gallery": [],
+    "startsAt": "2026-07-20T16:00:00",
+    "firstMatchAt": null
+  }
+]

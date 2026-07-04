@@ -15,16 +15,15 @@
 }
 
 .td-page {
-    position: relative;
-    max-width: 640px;
-    margin-inline: auto;
-    padding: 24px 16px 120px;
-    background: var(--td-bg);
+    /* background: var(--td-bg); */
     color: var(--td-text);
-    font-family: 'Tajawal', sans-serif;
-    display: flex;
     flex-direction: column;
     gap: 20px;
+    margin-inline: auto;
+    padding: 120px;
+    display: flex;
+    position: relative;
+    width: 95%;
 }
 
 .td-page::before {

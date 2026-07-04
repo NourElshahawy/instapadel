@@ -3,6 +3,7 @@ import path from "path";
 
 const isServer = typeof window === "undefined";
 
+
 export async function fetchJson(relativePath) {
   if (isServer) {
     const filePath = path.join(process.cwd(), "public", "api", relativePath);

@@ -1,22 +1,17 @@
-import { tournaments } from "@/data/tournaments";
+import { fetchJson } from "./api";
 
-export function getTournamentById(id) {
-  return tournaments.find((t) => t.id == id);
+export async function getAllTournaments() {
+  return fetchJson("tournaments.json");
 }
 
-export function getAllTournaments() {
-  return tournaments;
+export async function getTournamentById(id) {
+  const tournaments = await getAllTournaments();
+  return tournaments.find((t) => t.id === id) || null;
 }
 
-export function createTournament(data) {
-  const newTournament = {
-    id: Date.now(),
-    ...data,
-    status: "registration",
-    teams: [],
-  };
-
-  tournaments.push(newTournament);
-
-  return newTournament;
-}
+// TODO: createTournament / joinTournament / startTournament / submitMatchResult
+// TODO: الدوال دي محتاجة تتحول لـ API حقيقي (POST/PATCH) لما الباك إند يشتغل
+// export async function createTournament(data) { ... }
+// export async function joinTournament(tournamentId, team) { ... }
+// export async function startTournament(tournamentId) { ... }
+// export async function submitMatchResult(tournamentId, matchId, scoreA, scoreB) { ... }

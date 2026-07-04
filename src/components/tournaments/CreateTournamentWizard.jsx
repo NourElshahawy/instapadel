@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import "@/styles/pages/tournament-wizard.css";
-import { createTournament } from "@/services/tournamentService";
 
 const TEAM_OPTIONS = [4, 8, 16, 32];
 const STEPS = [
@@ -14,7 +13,7 @@ const STEPS = [
 
 const INITIAL_DATA = {
   name: "",
-  type: "single", // single | double
+  type: "single",
   teamsCount: 8,
   courtId: null,
   courtName: "",
@@ -23,10 +22,6 @@ const INITIAL_DATA = {
   registrationDeadline: "",
 };
 
-/**
- * courts: [{ id, slug, name, image, rating, location }]
- * onSubmit: async (tournamentData) => void  -> parent handles API call + notifications
- */
 export default function CreateTournamentWizard({ courts = [], onSubmit }) {
   const [step, setStep] = useState(1);
   const [data, setData] = useState(INITIAL_DATA);
@@ -44,18 +39,25 @@ export default function CreateTournamentWizard({ courts = [], onSubmit }) {
 
   const goNext = () => canGoNext && setStep((s) => Math.min(s + 1, 4));
   const goBack = () => setStep((s) => Math.max(s - 1, 1));
-const router = useRouter();
+  const router = useRouter();
 
   const handleSubmit = async () => {
-    const tournament = await createTournament(data);
+    setSubmitting(true);
+    setError(null);
 
-    router.push(`/tournaments/${tournament.id}`);
+    try {
+      const tournament = await onSubmit?.(data);
+      router.push(`/tournaments/${tournament.id}`);
+    } catch (err) {
+      setError("حصل خطأ أثناء إنشاء البطولة، حاول تاني.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <section className="wizard-section section">
       <div className="container">
-        {/* Progress header */}
         <div className="wizard-steps mb-4">
           {STEPS.map((s) => (
             <div key={s.id} className={`wizard-step-pill ${step === s.id ? "active" : ""} ${step > s.id ? "done" : ""}`}>
@@ -96,7 +98,6 @@ const router = useRouter();
   );
 }
 
-/* ---------------- Step 1: Basic Info ---------------- */
 function StepBasicInfo({ data, updateData }) {
   const currentIndex = TEAM_OPTIONS.indexOf(data.teamsCount);
 
@@ -156,7 +157,6 @@ function StepBasicInfo({ data, updateData }) {
   );
 }
 
-/* ---------------- Step 2: Court Select ---------------- */
 function StepCourtSelect({ courts, data, updateData }) {
   return (
     <div className="wizard-step-content">
@@ -197,7 +197,6 @@ function StepCourtSelect({ courts, data, updateData }) {
   );
 }
 
-/* ---------------- Step 3: Schedule ---------------- */
 function StepSchedule({ data, updateData }) {
   return (
     <div className="wizard-step-content">
@@ -224,7 +223,6 @@ function StepSchedule({ data, updateData }) {
   );
 }
 
-/* ---------------- Step 4: Review ---------------- */
 function StepReview({ data }) {
   const rows = [
     { label: "اسم البطولة", value: data.name },

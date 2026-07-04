@@ -1,6 +1,3 @@
-// app/tournaments/create/page.js
-// مثال بسيط لطريقة الاستخدام — عدّل المسارات حسب بنية مشروعك
-
 import CreateTournamentWizard from "@/components/tournaments/CreateTournamentWizard";
 import { getAllCourts } from "@/services/courtService";
 
@@ -11,10 +8,12 @@ export const metadata = {
 export default async function CreateTournamentPage() {
   const courts = (await getAllCourts()) ?? [];
 
-  async function handleCreateTournament(data) {
-    const tournament = await createTournament(data);
-    return tournament;
+  async function handleCreateTournament(formData) {
+    "use server";
+    // TODO: يتبدل بالـ fetch الحقيقي لما الـ API الحقيقي يجهز
+    console.log("Tournament data:", formData);
+    return { id: "t-temp-" + Date.now() };
   }
 
-  return <CreateTournamentWizard courts={courts} />;
+  return <CreateTournamentWizard courts={courts} onSubmit={handleCreateTournament} />;
 }

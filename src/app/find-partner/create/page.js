@@ -1,6 +1,7 @@
 import CreatePartnerRequestForm from "@/components/pages/find-partner/CreatePartnerRequestForm";
 import { getAllCourts } from "@/services/courtService";
 import { getCurrentUser } from "@/services/authService";
+import ParallaxBg from "@/components/ui/ParallaxBg";
 
 export const metadata = { title: "إنشاء طلب شريك — InstaPadel" };
 
@@ -9,7 +10,8 @@ export default async function CreatePartnerRequestPage() {
 
   return (
     <section className="section" style={{ paddingTop: 140 }}>
-      <div className="container">
+      <ParallaxBg image="/assets/imgs/courts-bg.png" />
+      <div>
         <CreatePartnerRequestForm courts={courts} currentUser={currentUser} />
       </div>
     </section>

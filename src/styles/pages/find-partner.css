@@ -483,4 +483,8 @@
     .request-detail-grid {
         grid-template-columns: 1fr;
     }
+        .partner-form-card{
+            width: 90%;
+            padding: 20px;
+        }
 }

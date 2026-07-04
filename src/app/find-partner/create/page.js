@@ -9,7 +9,7 @@ export default async function CreatePartnerRequestPage() {
   const [courts, currentUser] = await Promise.all([getAllCourts(), getCurrentUser()]);
 
   return (
-    <section className="section" style={{ paddingTop: 140 }}>
+    <section className="new-section section" style={{ paddingTop: 140 }}>
       <ParallaxBg image="/assets/imgs/courts-bg.png" />
       <div>
         <CreatePartnerRequestForm courts={courts} currentUser={currentUser} />

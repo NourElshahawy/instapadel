@@ -11,9 +11,14 @@ export default function CtaBand() {
           <span className="eyebrow justify-content-center">جاهزون عندما تكون أنت جاهزاً</span>
           <h2 className="mt-3">جاهز للعب؟</h2>
           <p>جميع ملاعب المنصورة على بُعد بحث واحد. ابحث عن مكانك وانضم إلى الملعب اليوم.</p>
-          <Link href="/find-partner" className="btn btn-accent">
-            البحث عن شريك <i className="fa-solid fa-circle-arrow-left" style={{color:"#000"}} />
-          </Link>
+          <div className="cta-buttons d-flex gap-3 justify-content-center mt-4 flex-column flex-md-row">
+            <Link href="/find-partner" className="btn btn-accent">
+              البحث عن شريك <i className="fa-solid fa-circle-arrow-left" style={{ color: "#000" }} />
+            </Link>
+            <Link href="/tournaments" className="btn btn-accent">
+              <i className="fa-solid fa-circle-arrow-right" style={{ color: "#000" }} /> انضم او انشاء بطولة
+            </Link>
+          </div>
         </div>
       </div>
     </section>

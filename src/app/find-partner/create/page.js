@@ -10,7 +10,6 @@ export default async function CreatePartnerRequestPage() {
 
   return (
     <section className="new-section section" style={{ paddingTop: 140 }}>
-      <ParallaxBg image="/assets/imgs/courts-bg.png" />
       <div>
         <CreatePartnerRequestForm courts={courts} currentUser={currentUser} />
       </div>

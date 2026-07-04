@@ -59,7 +59,6 @@ export default function TournamentDashboard({ tournament: initialTournament, cur
 
   return (
     <div className={`td-page td-page--${stage}`} dir="rtl">
-      <ParallaxBg image="/assets/imgs/courts-bg.png" />
       <Hero tournament={tournament} stage={stage} />
 
       {stage === "registration" && (

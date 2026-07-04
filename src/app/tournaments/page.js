@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllTournaments } from "@/services/tournamentService";
 import "@/styles/pages/tournaments-listing.css";
+import ParallaxBg from "@/components/ui/ParallaxBg";
 
 export const metadata = { title: "البطولات — InstaPadel" };
 

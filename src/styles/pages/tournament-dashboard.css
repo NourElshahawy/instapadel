@@ -20,7 +20,7 @@
     flex-direction: column;
     gap: 20px;
     margin-inline: auto;
-    padding: 120px;
+    padding: 120px 20px;
     display: flex;
     position: relative;
     width: 95%;

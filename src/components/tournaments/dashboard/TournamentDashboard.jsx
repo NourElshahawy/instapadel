@@ -15,6 +15,7 @@ import FloatingActionButton from "./FloatingActionButton";
 import JoinTeamSheet from "../JoinTeamSheet";
 import "@/styles/pages/tournament-dashboard.css";
 import "@/styles/pages/booking.css";
+import ParallaxBg from "@/components/ui/ParallaxBg";
 
 function resolveStage(tournament) {
   if (tournament.status === "completed") return "completed";
@@ -58,6 +59,7 @@ export default function TournamentDashboard({ tournament: initialTournament, cur
 
   return (
     <div className={`td-page td-page--${stage}`} dir="rtl">
+      <ParallaxBg image="/assets/imgs/courts-bg.png" />
       <Hero tournament={tournament} stage={stage} />
 
       {stage === "registration" && (

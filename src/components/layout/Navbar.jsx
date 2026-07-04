@@ -8,8 +8,9 @@ import { useStickyNavbar } from "@/hooks/useStickyNavbar";
 const NAV_LINKS = [
   { href: "/", label: "الرئيسية" },
   { href: "/courts", label: "الملاعب" },
+  { href: "/find-partner", label: "دور على شريك" },
   { href: "/news", label: "اخبار البادل" },
-  { href: "/contact", label: "تواصل معنا" },
+  // { href: "/contact", label: "تواصل معنا" },
 ];
 
 export default function Navbar() {

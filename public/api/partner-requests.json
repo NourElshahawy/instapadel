@@ -1,0 +1,78 @@
+[
+  {
+    "id": "pr1",
+    "hostId": "u1",
+    "hostName": "أحمد سعيد",
+    "hostLevel": "متوسط",
+    "hostPhone": "201012345678",
+    "courtName": "Padel Go Mansoura",
+    "courtId": "padel-go-mansoura",
+    "date": "2026-07-06",
+    "dateLabel": "الإثنين 6 يوليو",
+    "time": "6:00 م - 7:00 م",
+    "level": "متوسط",
+    "playersNeeded": 2,
+    "playersJoined": [],
+    "notes": "لعب ودي، محتاجين رابع وخامس احتياط لو حد اعتذر",
+    "status": "open",
+    "createdAt": "2026-07-04T10:00:00"
+  },
+  {
+    "id": "pr2",
+    "hostId": "u2",
+    "hostName": "مريم خالد",
+    "hostLevel": "مبتدئ",
+    "hostPhone": "201098765432",
+    "courtName": "Ace Town Mansoura",
+    "courtId": "ace-town-mansoura",
+    "date": "2026-07-05",
+    "dateLabel": "الأحد 5 يوليو",
+    "time": "4:00 م - 5:00 م",
+    "level": "مبتدئ",
+    "playersNeeded": 1,
+    "playersJoined": [
+      { "id": "u5", "name": "سارة أدهم", "phone": "201055512345", "level": "مبتدئ", "status": "pending" }
+    ],
+    "notes": "أول مرة ألعب بادل، حابة حد كمان مبتدئ 🙂",
+    "status": "partially_filled",
+    "createdAt": "2026-07-04T09:00:00"
+  },
+  {
+    "id": "pr3",
+    "hostId": "u3",
+    "hostName": "كريم عادل",
+    "hostLevel": "محترف",
+    "hostPhone": "201123456789",
+    "courtName": "Padel Zone Mansoura",
+    "courtId": "padel-zone-mansoura",
+    "date": "2026-07-06",
+    "dateLabel": "الإثنين 6 يوليو",
+    "time": "9:00 م - 10:00 م",
+    "level": "محترف",
+    "playersNeeded": 2,
+    "playersJoined": [],
+    "notes": "",
+    "status": "open",
+    "createdAt": "2026-07-04T08:30:00"
+  },
+  {
+    "id": "pr4",
+    "hostId": "u4",
+    "hostName": "نور الشهاوي",
+    "hostLevel": "متوسط",
+    "hostPhone": "201065801252",
+    "courtName": "Padel H Club",
+    "courtId": "padel-h-mansoura",
+    "date": "2026-07-07",
+    "dateLabel": "الثلاثاء 7 يوليو",
+    "time": "8:00 م - 9:00 م",
+    "level": "متوسط",
+    "playersNeeded": 3,
+    "playersJoined": [
+      { "id": "u9", "name": "عمر حسن", "phone": "201077712121", "level": "متوسط", "status": "accepted" }
+    ],
+    "notes": "الملعب محجوز، محتاجين تلاته يكملوا",
+    "status": "partially_filled",
+    "createdAt": "2026-07-04T07:00:00"
+  }
+]

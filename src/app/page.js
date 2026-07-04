@@ -14,8 +14,8 @@ export default function HomePage() {
     <>
       <Hero />
       <FeaturedCourts />
-      <NewsSection />
       <CtaBand />
+      <NewsSection />
       <WhyUs />
     </>
   );

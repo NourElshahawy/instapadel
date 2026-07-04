@@ -35,6 +35,7 @@ export default function Footer() {
               <h4>المنصة</h4>
               <Link href="/">الرئيسية</Link>
               <Link href="/courts">احجز ملعباً</Link>
+              <Link href="/find-partner"> ابحث عن شريك</Link>
               <Link href="/news">أخبار البادل</Link>
             </div>
 

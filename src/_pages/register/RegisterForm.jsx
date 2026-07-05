@@ -1,17 +1,29 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/supabase";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PasswordField from "@/components/shared/PasswordField";
 import AccountTypeSelector from "./AccountTypeSelector";
-
 export default function RegisterForm() {
+  const router = useRouter();
+  //  const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+  // const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+
+
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
     password: "",
     confirmPassword: "",
+    role: "user",
     agreeTerms: false,
   });
   const [status, setStatus] = useState("idle");
@@ -21,16 +33,46 @@ export default function RegisterForm() {
     setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (form.password !== form.confirmPassword) {
-      alert("كلمة المرور غير متطابقة");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (loading) return;
+
+  if (form.password !== form.confirmPassword) {
+    alert("كلمة المرور غير متطابقة");
+    return;
+  }
+
+  setLoading(true);
+  setError(null);
+
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email: form.email,
+      password: form.password,
+      options: {
+        data: {
+          name: form.name,
+          phone: form.phone,
+          role: form.role,
+        },
+      },
+    });
+
+    if (error) {
+      setError(error.message);
       return;
     }
-    // TODO: هتتوصل بـ endpoint التسجيل بتاع Laravel
-    setStatus("loading");
-    setTimeout(() => setStatus("idle"), 1200);
-  };
+
+    router.push("/verify-email");
+  } finally {
+    setLoading(false);
+  }
+};
+
+ 
+  
+
 
   return (
     <div className="auth-form-col">

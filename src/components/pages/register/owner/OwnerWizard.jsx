@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { signUpOwner } from "@/services/authClient";
+import { createVenueWithCourts } from "@/services/venueClient";
 import { useRouter } from "next/navigation";
 import WizardSideNav from "./WizardSideNav";
 import WizardTopbar from "./WizardTopbar";
@@ -26,6 +28,7 @@ export default function OwnerWizard() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const updateVenue = (patch) => setVenue((v) => ({ ...v, ...patch }));
 
@@ -58,12 +61,33 @@ export default function OwnerWizard() {
   const handleSubmit = async () => {
     if (!agreeTerms) return;
     setSubmitting(true);
-    // TODO: هتتبعت الداتا (venue, courts, photosByCourtId, amenities, hours, cancellationPolicy)
-    // لـ POST /api/owner/venues على الباك إند بتاعك
-    await new Promise((r) => setTimeout(r, 1400));
-    setSubmitting(false);
-    setSubmitted(true);
-    setTimeout(() => router.push("/"), 2200);
+    setSubmitError(null);
+
+    try {
+      const { user } = await signUpOwner({
+        name: venue.name,
+        email: venue.email,
+        phone: venue.phone,
+        password: venue.password,
+      });
+
+      await createVenueWithCourts({
+        ownerId: user.id,
+        venue,
+        courts,
+        photosByCourtId,
+        amenities,
+        hours,
+        cancellationPolicy,
+      });
+
+      setSubmitted(true);
+      setTimeout(() => router.push("/owner/pending-approval"), 1800);
+    } catch (err) {
+      setSubmitError("حصل خطأ أثناء إنشاء الحساب: " + err.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -103,9 +127,13 @@ export default function OwnerWizard() {
                 <i className="fa-solid fa-arrow-right" /> التالي
               </button>
             ) : (
+              // <button type="button" className="btn btn-accent" onClick={handleSubmit} disabled={!agreeTerms || submitting}>
+              //   <i className="fa-solid fa-circle-check" />
+              //   {submitted ? "تم الإرسال ✓" : submitting ? "جاري الإرسال…" : "إرسال القائمة"}
+              //   </button>
               <button type="button" className="btn btn-accent" onClick={handleSubmit} disabled={!agreeTerms || submitting}>
                 <i className="fa-solid fa-circle-check" />
-                {submitted ? "تم الإرسال ✓" : submitting ? "جاري الإرسال…" : "إرسال القائمة"}
+                {submitError ? submitError : submitted ? "تم الإرسال ✓" : submitting ? "جاري الإرسال…" : "إرسال القائمة"}
               </button>
             )}
           </div>

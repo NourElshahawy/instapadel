@@ -1,78 +1,85 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/supabase";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import PasswordField from "@/components/shared/PasswordField";
 import AccountTypeSelector from "./AccountTypeSelector";
+import { signUpPlayer, signInWithGoogle } from "@/services/authClient";
+
 export default function RegisterForm() {
   const router = useRouter();
-  //  const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-
-
-
   const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
     password: "",
     confirmPassword: "",
-    role: "user",
     agreeTerms: false,
   });
-  const [status, setStatus] = useState("idle");
+  const [status, setStatus] = useState("idle"); // idle | loading | check-email
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
 
-  if (loading) return;
-
-  if (form.password !== form.confirmPassword) {
-    alert("كلمة المرور غير متطابقة");
-    return;
-  }
-
-  setLoading(true);
-  setError(null);
-
-  try {
-    const { data, error } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.password,
-      options: {
-        data: {
-          name: form.name,
-          phone: form.phone,
-          role: form.role,
-        },
-      },
-    });
-
-    if (error) {
-      setError(error.message);
+    if (form.password !== form.confirmPassword) {
+      setError("كلمة المرور غير متطابقة");
       return;
     }
 
-    router.push("/verify-email");
-  } finally {
-    setLoading(false);
+    setStatus("loading");
+    try {
+      const data = await signUpPlayer({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
+      });
+
+      if (data.session) {
+        // تأكيد الإيميل متعطل في إعدادات Supabase — دخل مباشرة
+        router.push("/");
+        router.refresh();
+      } else {
+        // تأكيد الإيميل مفعّل — لازم يفتح الرابط اللي وصله بالإيميل
+        setStatus("check-email");
+      }
+    } catch (err) {
+      if (err.message?.includes("already registered") || err.message?.includes("already exists")) {
+        setError("الإيميل ده مسجل بالفعل، جرب تسجل الدخول بدل كده.");
+      } else {
+        setError("حصل خطأ أثناء إنشاء الحساب، حاول تاني.");
+      }
+      setStatus("idle");
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    try {
+      await signInWithGoogle();
+    } catch {
+      setError("حصل خطأ أثناء التسجيل بجوجل");
+    }
+  };
+
+  if (status === "check-email") {
+    return (
+      <div className="auth-form-col">
+        <div className="auth-card" style={{ textAlign: "center" }}>
+          <i className="fa-solid fa-envelope-open-text" style={{ fontSize: 48, color: "var(--accent)" }}></i>
+          <h1 style={{ marginTop: 16 }}>تأكد من إيميلك</h1>
+          <p className="auth-sub">بعتنالك رابط تفعيل على {form.email} — افتحه عشان تكمّل تسجيل حسابك.</p>
+        </div>
+      </div>
+    );
   }
-};
-
- 
-  
-
 
   return (
     <div className="auth-form-col">
@@ -88,12 +95,14 @@ const handleSubmit = async (e) => {
 
         <AccountTypeSelector />
 
-        <button type="button" className="social-btn">
+        <button type="button" className="social-btn" onClick={handleGoogleSignup}>
           <i className="fa-brands fa-google" />
           تابع باستخدام Google
         </button>
 
         <div className="auth-divider">أو سجل بالبريد الإلكتروني</div>
+
+        {error && <p style={{ color: "#ff6b6b", fontSize: ".85rem", marginBottom: 16 }}>{error}</p>}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="field-group">
@@ -121,7 +130,6 @@ const handleSubmit = async (e) => {
           </div>
 
           <PasswordField id="regPassword" label="كلمة المرور" placeholder="أنشئ كلمة مرور" value={form.password} onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))} />
-
           <PasswordField
             id="regConfirm"
             label="تأكيد كلمة المرور"

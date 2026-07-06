@@ -14,14 +14,12 @@ export async function signUpPlayer({ name, email, phone, password }) {
   return data;
 }
 
-export async function signUpOwner({ email, password, venueName, venuePhone }) {
+export async function signUpOwner({ name, email, phone, password }) {
   const supabase = createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      data: { name: venueName, phone: venuePhone, role: "owner" },
-    },
+    options: { data: { name, phone, role: "owner" } },
   });
   if (error) throw error;
   return data;

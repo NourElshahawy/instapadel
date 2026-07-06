@@ -55,6 +55,18 @@ export default function Step1VenueInfo({ venue, updateVenue }) {
           onChange={(e) => updateVenue({ description: e.target.value })}
         />
       </div>
+
+      <div className="row g-3">
+        <div className="col-6">
+          <div className="field-group mb-0">
+            <label>كلمة المرور</label>
+            <div className="field-input-wrap">
+              <i className="fa-solid fa-lock field-icon"></i>
+              <input className="field-input" type="password" value={venue.password} onChange={(e) => updateVenue({ password: e.target.value })} placeholder="لحساب الدخول" required />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

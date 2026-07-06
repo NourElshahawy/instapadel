@@ -3,7 +3,6 @@ import FeaturedCourts from "@/components/home/FeaturedCourts";
 import NewsSection from "@/components/home/NewsSection";
 import CtaBand from "@/components/home/CtaBand";
 import WhyUs from "@/components/home/WhyUs";
-import { supabase } from "@/supabase";
 
 export const metadata = {
   title: "InstaPadel — Book Padel Courts in Mansoura",
@@ -12,7 +11,6 @@ export const metadata = {
 
 export default function HomePage() {
   return (
-    console.log(supabase),
     <>
       <Hero />
       <FeaturedCourts />

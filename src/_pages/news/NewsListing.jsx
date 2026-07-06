@@ -35,7 +35,7 @@ export default function NewsListing({ news }) {
 
   return (
     <>
-      <ListingHero titlehead="الاخبار" title="جميع أخبار البادل في المنصورة" count={news.length} />
+      <ListingHero titlehead="الاخبار" title=" أخبار البادل في المنصورة" count={news.length} />
 
       <section className="courts-section section" id="courts">
         <ParallaxBg image="/assets/imgs/courts-bg.png" />

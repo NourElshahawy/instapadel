@@ -24,7 +24,7 @@ export default async function TournamentsPage() {
             <i className="fa-solid fa-chevron-right"></i>
             <span>البطولات</span>
           </div>
-          <h1 data-aos="fade-up">بطولات InstaPadel</h1>
+          <h1 data-aos="fade-up">بطولات البادل في المنصورة</h1>
           <p className="results-count">
             <b>{tournaments.length}</b> بطولة
           </p>

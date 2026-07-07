@@ -1,17 +1,21 @@
+import { redirect } from "next/navigation";
 import CreatePartnerRequestForm from "@/components/pages/find-partner/CreatePartnerRequestForm";
 import { getAllCourts } from "@/services/courtService";
-import { getCurrentUser } from "@/services/authService";
-import ParallaxBg from "@/components/ui/ParallaxBg";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "إنشاء طلب شريك — InstaPadel" };
 
 export default async function CreatePartnerRequestPage() {
-  const [courts, currentUser] = await Promise.all([getAllCourts(), getCurrentUser()]);
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const courts = await getAllCourts();
 
   return (
-    <section className="new-section section" style={{ paddingTop: 140 }}>
-      <div>
-        <CreatePartnerRequestForm courts={courts} currentUser={currentUser} />
+    <section className="section" style={{ paddingTop: 140 }}>
+      <div className="container">
+        <CreatePartnerRequestForm courts={courts} hostId={user.id} />
       </div>
     </section>
   );

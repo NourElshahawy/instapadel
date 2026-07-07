@@ -1,15 +1,63 @@
-import { fetchJson } from "./api";
+import { createClient } from "@/lib/supabase/server";
 
 export async function getAllPartnerRequests() {
-  return fetchJson("partner-requests.json");
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("partner_requests")
+    .select(`
+      *,
+      host:profiles!partner_requests_host_id_fkey (name, phone, level:role),
+      partner_request_joins (id, status, player_id, profiles (name, phone))
+    `)
+    .neq("status", "matched")
+    .neq("status", "expired")
+    .neq("status", "cancelled")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return (data || []).map(mapRequest);
 }
 
 export async function getPartnerRequestById(id) {
-  const requests = await getAllPartnerRequests();
-  return requests.find((r) => r.id === id) || null;
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("partner_requests")
+    .select(`
+      *,
+      host:profiles!partner_requests_host_id_fkey (name, phone),
+      partner_request_joins (id, status, player_id, profiles (name, phone))
+    `)
+    .eq("id", id)
+    .single();
+
+  if (error || !data) return null;
+  return mapRequest(data);
 }
 
-// TODO: الدوال دي محتاجة تتحول لـ POST/PATCH حقيقية على الباك إند
-// export async function createPartnerRequest(data) { ... }
-// export async function joinPartnerRequest(requestId, player) { ... }
-// export async function respondToJoinRequest(requestId, playerId, accept) { ... }
+function mapRequest(r) {
+  return {
+    id: r.id,
+    hostId: r.host_id,
+    hostName: r.host?.name || "مستخدم",
+    hostLevel: r.level,
+    hostPhone: r.host?.phone,
+    courtId: r.court_id,
+    courtName: r.court_name,
+    date: r.request_date,
+    dateLabel: new Date(r.request_date).toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long" }),
+    time: r.time_label,
+    level: r.level,
+    playersNeeded: r.players_needed,
+    notes: r.notes,
+    status: r.status,
+    playersJoined: (r.partner_request_joins || []).map((j) => ({
+      id: j.player_id,
+      joinId: j.id,
+      name: j.profiles?.name || "مستخدم",
+      phone: j.profiles?.phone,
+      status: j.status,
+    })),
+  };
+}

@@ -1,12 +1,18 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { createPartnerRequest } from "@/services/partnerRequestClient";
 
 const LEVELS = ["مبتدئ", "متوسط", "محترف"];
 
-export default function CreatePartnerRequestForm({ courts, currentUser,onClose }) {
+export default function CreatePartnerRequestForm({
+  courts,
+  currentUser,
+  onClose,
+  hostId,
+}) {
   const [form, setForm] = useState({
-    courtId: courts[0]?.slug || "",
+    courtId: courts[0]?.id || "",
     date: "",
     time: "",
     level: "متوسط",
@@ -24,28 +30,43 @@ export default function CreatePartnerRequestForm({ courts, currentUser,onClose }
     e.preventDefault();
     if (!canSubmit) return;
     setSubmitting(true);
-    // TODO: POST /api/partner-requests بالداتا دي + hostId من الـ session الحقيقية
-    await new Promise((r) => setTimeout(r, 900));
-    setSubmitting(false);
-    setSubmitted(true);
+    try {
+      const court = courts.find((c) => c.id === form.courtId); // c.id بدل c.slug
+      await createPartnerRequest(
+        { ...form, courtName: court?.name || "" },
+        hostId,
+      );
+      setSubmitted(true);
+    } catch (err) {
+      alert("حصل خطأ أثناء نشر الطلب");
+    } finally {
+      setSubmitting(false);
+    }
   };
-
   if (submitted) {
     return (
       <div className="form-success-card">
         <i className="fa-solid fa-circle-check"></i>
         <h3>تم نشر طلبك</h3>
-        <p>هيظهر لكل اللاعبين دلوقتي، وهيوصلك إشعار أول ما حد يبعت طلب انضمام.</p>
-        <a href="/find-partner" className="btn btn-accent btn-sm">
+        <p>
+          هيظهر لكل اللاعبين دلوقتي، وهيوصلك إشعار أول ما حد يبعت طلب انضمام.
+        </p>
+        <Link href="/find-partner" className="btn btn-accent btn-sm">
           رجوع لكل الطلبات
-        </a>
+        </Link>
       </div>
     );
   }
 
   return (
     <div className="partner-form-card">
-      <Link href="/find-partner" type="button" className="btn-close-ph" aria-label="إغلاق" onClick={onClose}>
+      <Link
+        href="/find-partner"
+        type="button"
+        className="btn-close-ph"
+        aria-label="إغلاق"
+        onClick={onClose}
+      >
         <i className="fa-solid fa-xmark"></i>
       </Link>
       <h2>إنشاء طلب شريك</h2>
@@ -56,9 +77,13 @@ export default function CreatePartnerRequestForm({ courts, currentUser,onClose }
           <label>الملعب</label>
           <div className="field-input-wrap">
             <i className="fa-solid fa-location-dot field-icon"></i>
-            <select className="field-input" value={form.courtId} onChange={(e) => update({ courtId: e.target.value })}>
+            <select
+              className="field-input"
+              value={form.courtId}
+              onChange={(e) => update({ courtId: e.target.value })}
+            >
               {courts.map((c) => (
-                <option key={c.id} value={c.slug}>
+                <option key={c.id} value={c.id}>
                   {c.name}
                 </option>
               ))}
@@ -71,7 +96,13 @@ export default function CreatePartnerRequestForm({ courts, currentUser,onClose }
             <div className="field-group mb-0">
               <label>التاريخ</label>
               <div className="field-input-wrap">
-                <input type="date" className="field-input" value={form.date} onChange={(e) => update({ date: e.target.value })} required />
+                <input
+                  type="date"
+                  className="field-input"
+                  value={form.date}
+                  onChange={(e) => update({ date: e.target.value })}
+                  required
+                />
               </div>
             </div>
           </div>
@@ -79,7 +110,14 @@ export default function CreatePartnerRequestForm({ courts, currentUser,onClose }
             <div className="field-group mb-0">
               <label>الوقت</label>
               <div className="field-input-wrap">
-                <input type="text" className="field-input" placeholder="مثال: 6:00 م - 7:00 م" value={form.time} onChange={(e) => update({ time: e.target.value })} required />
+                <input
+                  type="text"
+                  className="field-input"
+                  placeholder="مثال: 6:00 م - 7:00 م"
+                  value={form.time}
+                  onChange={(e) => update({ time: e.target.value })}
+                  required
+                />
               </div>
             </div>
           </div>
@@ -89,7 +127,12 @@ export default function CreatePartnerRequestForm({ courts, currentUser,onClose }
           <label>مستوى اللعب</label>
           <div className="level-radio-pills">
             {LEVELS.map((l) => (
-              <button type="button" key={l} className={`level-radio-pill ${form.level === l ? "active" : ""}`} onClick={() => update({ level: l })}>
+              <button
+                type="button"
+                key={l}
+                className={`level-radio-pill ${form.level === l ? "active" : ""}`}
+                onClick={() => update({ level: l })}
+              >
                 {l}
               </button>
             ))}
@@ -99,11 +142,23 @@ export default function CreatePartnerRequestForm({ courts, currentUser,onClose }
         <div className="field-group">
           <label>عدد اللاعبين المطلوبين</label>
           <div className="players-stepper">
-            <button type="button" onClick={() => update({ playersNeeded: Math.max(1, form.playersNeeded - 1) })} disabled={form.playersNeeded <= 1}>
+            <button
+              type="button"
+              onClick={() =>
+                update({ playersNeeded: Math.max(1, form.playersNeeded - 1) })
+              }
+              disabled={form.playersNeeded <= 1}
+            >
               −
             </button>
             <span>{form.playersNeeded}</span>
-            <button type="button" onClick={() => update({ playersNeeded: Math.min(3, form.playersNeeded + 1) })} disabled={form.playersNeeded >= 3}>
+            <button
+              type="button"
+              onClick={() =>
+                update({ playersNeeded: Math.min(3, form.playersNeeded + 1) })
+              }
+              disabled={form.playersNeeded >= 3}
+            >
               +
             </button>
           </div>
@@ -113,10 +168,19 @@ export default function CreatePartnerRequestForm({ courts, currentUser,onClose }
           <label>
             ملاحظات <span className="label-optional">اختياري</span>
           </label>
-          <textarea className="field-input field-textarea" placeholder="مستوى اللعب، لو محتاجين لاعب معين، إلخ..." value={form.notes} onChange={(e) => update({ notes: e.target.value })} />
+          <textarea
+            className="field-input field-textarea"
+            placeholder="مستوى اللعب، لو محتاجين لاعب معين، إلخ..."
+            value={form.notes}
+            onChange={(e) => update({ notes: e.target.value })}
+          />
         </div>
 
-        <button type="submit" className="btn btn-accent btn-block" disabled={!canSubmit || submitting}>
+        <button
+          type="submit"
+          className="btn btn-accent btn-block"
+          disabled={!canSubmit || submitting}
+        >
           {submitting ? "جاري النشر…" : "نشر الطلب"}
         </button>
       </form>

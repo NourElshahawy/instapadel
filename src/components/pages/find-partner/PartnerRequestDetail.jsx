@@ -1,56 +1,59 @@
 "use client";
 import { useState } from "react";
+import { joinPartnerRequest, respondToJoin } from "@/services/partnerRequestClient";
 import MatchedContactCard from "./MatchedContactCard";
 import Link from "next/link";
 
-const LEVEL_LABELS = { open: "مفتوح للانضمام", partially_filled: "محتاج لاعبين كمان", matched: "اكتمل الفريق" };
+const STATUS_LABELS = { open: "مفتوح للانضمام", partially_filled: "محتاج لاعبين كمان", matched: "اكتمل الفريق" };
 
-export default function PartnerRequestDetail({ initialRequest, currentUser }) {
+export default function PartnerRequestDetail({ initialRequest, currentUserId }) {
   const [request, setRequest] = useState(initialRequest);
   const [joining, setJoining] = useState(false);
 
-  const isHost = request.hostId === currentUser.id;
-  const myJoin = request.playersJoined.find((p) => p.id === currentUser.id);
+  const isHost = request.hostId === currentUserId;
+  const myJoin = request.playersJoined.find((p) => p.id === currentUserId);
   const acceptedCount = request.playersJoined.filter((p) => p.status === "accepted").length;
   const isFull = acceptedCount >= request.playersNeeded;
 
   const handleJoin = async () => {
+    if (!currentUserId) return;
     setJoining(true);
-    // TODO: POST /api/partner-requests/:id/join
-    await new Promise((r) => setTimeout(r, 700));
-    setRequest((r) => ({
-      ...r,
-      playersJoined: [...r.playersJoined, { id: currentUser.id, name: currentUser.name, phone: currentUser.phone, level: currentUser.level, status: "pending" }],
-      status: "partially_filled",
-    }));
-    setJoining(false);
+    try {
+      await joinPartnerRequest(request.id, currentUserId);
+      setRequest((r) => ({
+        ...r,
+        playersJoined: [...r.playersJoined, { id: currentUserId, name: "أنت", status: "pending" }],
+        status: "partially_filled",
+      }));
+    } finally {
+      setJoining(false);
+    }
   };
 
-  const handleRespond = (playerId, accept) => {
-    // TODO: PATCH /api/partner-requests/:id/respond
+  const handleRespond = async (player, accept) => {
+    await respondToJoin(player.joinId, request.id, accept, request.playersNeeded);
     setRequest((r) => {
-      const updatedPlayers = r.playersJoined.map((p) => (p.id === playerId ? { ...p, status: accept ? "accepted" : "rejected" } : p));
+      const updatedPlayers = r.playersJoined.map((p) => (p.id === player.id ? { ...p, status: accept ? "accepted" : "rejected" } : p));
       const acceptedNow = updatedPlayers.filter((p) => p.status === "accepted").length;
       return { ...r, playersJoined: updatedPlayers, status: acceptedNow >= r.playersNeeded ? "matched" : "partially_filled" };
     });
   };
 
   return (
-    
     <section className="section" style={{ paddingTop: 140 }}>
       <div className="container">
         <div className="breadcrumb-ph" data-aos="fade-up">
           <Link href="/">الرئيسية</Link>
-          <i className="fa-solid fa-chevron-right"></i>
-          <a href="/find-partner">البحث عن شريك</a>
-          <i className="fa-solid fa-chevron-right"></i>
+          <span className="material-symbols-rounded">chevron_right</span>
+          <Link href="/find-partner">البحث عن شريك</Link>
+          <span className="material-symbols-rounded">chevron_right</span>
           <span>{request.courtName}</span>
         </div>
 
         <div className="request-detail-grid mt-4">
           <div className="request-detail-card">
             <div className="request-host-row">
-              <span className="partner-avatar">{request.hostName.charAt(0)}</span>
+              <span className="partner-avatar">{request.hostName?.charAt(0)}</span>
               <div>
                 <b>{request.hostName}</b>
                 <span className={`level-badge ${request.hostLevel}`}>{request.hostLevel}</span>
@@ -58,48 +61,32 @@ export default function PartnerRequestDetail({ initialRequest, currentUser }) {
             </div>
 
             <div className="partner-card-meta">
-              <span className="meta-row">
-                <i className="fa-solid fa-location-dot" /> {request.courtName}
-              </span>
-              <span className="meta-row">
-                <i className="fa-solid fa-calendar-days" /> {request.dateLabel}
-              </span>
-              <span className="meta-row">
-                <i className="fa-regular fa-clock" /> {request.time}
-              </span>
-              <span className="meta-row">
-                <i className="fa-solid fa-chart-simple" /> مستوى {request.level}
-              </span>
+              <span className="meta-row"><i className="fa-solid fa-location-dot" /> {request.courtName}</span>
+              <span className="meta-row"><i className="fa-solid fa-calendar-days" /> {request.dateLabel}</span>
+              <span className="meta-row"><i className="fa-regular fa-clock" /> {request.time}</span>
+              <span className="meta-row"><i className="fa-solid fa-chart-simple" /> مستوى {request.level}</span>
             </div>
 
             {request.notes && <p className="partner-card-notes mt-3">{request.notes}</p>}
 
             <span className={`partner-status-tag ${request.status}`} style={{ display: "block", marginTop: 16 }}>
-              {LEVEL_LABELS[request.status]}
+              {STATUS_LABELS[request.status]}
             </span>
 
-            {/* ===== لو أنا المضيف: قائمة طلبات الانضمام ===== */}
             {isHost && request.playersJoined.length > 0 && (
               <div className="join-players-list">
                 {request.playersJoined.map((p) => (
                   <div className="join-player-row" key={p.id}>
                     <div className="jp-info">
-                      <span className="partner-avatar" style={{ width: 34, height: 34, fontSize: ".8rem" }}>
-                        {p.name.charAt(0)}
-                      </span>
+                      <span className="partner-avatar" style={{ width: 34, height: 34, fontSize: ".8rem" }}>{p.name?.charAt(0)}</span>
                       <div>
                         <b>{p.name}</b>
-                        <span style={{ fontSize: ".76rem", color: "var(--text-muted)" }}> {p.level}</span>
                       </div>
                     </div>
                     {p.status === "pending" ? (
                       <div className="jp-actions">
-                        <button className="jp-btn accept" onClick={() => handleRespond(p.id, true)} aria-label="قبول">
-                          <i className="fa-solid fa-check" />
-                        </button>
-                        <button className="jp-btn reject" onClick={() => handleRespond(p.id, false)} aria-label="رفض">
-                          <i className="fa-solid fa-xmark" />
-                        </button>
+                        <button className="jp-btn accept" onClick={() => handleRespond(p, true)} aria-label="قبول"><i className="fa-solid fa-check" /></button>
+                        <button className="jp-btn reject" onClick={() => handleRespond(p, false)} aria-label="رفض"><i className="fa-solid fa-xmark" /></button>
                       </div>
                     ) : (
                       <span className={`jp-status-tag ${p.status}`}>{p.status === "accepted" ? "مقبول" : "مرفوض"}</span>
@@ -109,16 +96,16 @@ export default function PartnerRequestDetail({ initialRequest, currentUser }) {
               </div>
             )}
 
-            {/* ===== أرقام واتساب اللاعبين المقبولين (تظهر للطرفين) ===== */}
-            {request.playersJoined
-              .filter((p) => p.status === "accepted")
-              .map((p) => (
-                <MatchedContactCard key={p.id} player={p} />
-              ))}
-            {isHost && acceptedCount > 0 && <p style={{ fontSize: ".8rem", color: "var(--text-faint)", marginTop: 10 }}>تقدر تتواصل مع اللاعبين المقبولين مباشرة من الأرقام فوق.</p>}
+            {request.playersJoined.filter((p) => p.status === "accepted").map((p) => (
+              <MatchedContactCard key={p.id} player={p} />
+            ))}
+            {isHost && acceptedCount > 0 && (
+              <p style={{ fontSize: ".8rem", color: "var(--text-faint)", marginTop: 10 }}>
+                تقدر تتواصل مع اللاعبين المقبولين مباشرة من الأرقام فوق.
+              </p>
+            )}
           </div>
 
-          {/* ===== Sidebar: زرار الانضمام ===== */}
           <div className="request-detail-card">
             {isHost ? (
               <p style={{ color: "var(--text-muted)", fontSize: ".88rem" }}>ده طلبك أنت — تقدر تدير طلبات الانضمام من الشمال.</p>

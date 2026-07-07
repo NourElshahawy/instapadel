@@ -13,6 +13,8 @@ import StatsGrid from "./StatsGrid";
 import NewsFeed from "./NewsFeed";
 import FloatingActionButton from "./FloatingActionButton";
 import JoinTeamSheet from "../JoinTeamSheet";
+import { joinTournament } from "@/services/tournamentClient";
+import { createClient } from "@/lib/supabase/client";
 import "@/styles/pages/tournament-dashboard.css";
 import "@/styles/pages/booking.css";
 import ParallaxBg from "@/components/ui/ParallaxBg";
@@ -25,29 +27,28 @@ function resolveStage(tournament) {
   return "registration";
 }
 
-export default function TournamentDashboard({ tournament: initialTournament, currentUser = {}, onJoin, onManage, onCreateNew }) {
+export default function TournamentDashboard({ tournament: initialTournament, currentUser = {},  onManage, onCreateNew }) {
   const [tournament, setTournament] = useState(initialTournament);
   const [joinOpen, setJoinOpen] = useState(false);
 
   const stage = useMemo(() => resolveStage(tournament), [tournament]);
 
   const handleJoinSubmit = async (teamData) => {
-    await onJoin?.(teamData);
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
 
-    const newTeam = {
-      id: `team-${Date.now()}`,
-      name: teamData.partnerName ? `${teamData.captainName} & ${teamData.partnerName}` : teamData.captainName,
-      captainId: currentUser.id,
-      captainName: teamData.captainName,
-      captainPhone: teamData.captainPhone,
-      partnerName: teamData.partnerName || null,
-      status: "confirmed",
-      rating: 0,
-    };
+  const newTeamRow = await joinTournament(tournament.id, teamData, user.id);
 
-    setTournament((t) => ({ ...t, teams: [...t.teams, newTeam] }));
-    setJoinOpen(false);
-  };
+  setTournament((t) => ({
+    ...t,
+    teams: [...t.teams, {
+      id: newTeamRow.id, name: newTeamRow.name, captainId: user.id,
+      captainName: teamData.captainName, captainPhone: teamData.captainPhone, status: "confirmed", rating: 0,
+    }],
+  }));
+  setJoinOpen(false);
+};
 
   const fab = useMemo(() => {
     if (stage === "completed") return { label: "أنشئ بطولة جديدة", href: onCreateNew, tone: "gold" };

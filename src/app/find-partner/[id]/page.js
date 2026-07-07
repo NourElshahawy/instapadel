@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import PartnerRequestDetail from "@/components/pages/find-partner/PartnerRequestDetail";
 import { getPartnerRequestById } from "@/services/partnerRequestService";
-import { getCurrentUser } from "@/services/authService";
+import { createClient } from "@/lib/supabase/server";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -11,8 +11,11 @@ export async function generateMetadata({ params }) {
 
 export default async function PartnerRequestPage({ params }) {
   const { id } = await params;
-  const [request, currentUser] = await Promise.all([getPartnerRequestById(id), getCurrentUser()]);
+  const request = await getPartnerRequestById(id);
   if (!request) notFound();
 
-  return <PartnerRequestDetail initialRequest={request} currentUser={currentUser} />;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  return <PartnerRequestDetail initialRequest={request} currentUserId={user?.id} />;
 }

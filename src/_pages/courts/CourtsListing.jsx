@@ -10,33 +10,43 @@ import "@/styles/pages/courts.css";
 import ParallaxBg from "@/components/ui/ParallaxBg";
 
 const PAGE_SIZE = 6;
-const DEFAULT_FILTERS = { maxPrice: 300, minRating: 0 }; 
+const DEFAULT_FILTERS = { maxPrice: 300, minRating: 0 };
 
 export default function CourtsListing({ courts }) {
   console.log("courts received:", courts);
 
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const highestPrice = Math.max(...courts.map((c) => c.pricePerHour), 200);
+
+  const [filters, setFilters] = useState({
+    maxPrice: highestPrice,
+    minRating: 0,
+  });
   const [sortMode, setSortMode] = useState("recommended");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredCourts = useMemo(() => {
-    console.log("courts received:", courts);
     let list = courts.filter((c) => {
       const matchesPrice = c.pricePerHour <= filters.maxPrice;
       const matchesRating = c.rating >= filters.minRating;
       return matchesPrice && matchesRating;
     });
 
-    if (sortMode === "price-asc") list = [...list].sort((a, b) => a.pricePerHour - b.pricePerHour);
-    if (sortMode === "price-desc") list = [...list].sort((a, b) => b.pricePerHour - a.pricePerHour);
-    if (sortMode === "rating") list = [...list].sort((a, b) => b.rating - a.rating);
+    if (sortMode === "price-asc")
+      list = [...list].sort((a, b) => a.pricePerHour - b.pricePerHour);
+    if (sortMode === "price-desc")
+      list = [...list].sort((a, b) => b.pricePerHour - a.pricePerHour);
+    if (sortMode === "rating")
+      list = [...list].sort((a, b) => b.rating - a.rating);
 
     return list;
   }, [courts, filters, sortMode]);
 
   const totalPages = Math.max(1, Math.ceil(filteredCourts.length / PAGE_SIZE));
-  const paginatedCourts = filteredCourts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const paginatedCourts = filteredCourts.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
 
   const handleSetFilters = (updater) => {
     setFilters(updater);
@@ -49,43 +59,72 @@ export default function CourtsListing({ courts }) {
   };
 
   const clearAll = () => {
-    setFilters(DEFAULT_FILTERS);
+    setFilters({ maxPrice: highestPrice, minRating: 0 });
     setSortMode("recommended");
     setCurrentPage(1);
   };
 
   return (
     <>
-      <ListingHero titlehead="الملاعب" title="جميع ملاعب البادل في المنصورة" count={filteredCourts.length} />
+      <ListingHero
+        titlehead="الملاعب"
+        title="جميع ملاعب البادل في المنصورة"
+        count={filteredCourts.length}
+      />
 
       <section className="courts-section section" id="courts">
         <ParallaxBg image="/assets/imgs/courts-bg.png" />
         <div className="courts-overlay" />
         <div className="container">
-          <button className="filter-toggle-mobile mb-4" onClick={() => setIsFilterOpen((v) => !v)}>
+          <button
+            className="filter-toggle-mobile mb-4"
+            onClick={() => setIsFilterOpen((v) => !v)}
+          >
             <i className="fa-solid fa-sliders"></i>
             الفلترة
           </button>
 
           <div className="row g-4">
-            <FilterSidebar filters={filters} setFilters={handleSetFilters} onClear={clearAll} isOpen={isFilterOpen} />
+            <FilterSidebar
+              filters={filters}
+              setFilters={handleSetFilters}
+              onClear={clearAll}
+              isOpen={isFilterOpen}
+            />
 
             <div className="col-lg-9">
-              <ResultsToolbar count={filteredCourts.length} sortMode={sortMode} setSortMode={handleSetSort} />
+              <ResultsToolbar
+                count={filteredCourts.length}
+                sortMode={sortMode}
+                setSortMode={handleSetSort}
+              />
 
               {paginatedCourts.length > 0 ? (
                 <div className="row g-4">
                   {paginatedCourts.map((court, i) => (
-                    <div className="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay={(i % 3) * 60} key={court.id}>
+                    <div
+                      className="col-md-6 col-xl-4"
+                      data-aos="fade-up"
+                      data-aos-delay={(i % 3) * 60}
+                      key={court.id}
+                    >
                       <CourtCard court={court} />
                     </div>
                   ))}
                 </div>
               ) : (
-                <EmptyState title="لا توجد ملاعب تطابق هذه الفلترة" text="حاول توسيع نطاق السعر أو إلغاء أحد الفلاتر — يتم إضافة ملاعب جديدة إلى InstaPadel كل أسبوع." onClear={clearAll} />
+                <EmptyState
+                  title="لا توجد ملاعب تطابق هذه الفلترة"
+                  text="حاول توسيع نطاق السعر أو إلغاء أحد الفلاتر — يتم إضافة ملاعب جديدة إلى InstaPadel كل أسبوع."
+                  onClear={clearAll}
+                />
               )}
 
-              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
             </div>
           </div>
         </div>

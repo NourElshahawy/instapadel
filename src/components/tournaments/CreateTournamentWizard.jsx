@@ -1,6 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { createTournament } from "@/services/tournamentClient";
+
 import "@/styles/pages/tournament-wizard.css";
 
 const TEAM_OPTIONS = [4, 8, 16, 32];
@@ -22,7 +24,7 @@ const INITIAL_DATA = {
   registrationDeadline: "",
 };
 
-export default function CreateTournamentWizard({ courts = [], onSubmit }) {
+export default function CreateTournamentWizard({ courts = [], organizerId }) {
   const [step, setStep] = useState(1);
   const [data, setData] = useState(INITIAL_DATA);
   const [submitting, setSubmitting] = useState(false);
@@ -44,9 +46,8 @@ export default function CreateTournamentWizard({ courts = [], onSubmit }) {
   const handleSubmit = async () => {
     setSubmitting(true);
     setError(null);
-
     try {
-      const tournament = await onSubmit?.(data);
+      const tournament = await createTournament(data, organizerId);
       router.push(`/tournaments/${tournament.id}`);
     } catch (err) {
       setError("حصل خطأ أثناء إنشاء البطولة، حاول تاني.");

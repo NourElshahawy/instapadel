@@ -44,9 +44,9 @@ export default function PartnerRequestDetail({ initialRequest, currentUserId }) 
       <div className="container">
         <div className="breadcrumb-ph" data-aos="fade-up">
           <Link href="/">الرئيسية</Link>
-          <span className="material-symbols-rounded">chevron_right</span>
+          <i className="fa-solid fa-chevron-right"></i>
           <Link href="/find-partner">البحث عن شريك</Link>
-          <span className="material-symbols-rounded">chevron_right</span>
+          <i className="fa-solid fa-chevron-right"></i>
           <span>{request.courtName}</span>
         </div>
 

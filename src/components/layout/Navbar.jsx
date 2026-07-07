@@ -25,6 +25,8 @@ export default function Navbar() {
 
   const closeMenu = () => setIsOpen(false);
 
+  console.log("PROFILE IN NAVBAR:", profile);
+
   return (
     <header className={`navbar-ph ${isScrolled ? "is-scrolled" : ""}`}>
       <div className="container d-flex align-items-center justify-content-between">
@@ -75,7 +77,7 @@ export default function Navbar() {
           )}
           {!loading && user && (
             <div className="d-lg-none mt-3">
-              <ProfileMenu name={profile?.name} />
+              <ProfileMenu name={profile?.name} role={profile?.role} />
             </div>
           )}
         </nav>
@@ -83,7 +85,7 @@ export default function Navbar() {
         <div className="navbar-cta">
           {loading ? null : user ? (
             <div className="d-none d-lg-block">
-              <ProfileMenu name={profile?.name} />
+              <ProfileMenu name={profile?.name} role={profile?.role} />
             </div>
           ) : (
             <>

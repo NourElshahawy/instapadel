@@ -95,3 +95,15 @@
     width: 100%;
   }
 }
+
+.profile-menu-item--highlight {
+  color: var(--accent);
+  font-weight: 700;
+}
+.profile-menu-item--highlight i {
+  color: var(--accent);
+}
+.profile-menu-item--highlight:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}

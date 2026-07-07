@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "@/services/authClient";
 
-export default function ProfileMenu({ name }) {
+export default function ProfileMenu({ name, role }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
@@ -38,6 +38,13 @@ export default function ProfileMenu({ name }) {
             <span className="profile-menu-avatar">{initial}</span>
             <span className="profile-menu-name">{name || "مستخدم"}</span>
           </div>
+
+          {role === "owner" && (
+            <Link href="/owner/dashboard" className="profile-menu-item profile-menu-item--highlight" onClick={() => setOpen(false)}>
+              <i className="fa-solid fa-table-columns"></i> لوحة التحكم
+            </Link>
+          )}
+
           <Link href="/profile" className="profile-menu-item" onClick={() => setOpen(false)}>
             <i className="fa-solid fa-user"></i> الملف الشخصي
           </Link>

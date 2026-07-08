@@ -61,17 +61,18 @@ export default function BookingPage({ court }) {
     const dateLabel = selectedDay
       ? `${selectedDay.dow} ${selectedDay.dom} ${selectedDay.month}`
       : "";
-    return { total, time, duration, dateLabel };
+    const dateISO = selectedDay?.date || ""; // ← جديد: الـ ISO date جاي من court-details.json / الداتا الأصلية
+    return { total, time, duration, dateLabel, dateISO };
   }, [selectedSlots, selectedDay]);
 
   const daySlots = useMemo(() => {
     if (!subCourt || !selectedDay) return [];
 
     const bookedTimes = court.bookings
-      .filter((b) => b.court_id === subCourt.id && b.date === summary.dateLabel)
+      .filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date) // مقارنة ISO بـ ISO مباشرة
       .map((b) => b.time);
 
-    return buildDefaultSlots(court.pricePerHour).map((slot) => ({
+    return buildDefaultSlots(subCourt.pricePerHour).map((slot) => ({
       ...slot,
       status: bookedTimes.some((t) => t.includes(slot.start))
         ? "booked"
@@ -82,47 +83,48 @@ export default function BookingPage({ court }) {
   const canBook = !!subCourt && !!selectedDay && selectedSlots.length > 0;
 
   const handleConfirm = async () => {
-    setConfirming(true);
+  setConfirming(true);
 
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) {
-      router.push("/login");
-      return;
-    }
+  if (!user) {
+    router.push("/login");
+    return;
+  }
 
-    const { data: bookingRow, error } = await supabase
-      .from("bookings")
-      .insert({
-        user_id: user.id,
-        court_id: subCourt.id,
-        venue_name: court.name,
-        court_name: subCourt.name,
-        date: summary.dateLabel,
-        time: summary.time,
-        price: summary.total,
-      })
-      .select()
-      .single();
+  const { data: bookingRow, error } = await supabase.from("bookings").insert({
+    user_id: user.id,
+    court_id: subCourt.id,
+    venue_name: court.name,
+    court_name: subCourt.name,
+    date: summary.dateISO,      // ← ISO دلوقتي بدل النص العربي
+    time: summary.time,
+    price: summary.total,
+  }).select().single();
 
-    if (error) {
-      setConfirming(false);
-      alert("حصل خطأ أثناء الحجز، حاول تاني");
-      return;
-    }
+  if (error) {
+    setConfirming(false);
+    alert("حصل خطأ أثناء الحجز، حاول تاني");
+    return;
+  }
 
-    setSheetOpen(false);
-    setShowToast(true);
+  setSheetOpen(false);
+  setShowToast(true);
 
-    setTimeout(() => {
-      router.push(
-        `/booking/${court.slug}/confirmation?bookingId=${bookingRow.id}`,
-      );
-    }, 1400);
-  };
+  const params = new URLSearchParams({
+    court: court.name,
+    subCourt: subCourt.name,
+    date: summary.dateLabel, // في صفحة التأكيد نعرض بالعربي زي ما هو
+    time: summary.time,
+    price: String(summary.total),
+  });
+
+  setTimeout(() => {
+    router.push(`/booking/${court.slug}/confirmation?${params.toString()}`);
+  }, 1400);
+};
+
 
   return (
     <>
@@ -153,7 +155,7 @@ export default function BookingPage({ court }) {
         />
 
         <SlotsGrid
-          slots={court.slots || []}
+          slots={daySlots}
           selectedTimes={selectedSlots.map((s) => s.start)}
           onToggle={handleToggleSlot}
           locked={!subCourt || !selectedDay}

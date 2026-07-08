@@ -1,6 +1,9 @@
 export default function SlotsGrid({ slots, selectedTimes, onToggle, locked }) {
   return (
-    <section className={`booking-slots ${locked ? "section-locked" : ""}`} data-requires="اليوم">
+    <section
+      className={`booking-slots ${locked ? "section-locked" : ""}`}
+      data-requires="اليوم"
+    >
       <div className="section-title">
         <h2>اختر الموعد المناسب</h2>
         <span>اضغط لاختيار الموعد</span>
@@ -26,7 +29,13 @@ export default function SlotsGrid({ slots, selectedTimes, onToggle, locked }) {
           const isSelected = selectedTimes.includes(slot.start);
 
           return (
-            <button key={slot.start} type="button" className={`slot-card ${isBooked ? "booked" : "available"} ${isSelected ? "selected" : ""}`} disabled={isBooked} onClick={() => onToggle(slot)}>
+            <button
+              key={slot.start}
+              type="button"
+              className={`slot-card ${isBooked ? "booked" : "available"} ${isSelected ? "selected" : ""}`}
+              disabled={isBooked}
+              onClick={() => onToggle(slot)}
+            >
               <span className="slot-status" />
               {isSelected && (
                 <span className="slot-check">

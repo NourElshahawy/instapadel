@@ -7,12 +7,12 @@ export default function TournamentsSection({ tournaments }) {
   return (
     <div className="profile-section">
       <h2>
-        <span className="material-symbols-rounded">emoji_events</span> بطولاتي
+        <i className="fa-solid fa-trophy"></i> بطولاتي
       </h2>
 
       {tournaments.length === 0 ? (
         <div className="profile-empty-card">
-          <span className="material-symbols-rounded">emoji_events</span>
+          <i className="fa-solid fa-trophy"></i>
           لسه معملتش ولا اشتركتش في أي بطولة.{" "}
           <Link href="/tournaments" className="auth-link">
             اكتشف البطولات

@@ -1,4 +1,8 @@
-export default function CourtGallerySelector({ subCourts, selectedId, onSelect }) {
+export default function CourtGallerySelector({
+  subCourts,
+  selectedId,
+  onSelect,
+}) {
   return (
     <section className="court-gallery">
       <div className="section-title">
@@ -12,11 +16,15 @@ export default function CourtGallerySelector({ subCourts, selectedId, onSelect }
       <div className="row g-4">
         {subCourts.map((sc) => (
           <div className="col-md-6" key={sc.id}>
-            <div className={`img-details ${selectedId === sc.id ? "court-selected" : ""}`} onClick={() => onSelect(sc)}>
+            <div
+              className={`img-details ${selectedId === sc.id ? "court-selected" : ""}`}
+              onClick={() => onSelect(sc)}
+            >
               <img src={sc.image} alt="" />
               <div className="hero-details">
                 <span className="court-number">
-                  <i className="fa-solid fa-table-tennis-paddle-ball" /> ملعب {sc.id}
+                  <i className="fa-solid fa-table-tennis-paddle-ball" /> ملعب{" "}
+                  {sc.id.slice(0, 4)}
                 </span>
                 <h2>{sc.name}</h2>
                 <p>{sc.description}</p>
@@ -27,6 +35,16 @@ export default function CourtGallerySelector({ subCourts, selectedId, onSelect }
                     </span>
                   ))}
                 </div>
+                <p
+                  style={{
+                    marginTop: 10,
+                    color: "var(--accent)",
+                    fontWeight: 700,
+                    fontSize: ".9rem",
+                  }}
+                >
+                  {sc.pricePerHour} جنيه / ساعة
+                </p>
               </div>
             </div>
           </div>

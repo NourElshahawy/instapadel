@@ -128,9 +128,7 @@ export default function LoginForm() {
               />
               تذكرني
             </label>
-            <Link href="/forgot-password" className="auth-link">
-              نسيت كلمة المرور؟
-            </Link>
+            <Link href="/forgot-password" className="auth-link">نسيت كلمة المرور؟</Link>
           </div>
 
           <button

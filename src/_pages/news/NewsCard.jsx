@@ -2,7 +2,6 @@ import Link from "next/link";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 export default function NewsCard({ article }) {
-  console.log(article.slug);
   return (
     <Link href={`/news/${article.slug}`} className="news-card">
       <div className="news-card-media">

@@ -6,12 +6,12 @@ export default function PartnerRequestsSection({ requests }) {
   return (
     <div className="profile-section">
       <h2>
-        <span className="material-symbols-rounded">group_add</span> طلبات البحث عن شريك
+        <i className="fa-solid fa-user-plus"></i> طلبات البحث عن شريك
       </h2>
 
       {requests.length === 0 ? (
         <div className="profile-empty-card">
-          <span className="material-symbols-rounded">group_off</span>
+          <i className="fa-solid fa-user-xmark"></i>
           لسه معملتش ولا اشتركتش في أي طلب.{" "}
           <Link href="/find-partner" className="auth-link">
             دور على شريك

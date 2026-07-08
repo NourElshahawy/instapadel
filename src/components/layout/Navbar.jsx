@@ -25,7 +25,6 @@ export default function Navbar() {
 
   const closeMenu = () => setIsOpen(false);
 
-  console.log("PROFILE IN NAVBAR:", profile);
 
   return (
     <header className={`navbar-ph ${isScrolled ? "is-scrolled" : ""}`}>

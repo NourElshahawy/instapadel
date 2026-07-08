@@ -13,7 +13,6 @@ const PAGE_SIZE = 6;
 const DEFAULT_FILTERS = { maxPrice: 300, minRating: 0 };
 
 export default function CourtsListing({ courts }) {
-  console.log("courts received:", courts);
 
   const highestPrice = Math.max(...courts.map((c) => c.pricePerHour), 200);
 

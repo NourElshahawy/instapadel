@@ -18,7 +18,7 @@ export default function CourtCard({ court }) {
         </span>
         <ImageWithFallback src={court.image} alt={`${court.name} court`} />
         <span className="court-price-tag">
-          {court.pricePerHour} جنية <span>/ ساعة</span>
+          {court.priceRangeLabel} جنية <span>/ ساعة</span>
         </span>
       </div>
 
@@ -26,7 +26,12 @@ export default function CourtCard({ court }) {
         <h3 className="court-name">{court.name}</h3>
 
         {court.locationLink ? (
-          <a href={court.locationLink} target="_blank" rel="noreferrer" className="court-loc-inline">
+          <a
+            href={court.locationLink}
+            target="_blank"
+            rel="noreferrer"
+            className="court-loc-inline"
+          >
             <i className="fa-solid fa-location-dot" /> {court.location}
           </a>
         ) : (
@@ -52,12 +57,26 @@ export default function CourtCard({ court }) {
 
         <div>
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <span style={{ fontSize: "0.78rem", color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.05em" }}>المواعيد المتاحة اليوم</span>
-            <span style={{ fontSize: "0.72rem", color: "var(--text-faint)" }}>{label}</span>
+            <span
+              style={{
+                fontSize: "0.78rem",
+                color: "var(--text-faint)",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              المواعيد المتاحة اليوم
+            </span>
+            <span style={{ fontSize: "0.72rem", color: "var(--text-faint)" }}>
+              {label}
+            </span>
           </div>
           <div className="slot-row">
             {slots.map((s) => (
-              <span key={s.time} className={`slot-chip ${s.taken ? "is-taken" : ""} ${s.leaving ? "is-leaving" : ""}`}>
+              <span
+                key={s.time}
+                className={`slot-chip ${s.taken ? "is-taken" : ""} ${s.leaving ? "is-leaving" : ""}`}
+              >
                 {s.time}
               </span>
             ))}
@@ -65,7 +84,10 @@ export default function CourtCard({ court }) {
         </div>
 
         <div className="court-foot">
-          <Link href={`/booking/${court.slug}`} className="btn btn-accent btn-sm btn-block">
+          <Link
+            href={`/booking/${court.slug}`}
+            className="btn btn-accent btn-sm btn-block"
+          >
             احجز الان
           </Link>
         </div>

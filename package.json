@@ -34,6 +34,7 @@
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.7.0",
     "recharts": "^3.9.2",
+    "resend": "^6.17.2",
     "sass": "^1.101.0",
     "swiper": "^14.0.1",
     "tailwind-merge": "^3.6.0"

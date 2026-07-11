@@ -69,7 +69,16 @@ export default function InstaPayBlock({ amount, bookingId, isPaid, onMarkPaid })
         </button>
       </div>
 
-      <button className="btn btn-accent btn-block" onClick={onMarkPaid}>
+      <button
+        className="btn btn-accent btn-block"
+        onClick={async () => {
+          onMarkPaid();
+          fetch("/api/notifications/payment-received", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: userEmail, userName, venueName, price: amount, bookingId }),
+          }).catch(() => {});
+        }}>
         لقد قمت بإرسال الدفع
       </button>
 

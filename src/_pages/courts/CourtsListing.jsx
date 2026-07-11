@@ -12,8 +12,7 @@ import ParallaxBg from "@/components/ui/ParallaxBg";
 const PAGE_SIZE = 6;
 const DEFAULT_FILTERS = { maxPrice: 300, minRating: 0 };
 
-export default function CourtsListing({ courts }) {
-
+export default function CourtsListing({ courts , searchFilters }) {
   const highestPrice = Math.max(...courts.map((c) => c.pricePerHour), 200);
 
   const [filters, setFilters] = useState({
@@ -31,21 +30,15 @@ export default function CourtsListing({ courts }) {
       return matchesPrice && matchesRating;
     });
 
-    if (sortMode === "price-asc")
-      list = [...list].sort((a, b) => a.pricePerHour - b.pricePerHour);
-    if (sortMode === "price-desc")
-      list = [...list].sort((a, b) => b.pricePerHour - a.pricePerHour);
-    if (sortMode === "rating")
-      list = [...list].sort((a, b) => b.rating - a.rating);
+    if (sortMode === "price-asc") list = [...list].sort((a, b) => a.pricePerHour - b.pricePerHour);
+    if (sortMode === "price-desc") list = [...list].sort((a, b) => b.pricePerHour - a.pricePerHour);
+    if (sortMode === "rating") list = [...list].sort((a, b) => b.rating - a.rating);
 
     return list;
   }, [courts, filters, sortMode]);
 
   const totalPages = Math.max(1, Math.ceil(filteredCourts.length / PAGE_SIZE));
-  const paginatedCourts = filteredCourts.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
-  );
+  const paginatedCourts = filteredCourts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const handleSetFilters = (updater) => {
     setFilters(updater);
@@ -63,67 +56,57 @@ export default function CourtsListing({ courts }) {
     setCurrentPage(1);
   };
 
+  const PERIOD_LABELS = { morning: "الصبح", afternoon: "بعد الظهر", evening: "مساءً", night: "ليلاً" };
+
   return (
     <>
-      <ListingHero
-        titlehead="الملاعب"
-        title="جميع ملاعب البادل في المنصورة"
-        count={filteredCourts.length}
-      />
+      <ListingHero title="جميع ملاعب البادل في المنصورة" count={filteredCourts.length} />
+
+      {searchFilters?.date && (
+        <div className="container" style={{ marginTop: -20, marginBottom: 20 }}>
+          <div
+            style={{
+              background: "var(--accent-soft)",
+              border: "1px solid rgba(0,214,143,.3)",
+              borderRadius: "var(--r-md)",
+              padding: "12px 18px",
+              fontSize: ".88rem",
+              color: "var(--white)",
+            }}>
+            🔍 بتشوف الملاعب المتاحة يوم <b>{new Date(searchFilters.date).toLocaleDateString("ar-EG", { day: "numeric", month: "long" })}</b>
+            {searchFilters.time && ` ، ${PERIOD_LABELS[searchFilters.time] || searchFilters.time}`}
+          </div>
+        </div>
+      )}
 
       <section className="courts-section section" id="courts">
         <ParallaxBg image="/assets/imgs/courts-bg.png" />
         <div className="courts-overlay" />
         <div className="container">
-          <button
-            className="filter-toggle-mobile mb-4"
-            onClick={() => setIsFilterOpen((v) => !v)}
-          >
+          <button className="filter-toggle-mobile mb-4" onClick={() => setIsFilterOpen((v) => !v)}>
             <i className="fa-solid fa-sliders"></i>
             الفلترة
           </button>
 
           <div className="row g-4">
-            <FilterSidebar
-              filters={filters}
-              setFilters={handleSetFilters}
-              onClear={clearAll}
-              isOpen={isFilterOpen}
-            />
+            <FilterSidebar filters={filters} setFilters={handleSetFilters} onClear={clearAll} isOpen={isFilterOpen} />
 
             <div className="col-lg-9">
-              <ResultsToolbar
-                count={filteredCourts.length}
-                sortMode={sortMode}
-                setSortMode={handleSetSort}
-              />
+              <ResultsToolbar count={filteredCourts.length} sortMode={sortMode} setSortMode={handleSetSort} />
 
               {paginatedCourts.length > 0 ? (
                 <div className="row g-4">
                   {paginatedCourts.map((court, i) => (
-                    <div
-                      className="col-md-6 col-xl-4"
-                      data-aos="fade-up"
-                      data-aos-delay={(i % 3) * 60}
-                      key={court.id}
-                    >
+                    <div className="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay={(i % 3) * 60} key={court.id}>
                       <CourtCard court={court} />
                     </div>
                   ))}
                 </div>
               ) : (
-                <EmptyState
-                  title="لا توجد ملاعب تطابق هذه الفلترة"
-                  text="حاول توسيع نطاق السعر أو إلغاء أحد الفلاتر — يتم إضافة ملاعب جديدة إلى InstaPadel كل أسبوع."
-                  onClear={clearAll}
-                />
+                <EmptyState title="لا توجد ملاعب تطابق هذه الفلترة" text="حاول توسيع نطاق السعر أو إلغاء أحد الفلاتر — يتم إضافة ملاعب جديدة إلى InstaPadel كل أسبوع." onClear={clearAll} />
               )}
 
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
             </div>
           </div>
         </div>

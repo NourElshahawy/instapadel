@@ -23,7 +23,19 @@ export default function BookingsTable({ initialBookings }) {
   };
 
   const columns = [
-    columnHelper.accessor("customerName", { header: "العميل" }),
+    columnHelper.accessor("customerName", {
+      header: "العميل",
+      cell: (info) => {
+        const b = info.row.original;
+        return (
+          <div>
+            <div style={{ fontWeight: 600 }}>{info.getValue()}</div>
+            <div style={{ fontSize: ".72rem", color: "#94a3b8" }}>{b.customerPhone || "—"}</div>
+            <div style={{ fontSize: ".72rem", color: "#94a3b8" }}>{b.customerEmail || "—"}</div>
+          </div>
+        );
+      },
+    }),
     columnHelper.accessor("courtName", { header: "الملعب" }),
     columnHelper.accessor("date", { header: "التاريخ" }),
     columnHelper.accessor("time", { header: "الوقت" }),

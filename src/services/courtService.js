@@ -1,21 +1,24 @@
 import { createClient } from "@/lib/supabase/server";
-import { buildNextSevenDays, buildDefaultSlots } from "./courtLogic";
+import { buildNextSevenDays, buildDefaultSlots, TIME_PERIODS } from "./courtLogic";
 
-export async function getAllCourts() {
+
+export async function getAllCourts({ date, time } = {}) {
   const supabase = await createClient();
 
   const { data: venues, error } = await supabase
     .from("venues")
-    .select(`
+    .select(
+      `
       id, name, address, phone, description, amenities,
       courts (id, name, type, price_per_hour, images)
-    `)
+    `,
+    )
     .eq("status", "approved");
 
   if (error) throw error;
 
-  // نجيب عدد الحجوزات الحقيقي لكل الـ courts دفعة واحدة (أسرع من query لكل ملعب لوحده)
   const allCourtIds = venues.flatMap((v) => v.courts.map((c) => c.id));
+
   const { data: bookingCounts } = await supabase
     .from("bookings")
     .select("court_id")
@@ -27,14 +30,36 @@ export async function getAllCourts() {
     countByCourtId[b.court_id] = (countByCourtId[b.court_id] || 0) + 1;
   });
 
-  // كل صف دلوقتي = venue كاملة (مش court لوحده)
+  // لو فيه فلتر تاريخ/فترة، نجيب الحجوزات بتاعة اليوم ده بس عشان نفحص التوفر
+  let bookingsForDate = [];
+  if (date) {
+    const { data } = await supabase
+      .from("bookings")
+      .select("court_id, time")
+      .in("court_id", allCourtIds.length ? allCourtIds : ["00000000-0000-0000-0000-000000000000"])
+      .eq("date", date)
+      .eq("status", "confirmed");
+    bookingsForDate = data || [];
+  }
+
+  const periodSlots = time && TIME_PERIODS[time] ? TIME_PERIODS[time] : null;
+
   return venues
     .filter((v) => v.courts.length > 0)
+    .filter((venue) => {
+      if (!date || !periodSlots) return true; // مفيش فلتر، اعرض الكل
+
+      // هل فيه ملعب فرعي واحد على الأقل فاضي في أي سلوت من الفترة المطلوبة؟
+      return venue.courts.some((court) => {
+        const bookedTimesForCourt = bookingsForDate.filter((b) => b.court_id === court.id).map((b) => b.time);
+
+        return periodSlots.some((slot) => !bookedTimesForCourt.some((bt) => bt.includes(slot)));
+      });
+    })
     .map((venue) => {
       const prices = venue.courts.map((c) => c.price_per_hour);
       const minPrice = Math.min(...prices);
       const maxPrice = Math.max(...prices);
-
       const totalBookings = venue.courts.reduce((sum, c) => sum + (countByCourtId[c.id] || 0), 0);
 
       return {
@@ -46,8 +71,8 @@ export async function getAllCourts() {
         location: venue.address,
         locationLink: null,
         isLive: true,
-        rating: 4.7, // TODO: من جدول reviews لما نعمله
-        pricePerHour: minPrice, // للفلترة/الترتيب بالسعر الأقل
+        rating: 4.7,
+        pricePerHour: minPrice,
         priceRangeLabel: minPrice === maxPrice ? `${minPrice}` : `${minPrice}-${maxPrice}`,
         courtsCount: venue.courts.length,
         bookingsCount: formatBookingsCount(totalBookings),
@@ -63,11 +88,7 @@ export async function getCourtDetails(slug) {
   if (!court) return null;
 
   const supabase = await createClient();
-  const { data: venue } = await supabase
-    .from("venues")
-    .select("*, courts(*)")
-    .eq("id", court.venueId)
-    .single();
+  const { data: venue } = await supabase.from("venues").select("*, courts(*)").eq("id", court.venueId).single();
 
   const courtIds = (venue?.courts || []).map((c) => c.id);
   const { data: bookings } = await supabase
@@ -75,7 +96,6 @@ export async function getCourtDetails(slug) {
     .select("court_id, date, time")
     .in("court_id", courtIds.length ? courtIds : ["00000000-0000-0000-0000-000000000000"])
     .eq("status", "confirmed");
-
 
   return {
     ...court,
@@ -103,7 +123,11 @@ function formatBookingsCount(count) {
 }
 
 function slugify(str) {
-  return str.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
 }
 
 function amenityIcon(key) {

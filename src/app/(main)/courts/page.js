@@ -6,7 +6,9 @@ export const metadata = {
   description: "قارن كل ملاعب البادل في المنصورة، الأسعار، والمواعيد المتاحة فورًا.",
 };
 
-export default async function CourtsPage() {
-  const courts = (await getAllCourts()) ?? [];
-  return <CourtsListing courts={courts} />;
+export default async function CourtsPage({ searchParams }) {
+  const sp = await searchParams;
+  const courts = await getAllCourts({ date: sp.date, time: sp.time });
+
+  return <CourtsListing courts={courts} searchFilters={{ date: sp.date, time: sp.time }} />;
 }

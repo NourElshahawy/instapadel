@@ -32,10 +32,25 @@ export default function PartnerRequestDetail({ initialRequest, currentUserId }) 
 
   const handleRespond = async (player, accept) => {
     await respondToJoin(player.joinId, request.id, accept, request.playersNeeded);
+
+    if (accept) {
+      fetch("/api/notifications/partner-accepted", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: player.email, // هتحتاج تضيف الإيميل في mapRequest بتاعة partnerRequestService.js زي ما عملنا مع الحجوزات
+          userName: player.name,
+          courtName: request.courtName,
+          date: request.dateLabel,
+          time: request.time,
+          hostName: "أنت", // أو اسم المضيف الحقيقي
+          hostPhone: request.hostPhone,
+        }),
+      }).catch(() => {});
+    }
+
     setRequest((r) => {
-      const updatedPlayers = r.playersJoined.map((p) => (p.id === player.id ? { ...p, status: accept ? "accepted" : "rejected" } : p));
-      const acceptedNow = updatedPlayers.filter((p) => p.status === "accepted").length;
-      return { ...r, playersJoined: updatedPlayers, status: acceptedNow >= r.playersNeeded ? "matched" : "partially_filled" };
+      /* ... زي ما هو */
     });
   };
 

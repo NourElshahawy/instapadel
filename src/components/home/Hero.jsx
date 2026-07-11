@@ -78,6 +78,7 @@ export default function Hero() {
                 <i className="fa-solid fa-angle-down"></i>
                 <select ref={timeRef} defaultValue="">
                   <option value="">أي وقت</option>
+                  <option value="morning">الصبح </option>
                   <option value="afternoon">بعد الظهر</option>
                   <option value="evening">مساءً</option>
                   <option value="night">ليلاً</option>

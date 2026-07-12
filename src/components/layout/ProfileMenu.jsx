@@ -45,6 +45,12 @@ export default function ProfileMenu({ name, role }) {
             </Link>
           )}
 
+          {role === "admin" && (
+            <Link href="/admin/dashboard" className="profile-menu-item profile-menu-item--highlight" onClick={() => setOpen(false)}>
+              <i className="fa-solid fa-user-shield"></i>لوحة الإدارة
+            </Link>
+          )}
+
           <Link href="/profile" className="profile-menu-item" onClick={() => setOpen(false)}>
             <i className="fa-solid fa-user"></i> الملف الشخصي
           </Link>

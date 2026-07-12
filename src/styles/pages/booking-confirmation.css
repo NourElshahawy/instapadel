@@ -628,3 +628,63 @@
         text-align: center;
     }
 }
+
+
+.payment-method-choice {
+    margin-top: 16px;
+}
+
+.payment-method-options {
+    display: flex;
+    gap: 10px;
+}
+
+.payment-method-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 18px 12px;
+    border-radius: var(--r-md);
+    border: 1.5px solid var(--border-glass);
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+    font-size: .84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .25s var(--ease);
+}
+
+.payment-method-card:hover {
+    border-color: var(--accent);
+    color: var(--white);
+    background: var(--accent-soft);
+}
+
+.payment-method-card i {
+    font-size: 24px;
+    color: var(--accent);
+}
+
+.onsite-payment-block {
+    margin-top: 16px;
+    text-align: center;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--r-md);
+    padding: 20px;
+}
+
+.payment-method-back {
+    background: none;
+    border: none;
+    color: var(--text-faint);
+    font-size: .8rem;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.payment-method-back:hover {
+    color: var(--white);
+}

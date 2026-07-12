@@ -62,7 +62,6 @@
 }
 
 .social-row a:hover {
-    background: var(--accent);
     border-color: var(--accent);
     color: #04140e;
     transform: translateY(-3px);

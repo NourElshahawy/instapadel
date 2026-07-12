@@ -8,7 +8,7 @@ export const metadata = {
 
 export default async function CourtsPage({ searchParams }) {
   const sp = await searchParams;
-  const courts = await getAllCourts({ date: sp.date, time: sp.time });
+  const courts = await getAllCourts({ date: sp.date });
 
-  return <CourtsListing courts={courts} searchFilters={{ date: sp.date, time: sp.time }} />;
+  return <CourtsListing courts={courts} searchFilters={{ date: sp.date }} />;
 }

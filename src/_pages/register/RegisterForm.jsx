@@ -75,7 +75,10 @@ export default function RegisterForm() {
         <div className="auth-card" style={{ textAlign: "center" }}>
           <i className="fa-solid fa-envelope-open-text" style={{ fontSize: 48, color: "var(--accent)" }}></i>
           <h1 style={{ marginTop: 16 }}>تأكد من إيميلك</h1>
-          <p className="auth-sub">بعتنالك رابط تفعيل على {form.email} — افتحه عشان تكمّل تسجيل حسابك.</p>
+          <p className="auth-sub">
+            بعتنالك رابط تفعيل على <b>{form.email}</b> — لازم تفتحه الأول عشان تقدر تسجل دخول.
+          </p>
+          <p style={{ fontSize: ".82rem", color: "var(--text-faint)", marginTop: 16 }}>مش لاقي الإيميل؟ تأكد من مجلد Spam.</p>
         </div>
       </div>
     );

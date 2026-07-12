@@ -26,18 +26,13 @@ export default function CourtCard({ court }) {
         <h3 className="court-name">{court.name}</h3>
 
         {court.locationLink ? (
-          <a
-            href={court.locationLink}
-            target="_blank"
-            rel="noreferrer"
-            className="court-loc-inline"
-          >
+          <a href={court.locationLink} target="_blank" rel="noreferrer" className="court-loc-inline">
             <i className="fa-solid fa-location-dot" /> {court.location}
           </a>
         ) : (
-          <span className="court-loc">
+          <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(court.location)}`} target="_blank" rel="noopener noreferrer" className="court-loc">
             <i className="fa-solid fa-location-dot"></i> {court.location}
-          </span>
+          </a>
         )}
 
         <div className="court-stats">
@@ -63,20 +58,14 @@ export default function CourtCard({ court }) {
                 color: "var(--text-faint)",
                 textTransform: "uppercase",
                 letterSpacing: "0.05em",
-              }}
-            >
+              }}>
               المواعيد المتاحة اليوم
             </span>
-            <span style={{ fontSize: "0.72rem", color: "var(--text-faint)" }}>
-              {label}
-            </span>
+            <span style={{ fontSize: "0.72rem", color: "var(--text-faint)" }}>{label}</span>
           </div>
           <div className="slot-row">
             {slots.map((s) => (
-              <span
-                key={s.time}
-                className={`slot-chip ${s.taken ? "is-taken" : ""} ${s.leaving ? "is-leaving" : ""}`}
-              >
+              <span key={s.time} className={`slot-chip ${s.taken ? "is-taken" : ""} ${s.leaving ? "is-leaving" : ""}`}>
                 {s.time}
               </span>
             ))}
@@ -84,10 +73,7 @@ export default function CourtCard({ court }) {
         </div>
 
         <div className="court-foot">
-          <Link
-            href={`/booking/${court.slug}`}
-            className="btn btn-accent btn-sm btn-block"
-          >
+          <Link href={`/booking/${court.slug}`} className="btn btn-accent btn-sm btn-block">
             احجز الان
           </Link>
         </div>

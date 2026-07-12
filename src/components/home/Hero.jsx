@@ -7,16 +7,21 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import TimePeriodChips from "./TimePeriodChips";
 
+function getTodayISO() {
+  const d = new Date();
+  const offset = d.getTimezoneOffset();
+  const local = new Date(d.getTime() - offset * 60000);
+  return local.toISOString().split("T")[0];
+}
 export default function Hero() {
   const router = useRouter();
   const dateRef = useRef(null);
-  const [timePeriod, setTimePeriod] = useState("");
+  // const [timePeriod, setTimePeriod] = useState("");
 
   const goToCourts = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
     if (dateRef.current?.value) params.set("date", dateRef.current.value);
-    if (timePeriod) params.set("time", timePeriod);
     const qs = params.toString();
     router.push(`/courts${qs ? `?${qs}` : ""}`);
   };
@@ -32,7 +37,7 @@ export default function Hero() {
       <div className="container hero-content">
         <span className="hero-badge" data-aos="fade-up">
           <Image src="/assets/imgs/logo.png" className="pulse-img" alt="" width={20} height={20} />
-          إمكانية الوصول المباشر إلى أكثر من 10 ملاعب في المنصورة
+          إمكانية الوصول المباشر إلى أكثر من 10 ملاعب
         </span>
 
         <h1 data-aos="fade-up" data-aos-delay="80">
@@ -57,19 +62,12 @@ export default function Hero() {
             ابحث عن ملعب متاح دلوقتي
           </div>
 
-          <div className="search-field-block">
-            <label>
-              <i className="fa-regular fa-clock"></i> الوقت
-            </label>
-            <TimePeriodChips value={timePeriod} onChange={setTimePeriod} />
-          </div>
-
-          <div className="search-grid" style={{ marginTop: 14 }}>
+          <div className="search-grid">
             <div className="search-field">
               <label>
                 <i className="fa-solid fa-calendar-days" /> التاريخ
               </label>
-              <input type="date" ref={dateRef} />
+              <input type="date" ref={dateRef} defaultValue={getTodayISO()} />
             </div>
 
             <a href="/courts" className="search-submit" onClick={goToCourts}>

@@ -1,9 +1,35 @@
+"use client";
+import { useState } from "react";
+import { cancelBooking } from "@/services/bookingClient";
+import DownloadReceiptButton from "../booking/confirmation/DownloadReceiptButton";
+// import DownloadReceiptButton from "./DownloadReceiptButton";
+
 export default function BookingSummarySidebar({ booking, isPaid }) {
+  const [cancelled, setCancelled] = useState(booking.status === "cancelled");
+  const [cancelling, setCancelling] = useState(false);
+
+  const handleCancel = async () => {
+    if (!confirm("متأكد إنك عايز تلغي الحجز ده؟")) return;
+    setCancelling(true);
+    try {
+      await cancelBooking(booking.id);
+      setCancelled(true);
+    } catch {
+      alert("حصل خطأ أثناء الإلغاء");
+    } finally {
+      setCancelling(false);
+    }
+  };
+
   const handleShare = async () => {
+    const shareText = `حجزي في ${booking.venueName} — ${booking.date}، ${booking.time}`;
     if (navigator.share) {
       try {
-        await navigator.share({ title: "InstaPadel", url: window.location.href });
+        await navigator.share({ title: "InstaPadel — تفاصيل الحجز", text: shareText, url: window.location.href });
       } catch {}
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(`${shareText}\n${window.location.href}`);
+      alert("تم نسخ رابط الحجز");
     }
   };
 
@@ -20,11 +46,6 @@ export default function BookingSummarySidebar({ booking, isPaid }) {
 
       <div className="summary-body">
         <h3 className="summary-venue-name">{booking.venueName}</h3>
-        {booking.locationLink && (
-          <a href={booking.locationLink} target="_blank" rel="noreferrer" className="court-loc-inline" style={{ marginBottom: 18, display: "flex" }}>
-            <i className="fa-solid fa-location-dot" /> {booking.location}
-          </a>
-        )}
 
         <div className="summary-rows">
           <div className="summary-row">
@@ -46,21 +67,28 @@ export default function BookingSummarySidebar({ booking, isPaid }) {
           <b>{booking.price} ج.م</b>
         </div>
 
-        <div className={`payment-status-badge ${isPaid ? "is-paid" : ""}`}>
-          <i className={`fa-solid ${isPaid ? "fa-circle-check" : "fa-clock"}`}></i>
-          <span>{isPaid ? "تم الدفع" : "في انتظار الدفع"}</span>
-        </div>
+        {cancelled ? (
+          <div className="payment-status-badge" style={{ background: "rgba(255,107,107,.1)", color: "#ff6b6b" }}>
+            <i className="fa-solid fa-circle-xmark"></i>
+            <span>تم إلغاء الحجز</span>
+          </div>
+        ) : (
+          <div className={`payment-status-badge ${isPaid ? "is-paid" : ""}`}>
+            <i className={`fa-solid ${isPaid ? "fa-circle-check" : "fa-clock"}`}></i>
+            <span>{isPaid ? "تم الدفع" : "في انتظار الدفع"}</span>
+          </div>
+        )}
 
         <div className="summary-actions">
-          <button className="summary-action-btn" type="button">
-            <i className="fa-solid fa-download"></i> تحميل الإيصال
-          </button>
+          <DownloadReceiptButton booking={booking} />
           <button className="summary-action-btn" type="button" onClick={handleShare}>
             <i className="fa-solid fa-share-nodes"></i> مشاركة الحجز
           </button>
-          <button className="summary-action-btn danger" type="button">
-            <i className="fa-solid fa-circle-xmark"></i> إلغاء الحجز
-          </button>
+          {!cancelled && (
+            <button className="summary-action-btn danger" type="button" onClick={handleCancel} disabled={cancelling}>
+              <i className="fa-solid fa-circle-xmark"></i> {cancelling ? "جاري الإلغاء…" : "إلغاء الحجز"}
+            </button>
+          )}
         </div>
       </div>
     </div>

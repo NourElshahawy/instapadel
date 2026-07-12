@@ -482,3 +482,23 @@
     font-size: .84rem;
     cursor: pointer;
 }
+
+
+.admin-search-bar {
+    margin-bottom: 20px;
+}
+
+.admin-search-input {
+    width: 100%;
+    max-width: 320px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--r-sm);
+    padding: 10px 14px;
+    color: var(--white);
+    font-size: .86rem;
+}
+
+.admin-search-input::placeholder {
+    color: var(--text-faint);
+}

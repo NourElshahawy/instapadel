@@ -1,4 +1,7 @@
-import InstaPayBlock from "./InstaPayBlock";
+// import InstaPayBlock from "./InstaPayBlock";
+// import PaymentMethodChoice from "./PaymentMethodChoice";
+
+import PaymentMethodChoice from "../booking/confirmation/PaymentMethodChoice";
 
 export default function StatusTracker({ booking, isPaid, onMarkPaid }) {
   return (
@@ -35,7 +38,7 @@ export default function StatusTracker({ booking, isPaid, onMarkPaid }) {
             <b>الدفع</b>
             <span>{isPaid ? "تم استلام الدفع" : "في انتظار الدفع عبر InstaPay"}</span>
             <span className="ts-time">{isPaid ? "الآن" : "—"}</span>
-            <InstaPayBlock amount={booking.price} bookingId={booking.id} isPaid={isPaid} onMarkPaid={onMarkPaid} />
+            <PaymentMethodChoice amount={booking.price} bookingId={booking.id} isPaid={isPaid} onMarkPaid={onMarkPaid} />
           </div>
         </div>
 

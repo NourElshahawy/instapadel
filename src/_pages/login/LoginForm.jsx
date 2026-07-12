@@ -30,18 +30,10 @@ export default function LoginForm() {
       });
 
       const supabase = createClient();
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role, owner_status")
-        .eq("id", user.id)
-        .single();
+      const { data: profile } = await supabase.from("profiles").select("role, owner_status").eq("id", user.id).single();
 
       if (profile?.role === "owner") {
-        router.push(
-          profile.owner_status === "approved"
-            ? "/owner/dashboard"
-            : "/owner/pending-approval",
-        );
+        router.push(profile.owner_status === "approved" ? "/owner/dashboard" : "/owner/pending-approval");
       } else if (profile?.role === "admin") {
         router.push("/admin/dashboard");
       } else {
@@ -49,7 +41,11 @@ export default function LoginForm() {
       }
       router.refresh();
     } catch (err) {
-      setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+      if (err.message?.includes("Email not confirmed")) {
+        setError("لازم تأكد إيميلك الأول من الرسالة اللي بعتناها لك وقت التسجيل.");
+      } else {
+        setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+      }
       setStatus("idle");
     }
   };

@@ -1,8 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
-import { buildNextSevenDays, buildDefaultSlots, TIME_PERIODS } from "./courtLogic";
+import { buildNextSevenDays, buildDefaultSlots } from "./courtLogic";
 
-
-export async function getAllCourts({ date, time } = {}) {
+export async function getAllCourts({ date } = {}) {
   const supabase = await createClient();
 
   const { data: venues, error } = await supabase
@@ -19,18 +18,16 @@ export async function getAllCourts({ date, time } = {}) {
 
   const allCourtIds = venues.flatMap((v) => v.courts.map((c) => c.id));
 
-  const { data: bookingCounts } = await supabase
-    .from("bookings")
-    .select("court_id")
-    .in("court_id", allCourtIds.length ? allCourtIds : ["00000000-0000-0000-0000-000000000000"])
-    .neq("status", "cancelled");
-
+  // العدد الحقيقي والموحّد لكل الناس عبر RPC (بدل الاعتماد على select مباشر بيتأثر بـ RLS)
   const countByCourtId = {};
-  (bookingCounts || []).forEach((b) => {
-    countByCourtId[b.court_id] = (countByCourtId[b.court_id] || 0) + 1;
-  });
+  await Promise.all(
+    allCourtIds.map(async (courtId) => {
+      const { data: count } = await supabase.rpc("get_court_booking_count", { target_court_id: courtId });
+      countByCourtId[courtId] = count || 0;
+    }),
+  );
 
-  // لو فيه فلتر تاريخ/فترة، نجيب الحجوزات بتاعة اليوم ده بس عشان نفحص التوفر
+  // فلترة حسب التاريخ لو موجود
   let bookingsForDate = [];
   if (date) {
     const { data } = await supabase
@@ -42,18 +39,13 @@ export async function getAllCourts({ date, time } = {}) {
     bookingsForDate = data || [];
   }
 
-  const periodSlots = time && TIME_PERIODS[time] ? TIME_PERIODS[time] : null;
-
   return venues
     .filter((v) => v.courts.length > 0)
     .filter((venue) => {
-      if (!date || !periodSlots) return true; // مفيش فلتر، اعرض الكل
-
-      // هل فيه ملعب فرعي واحد على الأقل فاضي في أي سلوت من الفترة المطلوبة؟
+      if (!date) return true;
       return venue.courts.some((court) => {
         const bookedTimesForCourt = bookingsForDate.filter((b) => b.court_id === court.id).map((b) => b.time);
-
-        return periodSlots.some((slot) => !bookedTimesForCourt.some((bt) => bt.includes(slot)));
+        return bookedTimesForCourt.length < 12;
       });
     })
     .map((venue) => {
@@ -80,6 +72,30 @@ export async function getAllCourts({ date, time } = {}) {
         todaySlots: [],
       };
     });
+}
+
+export async function getAllCourtsFlat() {
+  const supabase = await createClient();
+
+  const { data: venues, error } = await supabase.from("venues").select("id, name, address, courts(id, name, price_per_hour, images)").eq("status", "approved");
+
+  if (error) throw error;
+
+  return venues.flatMap((venue) =>
+    (venue.courts || []).map((court) => ({
+      id: court.id,
+      name: venue.courts.length > 1 ? `${venue.name} — ${court.name}` : venue.name,
+      image: court.images?.[0] || "/assets/imgs/img1.jpg",
+      location: venue.address,
+      rating: 4.7,
+    })),
+  );
+}
+
+export async function getFeaturedCourts() {
+  const courts = await getAllCourts();
+  const featured = courts.filter((c) => c.featured);
+  return featured.length > 0 ? featured : courts.slice(0, 3);
 }
 
 export async function getCourtDetails(slug) {
@@ -137,28 +153,4 @@ function amenityIcon(key) {
 function amenityLabel(key) {
   const map = { parking: "موقف سيارات", cafeteria: "كافتيريا", showers: "غرف تغيير", lockers: "خزائن", wifi: "واي فاي" };
   return map[key] || key;
-}
-
-export async function getFeaturedCourts() {
-  const courts = await getAllCourts();
-  const featured = courts.filter((c) => c.featured);
-  return featured.length > 0 ? featured : courts.slice(0, 3);
-}
-
-export async function getAllCourtsFlat() {
-  const supabase = await createClient();
-
-  const { data: venues, error } = await supabase.from("venues").select("id, name, address, courts(id, name, price_per_hour, images)").eq("status", "approved");
-
-  if (error) throw error;
-
-  return venues.flatMap((venue) =>
-    (venue.courts || []).map((court) => ({
-      id: court.id, // ← ده الـ court.id الحقيقي دلوقتي
-      name: venue.courts.length > 1 ? `${venue.name} — ${court.name}` : venue.name,
-      image: court.images?.[0] || "/assets/imgs/img1.jpg",
-      location: venue.address,
-      rating: 4.7,
-    })),
-  );
 }

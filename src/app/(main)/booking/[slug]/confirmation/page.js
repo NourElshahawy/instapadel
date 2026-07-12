@@ -1,6 +1,8 @@
-import BookingConfirmationPage from "@/components/pages/confirmation/BookingConfirmationPage";
+// import BookingConfirmationPage from "@/components/pages/booking/confirmation/";
 import { getCourtDetails } from "@/services/courtService";
+import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import BookingConfirmationPage from "@/components/pages/confirmation/BookingConfirmationPage";
 
 export const metadata = { title: "تأكيد الحجز — InstaPadel" };
 
@@ -19,9 +21,15 @@ export default async function ConfirmationPage({ params, searchParams }) {
   if (!court) notFound();
 
   const sp = await searchParams;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: bookingRow } = await supabase.from("bookings").select("status, payment_status").eq("id", sp.bookingId).maybeSingle();
 
   const booking = {
-    id: generateBookingId(),
+    id: sp.bookingId || generateBookingId(),
     venueName: sp.court || court.name,
     venueImage: court.coverImage || court.image,
     location: court.location,
@@ -30,8 +38,9 @@ export default async function ConfirmationPage({ params, searchParams }) {
     date: sp.date || "—",
     time: sp.time || "—",
     price: sp.price || court.pricePerHour,
-    email: "you@example.com", // TODO: تجيب من حساب اليوزر الفعلي بعد ما نظام تسجيل الدخول يشتغل
+    email: user?.email || "—",
     createdAt: "اليوم",
+    status: bookingRow?.status || "confirmed", // ← جديد
   };
 
   return <BookingConfirmationPage booking={booking} />;

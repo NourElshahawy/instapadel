@@ -5,6 +5,10 @@ import { tournamentInviteEmail } from "./email-templates/tournamentInvite";
 import { partnerRequestAcceptedEmail } from "./email-templates/partnerRequestAccepted";
 
 export async function sendBookingConfirmationEmail(to, data) {
+  if (!resend) {
+    console.warn("Resend not configured, skipping email");
+    return;
+  }
   try {
     await resend.emails.send({
       from: FROM_EMAIL,

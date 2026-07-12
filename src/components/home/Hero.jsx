@@ -1,21 +1,22 @@
 "use client";
-import { useRef } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import "../../styles/home/hero.css";
 import "../../styles/home/search.css";
 import ParallaxBg from "../ui/ParallaxBg";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import TimePeriodChips from "./TimePeriodChips";
 
 export default function Hero() {
   const router = useRouter();
   const dateRef = useRef(null);
-  const timeRef = useRef(null);
+  const [timePeriod, setTimePeriod] = useState("");
 
   const goToCourts = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
     if (dateRef.current?.value) params.set("date", dateRef.current.value);
-    if (timeRef.current?.value) params.set("time", timeRef.current.value);
+    if (timePeriod) params.set("time", timePeriod);
     const qs = params.toString();
     router.push(`/courts${qs ? `?${qs}` : ""}`);
   };
@@ -44,49 +45,35 @@ export default function Hero() {
           وفر وقتك في البحث والتواصل، واعثر على الملعب المناسب والمواعيد المتاحة فورًا.
         </p>
 
-        <div className="search-card" data-aos="fade-up" data-aos-delay="240">
-          <div className="search-card-label">
-            <span className="pulse-dot" />
-            ابحث عن ملعب متاح لبطولتك أو لمباراة ودية
-          </div>
-
-          {/* <div className="search-grid tournament-cta">
+        {/* <div className="search-grid tournament-cta">
             <Link href="/tournaments/create" className="search-submit ">
               <i className="fa-solid fa-trophy"></i>
               <span className="submit-text">إنشاء بطولة</span>
             </Link>
           </div> */}
-          <div className="search-grid">
+        <div className="search-card" data-aos="fade-up" data-aos-delay="240">
+          <div className="search-card-label">
+            <span className="pulse-dot" />
+            ابحث عن ملعب متاح دلوقتي
+          </div>
+
+          <div className="search-field-block">
+            <label>
+              <i className="fa-regular fa-clock"></i> الوقت
+            </label>
+            <TimePeriodChips value={timePeriod} onChange={setTimePeriod} />
+          </div>
+
+          <div className="search-grid" style={{ marginTop: 14 }}>
             <div className="search-field">
               <label>
-                <i className="fa-regular fa-calendar"></i>
-                التاريخ
+                <i className="fa-solid fa-calendar-days" /> التاريخ
               </label>
-              <div className="select-wrapper">
-                <input type="date" ref={dateRef} />
-              </div>
-            </div>
-
-            <div className="search-divider" />
-
-            <div className="search-field">
-              <label>
-                <i className="fa-regular fa-calendar-days"></i>
-                الوقت
-              </label>
-              <div className="select-wrapper">
-                <i className="fa-solid fa-angle-down"></i>
-                <select ref={timeRef} defaultValue="">
-                  <option value="">أي وقت</option>
-                  <option value="morning">الصبح </option>
-                  <option value="afternoon">بعد الظهر</option>
-                  <option value="evening">مساءً</option>
-                  <option value="night">ليلاً</option>
-                </select>
-              </div>
+              <input type="date" ref={dateRef} />
             </div>
 
             <a href="/courts" className="search-submit" onClick={goToCourts}>
+              <i className="fa-solid fa-table-tennis-paddle-ball submit-icon"></i>
               <span className="submit-text">دور على ملعب</span>
             </a>
           </div>

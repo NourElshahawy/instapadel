@@ -56,8 +56,7 @@ export default function CourtsListing({ courts , searchFilters }) {
     setCurrentPage(1);
   };
 
-  const PERIOD_LABELS = { morning: "الصبح", afternoon: "بعد الظهر", evening: "مساءً", night: "ليلاً" };
-
+const PERIOD_LABELS = { morning: "صباحًا", noon: "ظهرًا", afternoon: "عصرًا", evening: "مساءً", night: "ليلاً" };
   return (
     <>
       <ListingHero title="جميع ملاعب البادل في المنصورة" count={filteredCourts.length} />

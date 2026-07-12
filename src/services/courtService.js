@@ -144,3 +144,21 @@ export async function getFeaturedCourts() {
   const featured = courts.filter((c) => c.featured);
   return featured.length > 0 ? featured : courts.slice(0, 3);
 }
+
+export async function getAllCourtsFlat() {
+  const supabase = await createClient();
+
+  const { data: venues, error } = await supabase.from("venues").select("id, name, address, courts(id, name, price_per_hour, images)").eq("status", "approved");
+
+  if (error) throw error;
+
+  return venues.flatMap((venue) =>
+    (venue.courts || []).map((court) => ({
+      id: court.id, // ← ده الـ court.id الحقيقي دلوقتي
+      name: venue.courts.length > 1 ? `${venue.name} — ${court.name}` : venue.name,
+      image: court.images?.[0] || "/assets/imgs/img1.jpg",
+      location: venue.address,
+      rating: 4.7,
+    })),
+  );
+}

@@ -14,16 +14,28 @@ import ParallaxBg from "@/components/ui/ParallaxBg";
 const PAGE_SIZE = 6;
 
 export default function NewsListing({ news }) {
-  const featured = news.find((n) => n.featured) || news[0];
-  const restNews = news.filter((n) => n.id !== featured.id);
-
   const [category, setCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const safeNews = news || [];
+  const featured = safeNews[0];
+  const restNews = safeNews.filter((n) => n.id !== featured?.id);
 
   const filtered = useMemo(() => {
     if (category === "all") return restNews;
     return restNews.filter((n) => n.category === category);
   }, [restNews, category]);
+
+  if (safeNews.length === 0) {
+    return (
+      <section className="section" style={{ paddingTop: 140, textAlign: "center" }}>
+        <div className="container">
+          <h1>الأخبار والبطولات</h1>
+          <p style={{ color: "var(--text-muted)", marginTop: 12 }}>لسه مفيش أخبار — أول بطولة أو طلب شريك هيظهر هنا فورًا.</p>
+        </div>
+      </section>
+    );
+  }
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -35,14 +47,13 @@ export default function NewsListing({ news }) {
 
   return (
     <>
-      <ListingHero titlehead="الاخبار" title=" أخبار البادل في المنصورة" count={news.length} />
+      <ListingHero title="الأخبار والبطولات" count={news.length} breadcrumbLabel="الأخبار" />
 
       <section className="courts-section section" id="courts">
-        <ParallaxBg image="/assets/imgs/courts-bg.png" />
+        <ParallaxBg />
         <div className="courts-overlay" />
         <div className="container">
           <NewsFeatureBanner article={featured} />
-
           <NewsFilterTabs active={category} onChange={handleCategoryChange} />
 
           {paginated.length > 0 ? (

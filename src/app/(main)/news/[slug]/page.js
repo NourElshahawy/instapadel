@@ -3,34 +3,24 @@ import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import NewsArticleHeader from "@/_pages/news/NewsArticleHeader";
 import NewsArticleBody from "@/_pages/news/NewsArticleBody";
 import NewsArticleSidebar from "@/_pages/news/NewsArticleSidebar";
-import { getAllNews, getNewsBySlug } from "@/services/newsService";
+import { getAllNews, getNewsById } from "@/services/newsService";
 import "@/styles/pages/news.css";
 import Link from "next/link";
 
-export async function generateStaticParams() {
-  const news = await getAllNews();
-  return news.map((n) => ({ slug: n.slug }));
-}
 
-export async function generateMetadata(props) {
-  const params = await props.params;
-  const slug = params.slug;
 
-  const article = await getNewsBySlug(slug);
-
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const article = await getNewsById(slug);
   if (!article) return {};
-
-  return {
-    title: `${article.title} — InstaPadel`,
-    description: article.excerpt,
-  };
+  return { title: `${article.title} — InstaPadel`, description: article.excerpt };
 }
 
 export default async function NewsArticlePage(props) {
   const params = await props.params;
   const slug = params.slug;
 
-  const article = await getNewsBySlug(slug);
+  const article = await getNewsById(slug);
 
   if (!article) notFound();
 

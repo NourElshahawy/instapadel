@@ -49,13 +49,11 @@ export default function BookingPage({ court }) {
   const daySlots = useMemo(() => {
     if (!subCourt || !selectedDay) return [];
 
-    const bookedTimes = court.bookings
-      .filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date) // مقارنة ISO بـ ISO مباشرة
-      .map((b) => b.time);
+    const bookedStartTimes = court.bookings.filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date).map((b) => b.time.split(" الي ")[0]); // ناخد أول جزء بس (وقت البداية) للمقارنة
 
     return buildDefaultSlots(subCourt.pricePerHour).map((slot) => ({
       ...slot,
-      status: bookedTimes.some((t) => t.includes(slot.start)) ? "booked" : "available",
+      status: bookedStartTimes.includes(slot.start) ? "booked" : "available",
     }));
   }, [subCourt, selectedDay, court]);
 
@@ -83,19 +81,19 @@ export default function BookingPage({ court }) {
       return;
     }
 
-    const { data: bookingRow, error } = await supabase
-      .from("bookings")
-      .insert({
-        user_id: user.id,
-        court_id: subCourt.id,
-        venue_name: court.name,
-        court_name: subCourt.name,
-        date: summary.dateISO,
-        time: summary.time,
-        price: summary.total,
-      })
-      .select()
-      .single();
+    // نبني صف منفصل لكل سلوت مختار
+    const rows = selectedSlots.map((slot) => ({
+      user_id: user.id,
+      court_id: subCourt.id,
+      venue_name: court.name,
+      court_name: subCourt.name,
+      date: summary.dateISO,
+      time: `${slot.start} الي ${slot.end}`, // وقت السلوت ده بس، مش الرينج الكامل
+      price: slot.price,
+      status: "confirmed",
+    }));
+
+    const { data: bookingRows, error } = await supabase.from("bookings").insert(rows).select();
 
     if (error) {
       setConfirming(false);
@@ -103,7 +101,6 @@ export default function BookingPage({ court }) {
       return;
     }
 
-    // إرسال إيميل التأكيد (من غير ما نستنى النتيجة، مش لازم توقف الفلو)
     fetch("/api/notifications/booking-confirmed", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -113,11 +110,11 @@ export default function BookingPage({ court }) {
         venueName: court.name,
         courtName: subCourt.name,
         date: summary.dateLabel,
-        time: summary.time,
+        time: summary.time, // في الإيميل نعرض الرينج الكامل، ده مفهوم للقراءة
         price: summary.total,
-        bookingId: bookingRow.id,
+        bookingId: bookingRows[0].id,
       }),
-    }).catch(() => {}); // نتجاهل أي خطأ هنا، الحجز نفسه نجح أصلاً
+    }).catch(() => {});
 
     setSheetOpen(false);
     setShowToast(true);

@@ -7,6 +7,7 @@ const LINKS = [
   { href: "/owner/dashboard", label: "نظرة عامة", icon: "📊" },
   { href: "/owner/dashboard/venues", label: "ملاعبي", icon: "🏟️" },
   { href: "/owner/dashboard/bookings", label: "الحجوزات", icon: "📅" },
+  { href: "/owner/dashboard/news", label: "الأخبار", icon: "📰" },
 ];
 
 export default function OwnerSidebar({ ownerName }) {

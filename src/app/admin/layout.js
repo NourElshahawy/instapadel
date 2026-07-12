@@ -24,6 +24,9 @@ export default async function AdminLayout({ children }) {
           <a href="/admin/dashboard" className="owner-nav-link is-active">
             🏟️ موافقة الملاعب
           </a>
+          <a href="/admin/dashboard/news" className="owner-nav-link">
+            📰 الأخبار
+          </a>
         </nav>
         <Link href="/" className="owner-sidebar-back">
           ← رجوع للموقع

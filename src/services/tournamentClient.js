@@ -21,6 +21,18 @@ export async function createTournament(data, organizerId) {
     .single();
 
   if (error) throw error;
+
+  // خبر تلقائي — التسجيل مفتوح لبطولة جديدة
+  await supabase.from("news").insert({
+    source_type: "tournament",
+    source_id: row.id,
+    author_id: organizerId,
+    title: `التسجيل مفتوح: بطولة ${row.name}`,
+    body: `بطولة ${row.type === "double" ? "زوجي" : "فردي"} جديدة في ${row.venue_name}، محتاجة ${row.max_teams} فرق. سجّل فريقك الآن.`,
+    category: "tournament",
+    status: "published",
+  });
+
   return row;
 }
 
@@ -55,28 +67,28 @@ export async function startTournament(tournamentId, rounds, matches) {
     team_b_name: m.teamB,
   }));
 
-  const { error: matchesError } = await supabase.from("tournament_matches").insert(rows);
+  const { data: insertedMatches, error: matchesError } = await supabase.from("tournament_matches").insert(rows).select(); // ← نرجّع الصفوف الحقيقية بالـ UUID اللي Supabase ولّده
+
   if (matchesError) throw matchesError;
 
-  const { error: updateError } = await supabase
-    .from("tournaments")
-    .update({ status: "ready", first_match_at: new Date().toISOString() })
-    .eq("id", tournamentId);
+  const { error: updateError } = await supabase.from("tournaments").update({ status: "ready", first_match_at: new Date().toISOString() }).eq("id", tournamentId);
   if (updateError) throw updateError;
+
+  return insertedMatches; // ← جديد، مهم
 }
 
 export async function submitMatchResult(matchId, scoreA, scoreB, nextMatchId, nextSlot, winnerName, isFinal, tournamentId) {
   const supabase = createClient();
 
-  const { error: matchError } = await supabase
-    .from("tournament_matches")
-    .update({ score_a: scoreA, score_b: scoreB, is_done: true })
-    .eq("id", matchId);
+  const { error: matchError } = await supabase.from("tournament_matches").update({ score_a: scoreA, score_b: scoreB, is_done: true }).eq("id", matchId);
   if (matchError) throw matchError;
 
   if (nextMatchId) {
     const field = nextSlot === "teamA" ? "team_a_name" : "team_b_name";
-    await supabase.from("tournament_matches").update({ [field]: winnerName }).eq("id", nextMatchId);
+    await supabase
+      .from("tournament_matches")
+      .update({ [field]: winnerName })
+      .eq("id", nextMatchId);
   }
 
   await supabase
@@ -86,4 +98,21 @@ export async function submitMatchResult(matchId, scoreA, scoreB, nextMatchId, ne
       champion_team_name: isFinal ? winnerName : null,
     })
     .eq("id", tournamentId);
+
+  // خبر تلقائي لما البطولة تخلص وتتحدد النتيجة النهائية
+  if (isFinal) {
+    const { data: tournament } = await supabase.from("tournaments").select("name, venue_name, organizer_id").eq("id", tournamentId).single();
+
+    if (tournament) {
+      await supabase.from("news").insert({
+        source_type: "tournament",
+        source_id: tournamentId,
+        author_id: tournament.organizer_id,
+        title: `🏆 ${winnerName} بطل بطولة ${tournament.name}`,
+        body: `انتهت بطولة ${tournament.name} في ${tournament.venue_name}، وتوّج ${winnerName} بلقب البطولة بعد منافسة قوية.`,
+        category: "tournament",
+        status: "published",
+      });
+    }
+  }
 }

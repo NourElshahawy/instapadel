@@ -19,6 +19,17 @@ export async function createPartnerRequest(form, hostId) {
     .single();
 
   if (error) throw error;
+
+  await supabase.from("news").insert({
+    source_type: "partner_request",
+    source_id: data.id,
+    author_id: hostId,
+    title: `محتاج ${form.playersNeeded} ${form.playersNeeded === 1 ? "لاعب" : "لاعبين"} في ${form.courtName}`,
+    body: `مستوى ${form.level} — ${form.date} الساعة ${form.time}. اضغط للانضمام.`,
+    category: "announcement",
+    status: "published",
+  });
+
   return data;
 }
 

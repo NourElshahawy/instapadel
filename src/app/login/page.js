@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import AuthVisual from "@/components/shared/AuthVisual";
 import LoginForm from "@/_pages/login/LoginForm";
 
@@ -19,8 +20,14 @@ const QUOTE = {
 export default function LoginPage() {
   return (
     <div className="auth-shell">
-      <AuthVisual heading="جميع ملاعب المنصورة، بلمسة واحدة." features={FEATURES} quote={QUOTE} />
-      <LoginForm />
+      <AuthVisual
+        heading="جميع ملاعب المنصورة، بلمسة واحدة."
+        features={FEATURES}
+        quote={QUOTE}
+      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <LoginForm />
+      </Suspense>
     </div>
   );
 }

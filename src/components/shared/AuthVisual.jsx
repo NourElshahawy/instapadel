@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import "@/styles/shared/auth.css";
+// import "@/styles/shared/auth.css";
 
 export default function AuthVisual({ heading, features, quote }) {
   return (

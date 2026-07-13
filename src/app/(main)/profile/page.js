@@ -4,7 +4,7 @@ import BookingHistorySection from "@/components/pages/profile/BookingHistorySect
 import TournamentsSection from "@/components/pages/profile/TournamentsSection";
 import PartnerRequestsSection from "@/components/pages/profile/PartnerRequestsSection";
 import { getMyTournaments, getMyPartnerRequests } from "@/services/profileService";
-import "@/styles/pages/profile.css";
+// import "@/styles/pages/profile.css";
 
 export const metadata = { title: "الملف الشخصي — InstaPadel" };
 

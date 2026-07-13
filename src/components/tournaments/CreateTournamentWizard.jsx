@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { createTournament } from "@/services/tournamentClient";
 
-import "@/styles/pages/tournament-wizard.css";
+// import "@/styles/pages/tournament-wizard.css";
 
 const TEAM_OPTIONS = [4, 8, 16, 32];
 const STEPS = [

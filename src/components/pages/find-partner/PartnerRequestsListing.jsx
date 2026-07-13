@@ -4,7 +4,7 @@ import Link from "next/link";
 import PartnerFilterBar from "./PartnerFilterBar";
 import PartnerRequestCard from "./PartnerRequestCard";
 import EmptyState from "@/components/shared/EmptyState";
-import "@/styles/pages/find-partner.css";
+// import "@/styles/pages/find-partner.css";
 import ParallaxBg from "@/components/ui/ParallaxBg";
 import ListingHero from "@/components/shared/ListingHero";
 

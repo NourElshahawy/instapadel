@@ -8,7 +8,7 @@ import ListingHero from "@/components/shared/ListingHero";
 import Pagination from "@/components/shared/Pagination";
 import EmptyState from "@/components/shared/EmptyState";
 import "../../styles/home/news.css";
-import "@/styles/pages/news.css";
+// import "@/styles/pages/news.css";
 import ParallaxBg from "@/components/ui/ParallaxBg";
 
 const PAGE_SIZE = 6;

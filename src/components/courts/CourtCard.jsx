@@ -2,7 +2,7 @@
 import Link from "next/link";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { useLiveSlots } from "@/hooks/useLiveSlots";
-import "@/styles/courts/card.css";
+// import "@/styles/courts/card.css";
 
 export default function CourtCard({ court }) {
   const { slots, label } = useLiveSlots(court.todaySlots); // مش .map(s => s.time) — هي أصلاً array نصوص

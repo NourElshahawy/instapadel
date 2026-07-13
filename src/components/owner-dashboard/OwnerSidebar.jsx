@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import "@/styles/pages/owner-dashboard.css";
+// import "@/styles/pages/owner-dashboard.css";
 
 const LINKS = [
   { href: "/owner/dashboard", label: "نظرة عامة", icon: "📊" },

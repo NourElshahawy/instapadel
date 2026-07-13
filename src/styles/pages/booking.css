@@ -81,7 +81,15 @@
     align-items: flex-start;
     gap: 12px;
 }
-
+@media (max-width: 420px) {
+  .court-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .court-price-box {
+    align-self: flex-start;
+  }
+}
 .court-logo {
     width: 56px;
     height: 56px;
@@ -371,21 +379,31 @@
 
 /* ===== Days ===== */
 .booking-days {
+    position: relative;
     padding: 28px 0 0;
 }
 
 .days-slider {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 4px;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
 }
-
-.days-slider::-webkit-scrollbar {
-    display: none;
+.days-slider::-webkit-scrollbar { display: none; }
+.booking-days::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 12px;
+  width: 24px;
+  background: linear-gradient(to left, transparent, var(--bg-primary));
+  pointer-events: none;
 }
-
+@media (min-width: 992px) {
+  .booking-days::after { display: none; } /* مش لازمة على الديسكتوب، مفيش تمرير غالبًا */
+}
 .day-card {
     width: 90px;
     flex-shrink: 0;
@@ -579,9 +597,25 @@
 }
 
 .slots-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 575px) {
+  .slots-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .slot-card {
+    padding: 12px 6px;
+  }
+  .slot-card h3 {
+    font-size: .76rem;
+  }
+  .slot-card p {
+    font-size: .68rem;
+  }
 }
 
 .slot-card {

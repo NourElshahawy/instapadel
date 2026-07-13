@@ -6,7 +6,7 @@ import FilterSidebar from "./FilterSidebar";
 import ResultsToolbar from "./ResultsToolbar";
 import Pagination from "@/components/shared/Pagination";
 import EmptyState from "@/components/shared/EmptyState";
-import "@/styles/pages/courts.css";
+// import "@/styles/pages/courts.css";
 import ParallaxBg from "@/components/ui/ParallaxBg";
 
 const PAGE_SIZE = 6;

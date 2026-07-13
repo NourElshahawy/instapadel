@@ -5,7 +5,7 @@ import { startTournament, submitMatchResult } from "@/services/tournamentClient"
 import StartTournamentButton from "./StartTournamentButton";
 import TeamsManageList from "./TeamsManageList";
 import MatchScoreForm from "./MatchScoreForm";
-import "@/styles/pages/tournament-manage.css";
+// import "@/styles/pages/tournament-manage.css";
 
 export default function TournamentManageDashboard({ tournament: initialTournament }) {
   const [tournament, setTournament] = useState(initialTournament);

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import PasswordField from "@/components/shared/PasswordField";
@@ -9,9 +10,16 @@ import { createClient } from "@/lib/supabase/client";
 
 export default function LoginForm() {
   const router = useRouter();
-  const [form, setForm] = useState({ email: "", password: "", remember: false });
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    remember: false,
+  });
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -30,10 +38,20 @@ export default function LoginForm() {
       });
 
       const supabase = createClient();
-      const { data: profile } = await supabase.from("profiles").select("role, owner_status").eq("id", user.id).single();
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role, owner_status")
+        .eq("id", user.id)
+        .single();
 
-      if (profile?.role === "owner") {
-        router.push(profile.owner_status === "approved" ? "/owner/dashboard" : "/owner/pending-approval");
+      if (redirectTo) {
+        router.push(redirectTo);
+      } else if (profile?.role === "owner") {
+        router.push(
+          profile.owner_status === "approved"
+            ? "/owner/dashboard"
+            : "/owner/pending-approval",
+        );
       } else if (profile?.role === "admin") {
         router.push("/admin/dashboard");
       } else {
@@ -42,7 +60,9 @@ export default function LoginForm() {
       router.refresh();
     } catch (err) {
       if (err.message?.includes("Email not confirmed")) {
-        setError("لازم تأكد إيميلك الأول من الرسالة اللي بعتناها لك وقت التسجيل.");
+        setError(
+          "لازم تأكد إيميلك الأول من الرسالة اللي بعتناها لك وقت التسجيل.",
+        );
       } else {
         setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
       }
@@ -77,14 +97,22 @@ export default function LoginForm() {
           سجّل الدخول لتحجز ملعبك التالي في أقل من دقيقة.
         </p>
 
-        <button type="button" className="social-btn" onClick={handleGoogleLogin}>
+        <button
+          type="button"
+          className="social-btn"
+          onClick={handleGoogleLogin}
+        >
           <i className="fa-brands fa-google" />
           تابع باستخدام Google
         </button>
 
         <div className="auth-divider">أو سجّل الدخول بالبريد الإلكتروني</div>
 
-                {error && <p style={{ color: "#ff6b6b", fontSize: ".85rem", marginBottom: 16 }}>{error}</p>}
+        {error && (
+          <p style={{ color: "#ff6b6b", fontSize: ".85rem", marginBottom: 16 }}>
+            {error}
+          </p>
+        )}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="field-group">
@@ -124,7 +152,9 @@ export default function LoginForm() {
               />
               تذكرني
             </label>
-            <Link href="/forgot-password" className="auth-link">نسيت كلمة المرور؟</Link>
+            <Link href="/forgot-password" className="auth-link">
+              نسيت كلمة المرور؟
+            </Link>
           </div>
 
           <button

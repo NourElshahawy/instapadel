@@ -4,7 +4,7 @@ import EmailNotice from "./EmailNotice";
 import StatusTracker from "./StatusTracker";
 import BookAgainCard from "./BookAgainCard";
 import BookingSummarySidebar from "./BookingSummarySidebar";
-import "@/styles/pages/booking-confirmation.css";
+// import "@/styles/pages/booking-confirmation.css";
 
 export default function BookingConfirmationPage({ booking }) {
   const [showEmailNotice, setShowEmailNotice] = useState(true);
@@ -20,7 +20,7 @@ export default function BookingConfirmationPage({ booking }) {
             <div className="booking-header">
               <div>
                 <p className="booking-id">
-                  الحجز <b>{booking.id}</b>
+                  الحجز <b>{booking.displayId}</b>
                 </p>
                 <h1>{isPaid ? "تم تأكيد الدفع. نراكم في الملعب." : "كل شيء جاهز. نراكم في الملعب."}</h1>
               </div>

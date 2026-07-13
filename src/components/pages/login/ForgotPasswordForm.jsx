@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { requestPasswordReset } from "@/services/authClient";
-import "@/styles/pages/forgot-password.css";
+// import "@/styles/pages/forgot-password.css";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");

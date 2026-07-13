@@ -1,7 +1,27 @@
-export default function BookingHistorySection({ bookings }) {
+"use client";
+import { useState } from "react";
+import { cancelBooking } from "@/services/bookingClient";
+
+export default function BookingHistorySection({ bookings: initialBookings }) {
+  const [bookings, setBookings] = useState(initialBookings);
+  const [cancellingId, setCancellingId] = useState(null);
+
+  const handleCancel = async (id) => {
+    if (!confirm("متأكد إنك عايز تلغي الحجز ده؟")) return;
+    setCancellingId(id);
+    try {
+      await cancelBooking(id);
+      setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b)));
+    } catch {
+      alert("حصل خطأ أثناء الإلغاء");
+    } finally {
+      setCancellingId(null);
+    }
+  };
+
   return (
     <div className="profile-section">
-      <h2><i className="fa-solid fa-calendar"></i> حجوزاتي</h2>
+      <h2><i className="fa-solid fa-calendar-days"></i>حجوزاتي</h2>
       {bookings.length === 0 ? (
         <div className="profile-empty-card">
           <i className="fa-solid fa-calendar-xmark"></i>
@@ -13,8 +33,22 @@ export default function BookingHistorySection({ bookings }) {
             <div className="bhc-info">
               <b>{b.venue_name} — {b.court_name}</b>
               <span>{b.date} · {b.time}</span>
+              {b.status === "cancelled" && (
+                <span style={{ color: "#ff6b6b", fontSize: ".76rem", fontWeight: 700 }}> ملغي</span>
+              )}
             </div>
-            <span className="bhc-price">{b.price} ج.م</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span className="bhc-price">{b.price} ج.م</span>
+              {b.status === "confirmed" && (
+                <button
+                  onClick={() => handleCancel(b.id)}
+                  disabled={cancellingId === b.id}
+                  style={{ background: "none", border: "none", color: "#ff6b6b", fontSize: ".76rem", cursor: "pointer" }}
+                >
+                  {cancellingId === b.id ? "..." : "إلغاء"}
+                </button>
+              )}
+            </div>
           </div>
         ))
       )}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import "@/styles/pages/courts.css";
+// import "@/styles/pages/courts.css";
 
 export default function ListingHero({titlehead, title, count }) {
   return (

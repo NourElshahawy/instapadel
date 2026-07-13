@@ -9,17 +9,21 @@ export default function BookingSummarySidebar({ booking, isPaid }) {
   const [cancelling, setCancelling] = useState(false);
 
   const handleCancel = async () => {
-    if (!confirm("متأكد إنك عايز تلغي الحجز ده؟")) return;
-    setCancelling(true);
-    try {
-      await cancelBooking(booking.id);
-      setCancelled(true);
-    } catch {
-      alert("حصل خطأ أثناء الإلغاء");
-    } finally {
-      setCancelling(false);
-    }
-  };
+  if (!confirm("متأكد إنك عايز تلغي الحجز ده؟")) return;
+  if (!booking.id) {
+    alert("مش قادرين نلاقي الحجز ده، جرب تفتح الصفحة من جديد");
+    return;
+  }
+  setCancelling(true);
+  try {
+    await cancelBooking(booking.id); // ← UUID حقيقي دلوقتي
+    setCancelled(true);
+  } catch {
+    alert("حصل خطأ أثناء الإلغاء");
+  } finally {
+    setCancelling(false);
+  }
+};
 
   const handleShare = async () => {
     const shareText = `حجزي في ${booking.venueName} — ${booking.date}، ${booking.time}`;

@@ -460,23 +460,22 @@
 }
 
 .review-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: .88rem;
-    margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: .88rem;
+  margin-bottom: 8px;
 }
-
 .review-row span:first-child {
-    color: var(--text-muted);
+  color: var(--text-muted);
+  flex-shrink: 0;
 }
-
 .review-row span:last-child {
-    color: var(--white);
-    font-weight: 600;
-    text-align: right;
-    max-width: 60%;
+  color: var(--white);
+  font-weight: 600;
+  text-align: left;
+  word-break: break-word; /* بدل max-width ثابت */
 }
-
 .review-agree {
     display: flex;
     align-items: flex-start;
@@ -508,6 +507,17 @@
 }
 
 @media (max-width: 991px) {
+    .wizard-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg-secondary);
+  }
+  .wizard-progress {
+    position: sticky;
+    top: 57px; /* ارتفاع الـ topbar تقريبًا */
+    z-index: 19;
+  }
     .wizard-inner {
         padding: 32px 24px;
     }

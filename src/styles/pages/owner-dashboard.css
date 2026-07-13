@@ -134,10 +134,10 @@
 
 /* ===== Stat cards ===== */
 .owner-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    margin-bottom: 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
 }
 
 .owner-stat-card {
@@ -489,16 +489,21 @@
 }
 
 .admin-search-input {
-    width: 100%;
-    max-width: 320px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-glass);
-    border-radius: var(--r-sm);
-    padding: 10px 14px;
-    color: var(--white);
-    font-size: .86rem;
+  width: 100%;
+  max-width: 320px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  color: var(--white);
+  font-size: .86rem;
 }
 
+@media (max-width: 575px) {
+  .admin-search-input {
+    max-width: 100%;
+  }
+}
 .admin-search-input::placeholder {
     color: var(--text-faint);
 }

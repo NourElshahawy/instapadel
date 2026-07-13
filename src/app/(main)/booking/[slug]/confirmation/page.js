@@ -22,14 +22,21 @@ export default async function ConfirmationPage({ params, searchParams }) {
 
   const sp = await searchParams;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  const { data: bookingRow } = await supabase.from("bookings").select("status, payment_status").eq("id", sp.bookingId).maybeSingle();
+  let bookingRow = null;
+  if (sp.bookingId) {
+    const { data } = await supabase
+      .from("bookings")
+      .select("id, status, payment_status")
+      .eq("id", sp.bookingId)
+      .maybeSingle();
+    bookingRow = data;
+  }
 
   const booking = {
-    id: sp.bookingId || generateBookingId(),
+    id: bookingRow?.id || sp.bookingId || null, // ← الـ UUID الحقيقي، يُستخدم للعمليات (إلغاء، تحديث)
+    displayId: generateBookingId(), // ← الرقم التجميلي، للعرض بس
     venueName: sp.court || court.name,
     venueImage: court.coverImage || court.image,
     location: court.location,
@@ -40,7 +47,7 @@ export default async function ConfirmationPage({ params, searchParams }) {
     price: sp.price || court.pricePerHour,
     email: user?.email || "—",
     createdAt: "اليوم",
-    status: bookingRow?.status || "confirmed", // ← جديد
+    status: bookingRow?.status || "confirmed",
   };
 
   return <BookingConfirmationPage booking={booking} />;

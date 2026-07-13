@@ -10,7 +10,7 @@ import Step2Courts from "./steps/Step2Courts";
 import Step3Photos from "./steps/Step3Photos";
 import Step4Amenities from "./steps/Step4Amenities";
 import Step5Review from "./steps/Step5Review";
-import "@/styles/pages/owner-register.css";
+// import "@/styles/pages/owner-register.css";
 
 const TOTAL_STEPS = 5;
 let nextCourtId = 1;

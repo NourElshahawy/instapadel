@@ -15,8 +15,8 @@ import FloatingActionButton from "./FloatingActionButton";
 import JoinTeamSheet from "../JoinTeamSheet";
 import { joinTournament } from "@/services/tournamentClient";
 import { createClient } from "@/lib/supabase/client";
-import "@/styles/pages/tournament-dashboard.css";
-import "@/styles/pages/booking.css";
+// import "@/styles/pages/tournament-dashboard.css";
+// import "@/styles/pages/booking.css";
 import ParallaxBg from "@/components/ui/ParallaxBg";
 
 function resolveStage(tournament) {

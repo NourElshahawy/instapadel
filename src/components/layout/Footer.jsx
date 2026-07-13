@@ -15,7 +15,7 @@ export default function Footer() {
           <div className="row g-4">
             <div className="col-lg-4 footer-brand" id="about">
               <Link href="/" className="brand">
-                <Image src="/assets/imgs/logo.png" alt="InstaPadel" width={140} height={80} />
+                <Image src="/assets/imgs/logo.png" alt="InstaPadel" width={100} height={56} />
               </Link>
               <p>أسرع طريقة للعثور على ملعب بادل وحجزه في المنصورة — مواعيد فورية، أندية موثقة، دفع آمن.</p>
               <div className="social-row">

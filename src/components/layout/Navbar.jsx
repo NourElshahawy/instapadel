@@ -14,7 +14,7 @@ const NAV_LINKS = [
   { href: "/tournaments", label: "البطولات" },
   { href: "/find-partner", label: "دور على شريك" },
   { href: "/#news", label: "اخبار البادل" },
-  { href: "/#contact", label: "تواصل معنا" },
+  // { href: "/#contact", label: "تواصل معنا" },
 ];
 
 export default function Navbar() {
@@ -36,33 +36,16 @@ export default function Navbar() {
     <header className={`navbar-ph ${isScrolled ? "is-scrolled" : ""}`}>
       <div className="container d-flex align-items-center justify-content-between">
         <Link href="/" className="brand">
-          <Image
-            src="/assets/imgs/logo.png"
-            alt="InstaPadel"
-            width={140}
-            height={80}
-            priority
-            style={{ height: "auto" }}
-          />
+          <Image src="/assets/imgs/logo.png" alt="InstaPadel" width={100} height={56} priority  />
         </Link>
 
         <nav className={`nav-links ${isOpen ? "is-open" : ""}`} id="navLinks">
-          <button
-            className="nav-close-btn d-lg-none"
-            onClick={closeMenu}
-            aria-label="إغلاق القائمة"
-          >
+          <button className="nav-close-btn d-lg-none" onClick={closeMenu} aria-label="إغلاق القائمة">
             <i className="fa-solid fa-xmark"></i>
           </button>
 
           <Link href="/" className="brand logo-mobil" onClick={closeMenu}>
-            <Image
-              src="/assets/imgs/logo.png"
-              alt="InstaPadel"
-              width={100}
-              height={56}
-              style={{ height: "auto" }}
-            />
+            <Image src="/assets/imgs/logo.png" alt="InstaPadel" width={100} height={56}  />
           </Link>
 
           <div className="nav-links-primary">
@@ -79,64 +62,33 @@ export default function Navbar() {
               {user ? (
                 <>
                   <div className="nav-account-header">
-                    <span className="profile-menu-avatar">
-                      {profile?.name?.charAt(0)?.toUpperCase() || "U"}
-                    </span>
-                    <span className="nav-account-name">
-                      {profile?.name || "مستخدم"}
-                    </span>
+                    <span className="profile-menu-avatar">{profile?.name?.charAt(0)?.toUpperCase() || "U"}</span>
+                    <span className="nav-account-name">{profile?.name || "مستخدم"}</span>
                   </div>
 
                   {profile?.role === "owner" && (
-                    <Link
-                      href="/owner/dashboard"
-                      className="nav-account-link"
-                      onClick={closeMenu}
-                    >
-                        <i className="fa-solid fa-table-columns"></i>{" "}
-                      لوحة التحكم
+                    <Link href="/owner/dashboard" className="nav-account-link" onClick={closeMenu}>
+                      <i className="fa-solid fa-table-columns"></i> لوحة التحكم
                     </Link>
                   )}
                   {profile?.role === "admin" && (
-                    <Link
-                      href="/admin/dashboard"
-                      className="nav-account-link"
-                      onClick={closeMenu}
-                    >
-                        <i className="fa-solid fa-user-gear"></i>{" "}
-                      لوحة الإدارة
+                    <Link href="/admin/dashboard" className="nav-account-link" onClick={closeMenu}>
+                      <i className="fa-solid fa-user-gear"></i> لوحة الإدارة
                     </Link>
                   )}
-                  <Link
-                    href="/profile"
-                    className="nav-account-link"
-                    onClick={closeMenu}
-                  >
-                    <i className="fa-solid fa-user"></i>{" "}
-                    الملف الشخصي
+                  <Link href="/profile" className="nav-account-link" onClick={closeMenu}>
+                    <i className="fa-solid fa-user"></i> الملف الشخصي
                   </Link>
-                  <button
-                    className="nav-account-link danger"
-                    onClick={handleMobileLogout}
-                  >
-                    <i className="fa-solid fa-sign-out-alt"></i>{" "}
-                    تسجيل خروج
+                  <button className="nav-account-link danger" onClick={handleMobileLogout}>
+                    <i className="fa-solid fa-sign-out-alt"></i> تسجيل خروج
                   </button>
                 </>
               ) : (
                 <div className="d-flex gap-3">
-                  <Link
-                    href="/login"
-                    className="btn btn-ghost btn-sm"
-                    onClick={closeMenu}
-                  >
+                  <Link href="/login" className="btn btn-ghost btn-sm" onClick={closeMenu}>
                     تسجيل دخول
                   </Link>
-                  <Link
-                    href="/register"
-                    className="btn btn-accent btn-sm"
-                    onClick={closeMenu}
-                  >
+                  <Link href="/register" className="btn btn-accent btn-sm" onClick={closeMenu}>
                     انشاء حساب
                   </Link>
                 </div>
@@ -160,11 +112,7 @@ export default function Navbar() {
               </Link>
             </>
           )}
-          <button
-            className="nav-toggle"
-            aria-label="Toggle menu"
-            onClick={() => setIsOpen((v) => !v)}
-          >
+          <button className="nav-toggle" aria-label="Toggle menu" onClick={() => setIsOpen((v) => !v)}>
             <i className={`fa-solid ${isOpen ? "fa-xmark" : "fa-bars"}`}></i>
           </button>
         </div>

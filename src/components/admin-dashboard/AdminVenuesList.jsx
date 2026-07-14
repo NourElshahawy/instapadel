@@ -58,9 +58,7 @@ export default function AdminVenuesList({ venues: initialVenues }) {
 
             <div className="admin-venue-meta">
               <span>📍 {v.address || "—"}</span>
-              <span>
-                📞 {v.phone || "—"} · ✉️ {v.email || "—"}
-              </span>
+              <span>📞 {v.phone || "—"} · ✉️ {v.email || "—"}</span>
             </div>
 
             <p className="admin-venue-courts">

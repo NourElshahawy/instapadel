@@ -59,7 +59,7 @@ export default function CourtsListing({ courts , searchFilters }) {
 // const PERIOD_LABELS = { morning: "صباحًا", noon: "ظهرًا", afternoon: "عصرًا", evening: "مساءً", night: "ليلاً" };
   return (
     <>
-      <ListingHero title="جميع ملاعب البادل في المنصورة" count={filteredCourts.length} />
+      <ListingHero title="جميع ملاعب البادل في المنصورة" titlehead={"الملاعب"} count={filteredCourts.length} />
 
       {searchFilters?.date && (
         <div className="container" style={{ marginTop: -20, marginBottom: 20 }}>

@@ -20,19 +20,26 @@ export async function createPartnerRequest(form, hostId) {
 
   if (error) throw error;
 
+  // نجيب صورة الملعب الحقيقية لو موجودة
+  const { data: courtRow } = await supabase
+    .from("courts")
+    .select("images")
+    .eq("id", form.courtId)
+    .maybeSingle();
+
   await supabase.from("news").insert({
     source_type: "partner_request",
     source_id: data.id,
     author_id: hostId,
     title: `محتاج ${form.playersNeeded} ${form.playersNeeded === 1 ? "لاعب" : "لاعبين"} في ${form.courtName}`,
     body: `مستوى ${form.level} — ${form.date} الساعة ${form.time}. اضغط للانضمام.`,
+    image_url: courtRow?.images?.[0] || null, // ← جديد
     category: "announcement",
     status: "published",
   });
 
   return data;
 }
-
 export async function joinPartnerRequest(requestId, playerId) {
   const supabase = createClient();
   const { error } = await supabase

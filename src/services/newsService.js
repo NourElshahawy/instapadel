@@ -17,6 +17,10 @@ export async function getNewsById(id) {
 const CATEGORY_LABELS = { tournament: "بطولة", partnership: "شراكة", announcement: "إعلان", maintenance: "صيانة" };
 
 function mapNews(n) {
+  const sourceLink = n.source_type === "partner_request" ? `/find-partner/${n.source_id}`
+    : n.source_type === "tournament" ? `/tournaments/${n.source_id}`
+    : null;
+
   return {
     id: n.id,
     slug: n.id,
@@ -29,6 +33,9 @@ function mapNews(n) {
     featured: false,
     meta: {},
     body: [{ type: "paragraph", text: n.body || "" }],
-    sidebar: null,
+    sourceLink, // ← جديد
+    sidebar: sourceLink
+      ? { title: "تفاصيل الطلب", rows: [], cta: { label: n.source_type === "partner_request" ? "اضغط للانضمام" : "شوف البطولة", href: sourceLink } }
+      : null,
   };
 }

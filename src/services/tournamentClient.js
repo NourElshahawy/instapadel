@@ -5,37 +5,31 @@ export async function createTournament(data, organizerId) {
   const supabase = createClient();
   const { data: row, error } = await supabase
     .from("tournaments")
-    .insert({
-      organizer_id: organizerId,
-      name: data.name,
-      type: data.type,
-      venue_name: data.courtName,
-      court_id: data.courtId,
-      tournament_date: data.startDate,
-      max_teams: data.teamsCount,
-      entry_fee: data.entryFee || null,
-      registration_deadline: data.registrationDeadline || null,
-      starts_at: data.startDate ? new Date(data.startDate).toISOString() : null,
-    })
+    .insert({ /* ... زي ما هو */ })
     .select()
     .single();
 
   if (error) throw error;
 
-  // خبر تلقائي — التسجيل مفتوح لبطولة جديدة
+  const { data: courtRow } = await supabase
+    .from("courts")
+    .select("images")
+    .eq("id", data.courtId)
+    .maybeSingle();
+
   await supabase.from("news").insert({
     source_type: "tournament",
     source_id: row.id,
     author_id: organizerId,
     title: `التسجيل مفتوح: بطولة ${row.name}`,
     body: `بطولة ${row.type === "double" ? "زوجي" : "فردي"} جديدة في ${row.venue_name}، محتاجة ${row.max_teams} فرق. سجّل فريقك الآن.`,
+    image_url: courtRow?.images?.[0] || null, // ← جديد
     category: "tournament",
     status: "published",
   });
 
   return row;
 }
-
 export async function joinTournament(tournamentId, teamData, captainId) {
   const supabase = createClient();
   const { data, error } = await supabase

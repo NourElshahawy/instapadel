@@ -27,7 +27,7 @@ export async function getPartnerRequestById(id) {
     .select(`
       *,
       host:profiles!partner_requests_host_id_fkey (name, phone),
-      partner_request_joins (id, status, player_id, profiles (name, phone))
+      partner_request_joins (id, status, player_id, profiles (name, phone,email))
     `)
     .eq("id", id)
     .single();
@@ -46,6 +46,7 @@ function mapRequest(r) {
     courtId: r.court_id,
     courtName: r.court_name,
     date: r.request_date,
+    email: j.profiles?.email,
     dateLabel: new Date(r.request_date).toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long" }),
     time: r.time_label,
     level: r.level,

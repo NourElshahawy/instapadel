@@ -39,7 +39,7 @@ export default function MatchesList({ matches = [], stage }) {
                   </span>
                 )}
                 <div className="td-match-row">
-                  <span className="td-match-team">{m.teamA}</span>
+                  <span className="td-match-team team1">{m.teamA}</span>
                   {m.isDone || m.isLive ? (
                     <span className="td-match-score">
                       {m.scoreA} : {m.scoreB}
@@ -47,7 +47,7 @@ export default function MatchesList({ matches = [], stage }) {
                   ) : (
                     <span className="td-match-vs">VS</span>
                   )}
-                  <span className="td-match-team">{m.teamB}</span>
+                  <span className="td-match-team team2">{m.teamB}</span>
                 </div>
                 {!m.isDone && !m.isLive && m.time && <span className="td-match-time">🕗 {m.time}</span>}
               </div>

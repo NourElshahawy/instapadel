@@ -443,6 +443,12 @@
     font-weight: 600;
     flex: 1;
 }
+.td-match-team.team1 {
+    text-align: right;
+}
+.td-match-team.team2 {
+    text-align: left;
+}
 
 .td-match-vs {
     font-size: 12px;

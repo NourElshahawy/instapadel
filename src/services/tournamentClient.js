@@ -5,7 +5,18 @@ export async function createTournament(data, organizerId) {
   const supabase = createClient();
   const { data: row, error } = await supabase
     .from("tournaments")
-    .insert({ /* ... زي ما هو */ })
+    .insert({
+      organizer_id: organizerId,
+      name: data.name,
+      type: data.type,
+      venue_name: data.courtName,
+      court_id: data.courtId,
+      tournament_date: data.startDate,
+      max_teams: data.teamsCount,
+      entry_fee: data.entryFee || null,
+      registration_deadline: data.registrationDeadline || null,
+      starts_at: data.startDate ? new Date(data.startDate).toISOString() : null,
+    })
     .select()
     .single();
 

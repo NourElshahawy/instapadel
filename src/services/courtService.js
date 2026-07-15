@@ -139,11 +139,12 @@ function formatBookingsCount(count) {
 }
 
 function slugify(str) {
-  return str
+  const cleaned = str
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-");
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\u0600-\u06FF-]/g, "");
+  return cleaned || "venue";
 }
 
 function amenityIcon(key) {

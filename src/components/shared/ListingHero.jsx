@@ -15,7 +15,7 @@ export default function ListingHero({titlehead, title, count }) {
           {title}
         </h1>
         <p className="results-count" data-aos="fade-up" data-aos-delay="100">
-          <b>{count}</b> {count === 1 ? `${titlehead} متاح` : `${titlehead} المتاحة`}
+          <b>{count}</b> {count === 1 ? `${titlehead} ملعب متاح` : `${titlehead} ملاعب متاحة`}
         </p>
       </div>
     </section>

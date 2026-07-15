@@ -7,7 +7,9 @@ const STATUS_LABELS = {
 };
 
 export default function PartnerRequestCard({ request }) {
-  const joinedCount = request.playersJoined.filter((p) => p.status === "accepted").length;
+  const joinedCount = request.playersJoined.filter(
+    (p) => p.status === "accepted",
+  ).length;
   const remaining = request.playersNeeded - joinedCount;
 
   return (
@@ -40,8 +42,15 @@ export default function PartnerRequestCard({ request }) {
       {request.notes && <p className="partner-card-notes">{request.notes}</p>}
 
       <div className="partner-card-foot">
-        <span className={`partner-status-tag ${request.status}`}>{STATUS_LABELS[request.status]}</span>
-        <Link href={`/find-partner/${request.id}`} className="btn btn-accent btn-sm">
+        <span className={`partner-status-tag ${request.status}`}>
+          {request.status === "matched"
+            ? "✓ اكتمل الفريق"
+            : STATUS_LABELS[request.status]}
+        </span>
+        <Link
+          href={`/find-partner/${request.id}`}
+          className="btn btn-accent btn-sm"
+        >
           التفاصيل
         </Link>
       </div>

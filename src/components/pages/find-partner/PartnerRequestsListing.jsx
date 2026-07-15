@@ -8,19 +8,21 @@ import EmptyState from "@/components/shared/EmptyState";
 import ParallaxBg from "@/components/ui/ParallaxBg";
 import ListingHero from "@/components/shared/ListingHero";
 
-const DEFAULT_FILTERS = { courtId: "all", date: "", level: "all" };
+const DEFAULT_FILTERS = { courtId: "all", date: "", level: "all", showCompleted: "active" };
+
 
 export default function PartnerRequestsListing({ requests, courts }) {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
   const filtered = useMemo(() => {
-    return requests.filter((r) => {
-      const matchesCourt = filters.courtId === "all" || r.courtId === filters.courtId;
-      const matchesDate = !filters.date || r.date === filters.date;
-      const matchesLevel = filters.level === "all" || r.level === filters.level;
-      return matchesCourt && matchesDate && matchesLevel && r.status !== "matched";
-    });
-  }, [requests, filters]);
+  return requests.filter((r) => {
+    const matchesCourt = filters.courtId === "all" || r.courtId === filters.courtId;
+    const matchesDate = !filters.date || r.date === filters.date;
+    const matchesLevel = filters.level === "all" || r.level === filters.level;
+    const matchesCompleted = filters.showCompleted === "all" || r.status !== "matched";
+    return matchesCourt && matchesDate && matchesLevel && matchesCompleted;
+  });
+}, [requests, filters]);
 
   return (
     <>

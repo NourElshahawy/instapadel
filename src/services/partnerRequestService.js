@@ -7,12 +7,9 @@ export async function getAllPartnerRequests() {
     .from("partner_requests")
     .select(`
       *,
-      host:profiles!partner_requests_host_id_fkey (name, phone, level:role),
-      partner_request_joins (id, status, player_id, profiles (name, phone))
+      host:profiles!partner_requests_host_id_fkey (name, phone),
+      partner_request_joins (id, status, player_id, profiles (name, phone, email))
     `)
-    .neq("status", "matched")
-    .neq("status", "expired")
-    .neq("status", "cancelled")
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -27,7 +24,7 @@ export async function getPartnerRequestById(id) {
     .select(`
       *,
       host:profiles!partner_requests_host_id_fkey (name, phone),
-      partner_request_joins (id, status, player_id, profiles (name, phone,email))
+      partner_request_joins (id, status, player_id, profiles (name, phone, email))
     `)
     .eq("id", id)
     .single();
@@ -46,7 +43,6 @@ function mapRequest(r) {
     courtId: r.court_id,
     courtName: r.court_name,
     date: r.request_date,
-    email: j.profiles?.email,
     dateLabel: new Date(r.request_date).toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long" }),
     time: r.time_label,
     level: r.level,
@@ -58,6 +54,7 @@ function mapRequest(r) {
       joinId: j.id,
       name: j.profiles?.name || "مستخدم",
       phone: j.profiles?.phone,
+      email: j.profiles?.email, // ← هنا مكانه الصح، جوه الـ map بتاعة playersJoined
       status: j.status,
     })),
   };

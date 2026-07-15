@@ -38,21 +38,33 @@ export default async function TournamentsPage() {
             {tournaments.map((t) => (
               <div className="col-md-6 col-lg-4" key={t.id} data-aos="fade-up">
                 <div className="tournament-list-card">
-                  <span className={`tournament-list-badge ${t.status}`}>{STATUS_LABELS[t.status]}</span>
+                  <span className={`tournament-list-badge ${t.status}`}>
+                    {STATUS_LABELS[t.status]}
+                  </span>
                   <h3>{t.name}</h3>
                   <div className="tournament-list-meta">
                     <span>
                       <i className="fa-solid fa-location-dot" /> {t.venue}
                     </span>
                     <span>
-                      <i className="fa-solid fa-calendar-days" /> {new Date(t.date).toLocaleDateString("ar-EG", { day: "numeric", month: "long" })}
+                      <i className="fa-solid fa-calendar-days" />{" "}
+                      {new Date(t.date).toLocaleDateString("ar-EG", {
+                        day: "numeric",
+                        month: "long",
+                      })}
                     </span>
                     <span>
-                      <i className="fa-solid fa-users"></i> {t.teams.length} / {t.maxTeams} فرق
+                      <span className="material-symbols-rounded">groups</span>{" "}
+                      {t.teams.length} / {t.maxTeams} فرق
                     </span>
                   </div>
-                  <Link href={`/tournaments/${t.id}`} className="btn btn-accent btn-sm btn-block">
-                    التفاصيل
+                  <Link
+                    href={`/tournaments/${t.id}`}
+                    className="btn btn-accent btn-sm btn-block"
+                  >
+                    {t.status === "completed"
+                      ? "شوف البطل والنتيجة"
+                      : "التفاصيل"}
                   </Link>
                 </div>
               </div>

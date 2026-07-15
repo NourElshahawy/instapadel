@@ -44,7 +44,7 @@ export default function Footer() {
               <Link href="#">مركز المساعدة</Link>
               <Link href="#">الإلغاءات</Link>
               <Link
-                href="#"
+                href="/register/owner"
                 onClick={(e) => {
                   e.preventDefault();
                   setShowOwnerModal(true);

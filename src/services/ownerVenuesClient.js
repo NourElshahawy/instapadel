@@ -8,8 +8,20 @@ export async function updateCourtPrice(courtId, newPrice) {
   if (error) throw error;
 }
 
-export async function addCourtToVenue(venueId, courtData) {
+export async function addCourtToVenue(venueId, courtData, photos = []) {
   const supabase = createClient();
+
+  const imageUrls = [];
+  for (const photo of photos) {
+    const blob = await (await fetch(photo.dataUrl)).blob();
+    const path = `${venueId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+    const { error: uploadError } = await supabase.storage.from("venue-photos").upload(path, blob);
+    if (!uploadError) {
+      const { data: publicUrl } = supabase.storage.from("venue-photos").getPublicUrl(path);
+      imageUrls.push(publicUrl.publicUrl);
+    }
+  }
+
   const { data, error } = await supabase
     .from("courts")
     .insert({
@@ -17,7 +29,7 @@ export async function addCourtToVenue(venueId, courtData) {
       name: courtData.name,
       type: courtData.type,
       price_per_hour: Number(courtData.price),
-      images: [],
+      images: imageUrls,
     })
     .select()
     .single();

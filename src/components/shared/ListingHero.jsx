@@ -1,21 +1,18 @@
 import Link from "next/link";
 // import "@/styles/pages/courts.css";
 
-export default function ListingHero({titlehead, title, count }) {
+export default function ListingHero({ title, count, breadcrumbLabel }) {
   return (
     <section className="listing-hero">
       <div className="container">
         <div className="breadcrumb-ph" data-aos="fade-up">
           <Link href="/">الرئيسية</Link>
-          <i className="fa-solid fa-angles-right"></i>
-          <span>{titlehead}</span>
+          <i className="fa-solid fa-chevron-right"></i>
+          <span>{breadcrumbLabel}</span>
         </div>
-
-        <h1 data-aos="fade-up" data-aos-delay="60">
-          {title}
-        </h1>
-        <p className="results-count" data-aos="fade-up" data-aos-delay="100">
-          <b>{count}</b> {count === 1 ? `${titlehead} ملعب متاح` : `${titlehead} ملاعب متاحة`}
+        <h1 data-aos="fade-up">{title}</h1>
+        <p className="results-count">
+          <b>{count}</b> {count === 1 ? "نتيجة متاحة" : "نتائج متاحة"}
         </p>
       </div>
     </section>

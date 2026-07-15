@@ -20,12 +20,13 @@ export async function createPartnerRequest(form, hostId) {
 
   if (error) throw error;
 
-  // نجيب صورة الملعب الحقيقية لو موجودة
-  const { data: courtRow } = await supabase
-    .from("courts")
-    .select("images")
-    .eq("id", form.courtId)
-    .maybeSingle();
+  const { data: courtRow } = await supabase.from("courts").select("images, venue_id").eq("id", form.courtId).maybeSingle();
+
+  let imageUrl = courtRow?.images?.[0] || null;
+  if (!imageUrl && courtRow?.venue_id) {
+    const { data: siblings } = await supabase.from("courts").select("images").eq("venue_id", courtRow.venue_id);
+    imageUrl = siblings?.find((c) => c.images?.length > 0)?.images?.[0] || null;
+  }
 
   await supabase.from("news").insert({
     source_type: "partner_request",
@@ -33,7 +34,7 @@ export async function createPartnerRequest(form, hostId) {
     author_id: hostId,
     title: `محتاج ${form.playersNeeded} ${form.playersNeeded === 1 ? "لاعب" : "لاعبين"} في ${form.courtName}`,
     body: `مستوى ${form.level} — ${form.date} الساعة ${form.time}. اضغط للانضمام.`,
-    image_url: courtRow?.images?.[0] || null, // ← جديد
+    image_url: imageUrl,
     category: "announcement",
     status: "published",
   });
@@ -64,14 +65,21 @@ export async function respondToJoin(joinId, requestId, accept, playersNeeded) {
   if (error) throw error;
 
   if (accept) {
-    const { count } = await supabase
-      .from("partner_request_joins")
-      .select("*", { count: "exact", head: true })
-      .eq("request_id", requestId)
-      .eq("status", "accepted");
+    const { count } = await supabase.from("partner_request_joins").select("*", { count: "exact", head: true }).eq("request_id", requestId).eq("status", "accepted");
 
     if (count >= playersNeeded) {
       await supabase.from("partner_requests").update({ status: "matched" }).eq("id", requestId);
+
+      // نحدّث الخبر بدل ما يفضل "محتاج لاعب" وهو خلاص اكتمل
+      const { data: request } = await supabase.from("partner_requests").select("court_name").eq("id", requestId).single();
+
+      if (request) {
+        await supabase
+          .from("news")
+          .update({ title: `✅ اكتمل الفريق في ${request.court_name}`, body: "تم إيجاد كل اللاعبين المطلوبين لهذا الطلب." })
+          .eq("source_type", "partner_request")
+          .eq("source_id", requestId);
+      }
     }
   }
 }

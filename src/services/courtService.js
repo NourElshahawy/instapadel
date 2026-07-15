@@ -146,7 +146,6 @@ function slugify(str) {
     .replace(/[^\w\u0600-\u06FF-]/g, "");
   return cleaned || "venue";
 }
-
 function amenityIcon(key) {
   const map = { parking: "fa-car", cafeteria: "fa-mug-hot", showers: "fa-shower", lockers: "fa-lock", wifi: "fa-wifi" };
   return map[key] || "fa-check";

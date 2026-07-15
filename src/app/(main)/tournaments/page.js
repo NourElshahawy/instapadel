@@ -2,8 +2,12 @@ import Link from "next/link";
 import { getAllTournaments } from "@/services/tournamentService";
 // import "@/styles/pages/tournaments-listing.css";
 import ParallaxBg from "@/components/ui/ParallaxBg";
+import ListingHero from "@/components/shared/ListingHero";
 
-export const metadata = { title: "البطولات — InstaPadel" };
+export const metadata = {
+  title: "البطولات — InstaPadel",
+  description: "اكتشف بطولات البادل في المنصورة، سجّل فريقك أو تابع نتائج البطولات الجارية والمنتهية.",
+};
 
 const STATUS_LABELS = {
   registration: "التسجيل مفتوح",
@@ -17,19 +21,7 @@ export default async function TournamentsPage() {
 
   return (
     <>
-      <section className="listing-hero">
-        <div className="container">
-          <div className="breadcrumb-ph" data-aos="fade-up">
-            <Link href="/">الرئيسية</Link>
-            <i className="fa-solid fa-chevron-right"></i>
-            <span>البطولات</span>
-          </div>
-          <h1 data-aos="fade-up">بطولات البادل في المنصورة</h1>
-          <p className="results-count">
-            <b>{tournaments.length}</b> بطولة
-          </p>
-        </div>
-      </section>
+      <ListingHero title="بطولات البادل في المنصورة" count={tournaments.length} breadcrumbLabel="البطولات" />
 
       <section className="courts-section section" id="tournaments">
         <div className="courts-overlay" />
@@ -38,9 +30,7 @@ export default async function TournamentsPage() {
             {tournaments.map((t) => (
               <div className="col-md-6 col-lg-4" key={t.id} data-aos="fade-up">
                 <div className="tournament-list-card">
-                  <span className={`tournament-list-badge ${t.status}`}>
-                    {STATUS_LABELS[t.status]}
-                  </span>
+                  <span className={`tournament-list-badge ${t.status}`}>{STATUS_LABELS[t.status]}</span>
                   <h3>{t.name}</h3>
                   <div className="tournament-list-meta">
                     <span>
@@ -54,17 +44,11 @@ export default async function TournamentsPage() {
                       })}
                     </span>
                     <span>
-                      <span className="material-symbols-rounded">groups</span>{" "}
-                      {t.teams.length} / {t.maxTeams} فرق
+                      <span className="material-symbols-rounded">groups</span> {t.teams.length} / {t.maxTeams} فرق
                     </span>
                   </div>
-                  <Link
-                    href={`/tournaments/${t.id}`}
-                    className="btn btn-accent btn-sm btn-block"
-                  >
-                    {t.status === "completed"
-                      ? "شوف البطل والنتيجة"
-                      : "التفاصيل"}
+                  <Link href={`/tournaments/${t.id}`} className="btn btn-accent btn-sm btn-block">
+                    {t.status === "completed" ? "شوف البطل والنتيجة" : "التفاصيل"}
                   </Link>
                 </div>
               </div>

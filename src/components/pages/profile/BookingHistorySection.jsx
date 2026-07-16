@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { cancelBooking } from "@/services/bookingClient";
-import ReviewPrompt from "@/components/ReviewPrompt"; // عدّل المسار حسب مكان الكومبوننت الفعلي
+import ReviewPrompt from "@/components/pages/booking/confirmation/ReviewPrompt"; 
 
 export default function BookingHistorySection({
   bookings: initialBookings,

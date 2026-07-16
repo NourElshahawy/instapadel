@@ -1,7 +1,7 @@
 import { getAllCourts } from "@/services/courtService";
 import { getAllNews } from "@/services/newsService";
 
-const BASE_URL = "https://instapadel.vercel.app/"; 
+const BASE_URL = "https://instapadel.vercel.app";
 
 export default async function sitemap() {
   const courts = (await getAllCourts()) ?? [];

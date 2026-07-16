@@ -33,7 +33,7 @@ export async function createVenueWithCourts({ ownerId, venue, courts, photosByCo
     for (const photo of photos) {
       const blob = await (await fetch(photo.dataUrl)).blob();
       const path = `${ownerId}/${venueRow.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
-      const { error: uploadError } = await supabase.storage.from("venue-photos").upload(path, blob);
+const { error: uploadError } = await supabase.storage.from("venue-photos").upload(path, blob);
       if (!uploadError) {
         const { data: publicUrl } = supabase.storage.from("venue-photos").getPublicUrl(path);
         imageUrls.push(publicUrl.publicUrl);

@@ -63,7 +63,7 @@ export async function getAllCourts({ date } = {}) {
         location: venue.address,
         locationLink: null,
         isLive: true,
-        rating: 4.7,
+        rating: avgRating || "جديد", // بدل الرقم الثابت 4.7
         pricePerHour: minPrice,
         priceRangeLabel: minPrice === maxPrice ? `${minPrice}` : `${minPrice}-${maxPrice}`,
         courtsCount: venue.courts.length,
@@ -91,7 +91,19 @@ export async function getAllCourtsFlat() {
     })),
   );
 }
-
+const { data: allReviews } = await supabase
+  .from("court_reviews")
+  .select("court_id, rating")
+  .in("court_id", allCourtIds.length ? allCourtIds : ["00000000-0000-0000-0000-000000000000"]);
+const ratingByCourtId = {};
+(allReviews || []).forEach((r) => {
+  if (!ratingByCourtId[r.court_id]) ratingByCourtId[r.court_id] = [];
+  ratingByCourtId[r.court_id].push(r.rating);
+});
+const venueRatings = venue.courts.flatMap((c) => ratingByCourtId[c.id] || []);
+const avgRating = venueRatings.length > 0
+  ? (venueRatings.reduce((a, b) => a + b, 0) / venueRatings.length).toFixed(1)
+  : null;
 export async function getFeaturedCourts() {
   const courts = await getAllCourts();
   const featured = courts.filter((c) => c.featured);
@@ -104,7 +116,11 @@ export async function getCourtDetails(slug) {
   if (!court) return null;
 
   const supabase = await createClient();
-  const { data: venue } = await supabase.from("venues").select("*, courts(*)").eq("id", court.venueId).single();
+  const { data: venue } = await supabase
+    .from("venues")
+    .select("*, courts(*)")
+    .eq("id", court.venueId)
+    .single();
 
   const courtIds = (venue?.courts || []).map((c) => c.id);
   const { data: bookings } = await supabase
@@ -113,6 +129,8 @@ export async function getCourtDetails(slug) {
     .in("court_id", courtIds.length ? courtIds : ["00000000-0000-0000-0000-000000000000"])
     .eq("status", "confirmed");
 
+  const todayISO = new Date().toISOString().split("T")[0];
+
   return {
     ...court,
     logo: court.image,
@@ -120,14 +138,18 @@ export async function getCourtDetails(slug) {
     reviewsCount: "0",
     amenities: (venue?.amenities || []).map((a) => ({ icon: amenityIcon(a), label: amenityLabel(a) })),
     heroImages: venue?.courts?.flatMap((c) => c.images || []) || [court.image],
-    subCourts: (venue?.courts || []).map((c) => ({
-      id: c.id,
-      name: c.name,
-      pricePerHour: c.price_per_hour,
-      image: c.images?.[0] || court.image,
-      description: `ملعب ${c.type === "panoramic" ? "بانوراما" : c.type === "indoor" ? "داخلي" : "خارجي"}`,
-      tags: [{ icon: "fa-table-tennis-paddle-ball", label: c.type }],
-    })),
+    subCourts: (venue?.courts || []).map((c) => {
+      const bookedTodayCount = (bookings || []).filter((b) => b.court_id === c.id && b.date === todayISO).length;
+      return {
+        id: c.id,
+        name: c.name,
+        pricePerHour: c.price_per_hour,
+        image: c.images?.[0] || court.image,
+        description: `ملعب ${c.type === "panoramic" ? "بانوراما" : c.type === "indoor" ? "داخلي" : "خارجي"}`,
+        tags: [{ icon: "fa-table-tennis-paddle-ball", label: c.type }],
+        isFullyBookedToday: bookedTodayCount >= 12, // 12 سلوت هي أقصى عدد ساعات اليوم
+      };
+    }),
     days: buildNextSevenDays(),
     bookings: bookings || [],
   };

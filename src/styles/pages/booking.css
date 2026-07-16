@@ -1021,3 +1021,16 @@
     }
     
 }
+
+.court-full-badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; margin-bottom: 10px;
+  border-radius: var(--r-pill); background: rgba(255,107,107,.1); color: #ff6b6b;
+  font-size: .74rem; font-weight: 700;
+}
+.img-details.court-full { opacity: .6; }
+
+
+.review-prompt-card { background: var(--bg-elevated); border: 1px solid var(--border-glass); border-radius: var(--r-md); padding: 18px; margin-top: 16px; }
+.review-stars { display: flex; gap: 6px; font-size: 28px; }
+.review-star { color: var(--border-glass-strong); cursor: pointer; transition: color .2s; }
+.review-star.is-active { color: #ffc453; }

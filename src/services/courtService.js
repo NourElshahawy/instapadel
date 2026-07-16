@@ -39,6 +39,18 @@ export async function getAllCourts({ date } = {}) {
     bookingsForDate = data || [];
   }
 
+  // تقييمات الكورتس (اتنقلت هنا جوه الفنكشن بدل ما تكون طليقة برا)
+  const { data: allReviews } = await supabase
+    .from("court_reviews")
+    .select("court_id, rating")
+    .in("court_id", allCourtIds.length ? allCourtIds : ["00000000-0000-0000-0000-000000000000"]);
+
+  const ratingByCourtId = {};
+  (allReviews || []).forEach((r) => {
+    if (!ratingByCourtId[r.court_id]) ratingByCourtId[r.court_id] = [];
+    ratingByCourtId[r.court_id].push(r.rating);
+  });
+
   return venues
     .filter((v) => v.courts.length > 0)
     .filter((venue) => {
@@ -54,6 +66,11 @@ export async function getAllCourts({ date } = {}) {
       const maxPrice = Math.max(...prices);
       const totalBookings = venue.courts.reduce((sum, c) => sum + (countByCourtId[c.id] || 0), 0);
 
+      const venueRatings = venue.courts.flatMap((c) => ratingByCourtId[c.id] || []);
+      const avgRating = venueRatings.length > 0
+        ? (venueRatings.reduce((a, b) => a + b, 0) / venueRatings.length).toFixed(1)
+        : null;
+
       return {
         id: venue.id,
         slug: `${slugify(venue.name)}-${venue.id.slice(0, 8)}`,
@@ -63,7 +80,7 @@ export async function getAllCourts({ date } = {}) {
         location: venue.address,
         locationLink: null,
         isLive: true,
-        rating: avgRating || "جديد", // بدل الرقم الثابت 4.7
+        rating: avgRating || "جديد",
         pricePerHour: minPrice,
         priceRangeLabel: minPrice === maxPrice ? `${minPrice}` : `${minPrice}-${maxPrice}`,
         courtsCount: venue.courts.length,
@@ -91,19 +108,7 @@ export async function getAllCourtsFlat() {
     })),
   );
 }
-const { data: allReviews } = await supabase
-  .from("court_reviews")
-  .select("court_id, rating")
-  .in("court_id", allCourtIds.length ? allCourtIds : ["00000000-0000-0000-0000-000000000000"]);
-const ratingByCourtId = {};
-(allReviews || []).forEach((r) => {
-  if (!ratingByCourtId[r.court_id]) ratingByCourtId[r.court_id] = [];
-  ratingByCourtId[r.court_id].push(r.rating);
-});
-const venueRatings = venue.courts.flatMap((c) => ratingByCourtId[c.id] || []);
-const avgRating = venueRatings.length > 0
-  ? (venueRatings.reduce((a, b) => a + b, 0) / venueRatings.length).toFixed(1)
-  : null;
+
 export async function getFeaturedCourts() {
   const courts = await getAllCourts();
   const featured = courts.filter((c) => c.featured);
@@ -147,7 +152,7 @@ export async function getCourtDetails(slug) {
         image: c.images?.[0] || court.image,
         description: `ملعب ${c.type === "panoramic" ? "بانوراما" : c.type === "indoor" ? "داخلي" : "خارجي"}`,
         tags: [{ icon: "fa-table-tennis-paddle-ball", label: c.type }],
-        isFullyBookedToday: bookedTodayCount >= 12, // 12 سلوت هي أقصى عدد ساعات اليوم
+        isFullyBookedToday: bookedTodayCount >= 12,
       };
     }),
     days: buildNextSevenDays(),

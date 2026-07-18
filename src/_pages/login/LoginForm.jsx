@@ -38,11 +38,7 @@ export default function LoginForm() {
       });
 
       const supabase = createClient();
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role, owner_status")
-        .eq("id", user.id)
-        .single();
+      const { data: profile } = await supabase.from("profiles").select("role, owner_status, avatar_url").eq("id", user.id).single();
 
       if (redirectTo) {
         router.push(redirectTo);

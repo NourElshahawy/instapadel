@@ -182,14 +182,14 @@
   background: var(--bg-elevated);
   color: var(--white);
 }
-.nav-account-link .material-symbols-rounded {
+.nav-account-link i {
   font-size: 18px;
   color: var(--accent);
 }
 .nav-account-link.danger {
   color: #ff6b6b;
 }
-.nav-account-link.danger .material-symbols-rounded {
+.nav-account-link.danger i {
   color: #ff6b6b;
 }
 

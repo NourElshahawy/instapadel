@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "@/services/authClient";
 
-export default function ProfileMenu({ name, role }) {
+export default function ProfileMenu({ name, role, avatarUrl }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
@@ -29,13 +29,13 @@ export default function ProfileMenu({ name, role }) {
   return (
     <div className="profile-menu" ref={menuRef}>
       <button type="button" className="profile-menu-trigger" onClick={() => setOpen((v) => !v)}>
-        <span className="profile-menu-avatar">{initial}</span>
+        <span className="profile-menu-avatar">{avatarUrl ? <img src={avatarUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} /> : initial}</span>
       </button>
 
       {open && (
         <div className="profile-menu-dropdown">
           <div className="profile-menu-header">
-            <span className="profile-menu-avatar">{initial}</span>
+            <span className="profile-menu-avatar">{avatarUrl ? <img src={avatarUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} /> : initial}</span>
             <span className="profile-menu-name">{name || "مستخدم"}</span>
           </div>
 

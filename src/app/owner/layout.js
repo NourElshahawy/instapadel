@@ -9,7 +9,7 @@ export default async function OwnerLayout({ children }) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase.from("profiles").select("role, name").eq("id", user.id).single();
+  const { data: profile } = await supabase.from("profiles").select("role, name, avatar_url").eq("id", user.id).single();
   if (profile?.role !== "owner") redirect("/");
 
   const { data: venues } = await supabase.from("venues").select("id, status").eq("owner_id", user.id);

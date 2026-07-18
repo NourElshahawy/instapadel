@@ -17,10 +17,10 @@ export function useAuth() {
       }
       const { data } = await supabase
         .from("profiles")
-        .select("name, phone, role, owner_status")
+        .select("name, phone, role, owner_status, avatar_url") 
         .eq("id", currentUser.id)
         .single();
-      setProfile(data);
+       setProfile(data);
     };
 
     supabase.auth.getUser().then(({ data: { user } }) => {

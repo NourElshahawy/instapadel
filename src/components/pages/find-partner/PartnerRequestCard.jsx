@@ -16,9 +16,12 @@ export default function PartnerRequestCard({ request }) {
     <div className="partner-card">
       <div className="partner-card-head">
         <div className="partner-host">
-          <span className="partner-avatar">{request.hostName.charAt(0)}</span>
-          <span className="partner-host-name">{request.hostName}</span>
-        </div>
+          <span className="partner-avatar">{request.hostAvatarUrl ? <img src={request.hostAvatarUrl} alt="" /> : request.hostName.charAt(0)}</span>
+          <div>
+            <span className="partner-host-name">{request.hostName}</span>
+            {request.hostRating && <span style={{ fontSize: ".72rem", color: "#ffc453", marginRight: 6 }}>★ {request.hostRating}</span>}
+          </div>
+        </div>  
         <span className={`level-badge ${request.level}`}>{request.level}</span>
       </div>
 
@@ -42,15 +45,8 @@ export default function PartnerRequestCard({ request }) {
       {request.notes && <p className="partner-card-notes">{request.notes}</p>}
 
       <div className="partner-card-foot">
-        <span className={`partner-status-tag ${request.status}`}>
-          {request.status === "matched"
-            ? "✓ اكتمل الفريق"
-            : STATUS_LABELS[request.status]}
-        </span>
-        <Link
-          href={`/find-partner/${request.id}`}
-          className="btn btn-accent btn-sm"
-        >
+        <span className={`partner-status-tag ${request.status}`}>{request.status === "matched" ? "✓ اكتمل الفريق" : STATUS_LABELS[request.status]}</span>
+        <Link href={`/find-partner/${request.id}`} className="btn btn-accent btn-sm">
           التفاصيل
         </Link>
       </div>

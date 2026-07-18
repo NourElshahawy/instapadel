@@ -44,7 +44,7 @@ export default async function TournamentsPage() {
                       })}
                     </span>
                     <span>
-                      <span className="material-symbols-rounded">groups</span> {t.teams.length} / {t.maxTeams} فرق
+                      <i className="fa-solid fa-users"></i> {t.teams.length} / {t.maxTeams} فرق
                     </span>
                   </div>
                   <Link href={`/tournaments/${t.id}`} className="btn btn-accent btn-sm btn-block">

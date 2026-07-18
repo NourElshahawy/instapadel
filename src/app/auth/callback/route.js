@@ -11,11 +11,7 @@ export async function GET(request) {
 
     if (!error) {
       const { data: { user } } = await supabase.auth.getUser();
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role, owner_status")
-        .eq("id", user.id)
-        .single();
+      const { data: profile } = await supabase.from("profiles").select("role, owner_status, avatar_url").eq("id", user.id).single();
 
       if (profile?.role === "owner") {
         const redirectPath = profile.owner_status === "approved" ? "/owner/dashboard" : "/owner/pending-approval";

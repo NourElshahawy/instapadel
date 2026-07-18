@@ -17,7 +17,9 @@ export default function RegisterForm() {
     confirmPassword: "",
     agreeTerms: false,
   });
-  const [status, setStatus] = useState("idle"); // idle | loading | check-email
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
@@ -25,10 +27,21 @@ export default function RegisterForm() {
     setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
   };
 
+  const handleAvatarChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
+    if (!avatarFile) {
+      setError("الصورة الشخصية إجبارية عشان يبقى في ثقة بينك وبين باقي اللاعبين.");
+      return;
+    }
     if (form.password !== form.confirmPassword) {
       setError("كلمة المرور غير متطابقة");
       return;
@@ -41,14 +54,13 @@ export default function RegisterForm() {
         email: form.email,
         phone: form.phone,
         password: form.password,
+        avatarFile,
       });
 
       if (data.session) {
-        // تأكيد الإيميل متعطل في إعدادات Supabase — دخل مباشرة
         router.push("/");
         router.refresh();
       } else {
-        // تأكيد الإيميل مفعّل — لازم يفتح الرابط اللي وصله بالإيميل
         setStatus("check-email");
       }
     } catch (err) {
@@ -75,10 +87,7 @@ export default function RegisterForm() {
         <div className="auth-card" style={{ textAlign: "center" }}>
           <i className="fa-solid fa-envelope-open-text" style={{ fontSize: 48, color: "var(--accent)" }}></i>
           <h1 style={{ marginTop: 16 }}>تأكد من إيميلك</h1>
-          <p className="auth-sub">
-            بعتنالك رابط تفعيل على <b>{form.email}</b> — لازم تفتحه الأول عشان تقدر تسجل دخول.
-          </p>
-          <p style={{ fontSize: ".82rem", color: "var(--text-faint)", marginTop: 16 }}>مش لاقي الإيميل؟ تأكد من مجلد Spam.</p>
+          <p className="auth-sub">بعتنالك رابط تفعيل على {form.email} — افتحه عشان تكمّل تسجيل حسابك.</p>
         </div>
       </div>
     );
@@ -97,6 +106,15 @@ export default function RegisterForm() {
         <p className="auth-sub">انضم إلى InstaPadel واحجز ملعبك الأول في دقائق.</p>
 
         <AccountTypeSelector />
+
+        {/* ===== رفع الصورة الشخصية ===== */}
+        <div className="avatar-upload-field">
+          <label htmlFor="avatarInput" className="avatar-upload-circle">
+            {avatarPreview ? <img src={avatarPreview} alt="" /> : <i className="fa-solid fa-camera"></i>}
+          </label>
+          <input id="avatarInput" type="file" accept="image/*" onChange={handleAvatarChange} hidden />
+          <p className="avatar-upload-hint">صورة شخصية واضحة — إجبارية عشان تبني ثقة مع باقي اللاعبين</p>
+        </div>
 
         <button type="button" className="social-btn" onClick={handleGoogleSignup}>
           <i className="fa-brands fa-google" />

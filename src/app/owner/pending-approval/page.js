@@ -23,12 +23,12 @@ export default async function PendingApprovalPage() {
   return (
     <div className="auth-shell" style={{ justifyContent: "center", alignItems: "center" }}>
       <div className="auth-card" style={{ textAlign: "center" }}>
-        <span className="material-symbols-rounded" style={{ fontSize: 48, color: "var(--accent)" }}>schedule</span>
+        <i className="fa-solid fa-clock" style={{ fontSize: 48, color: "var(--accent)" }}></i>
         <h1 style={{ marginTop: 16 }}>طلبك قيد المراجعة</h1>
-        <p className="auth-sub">
-          فريقنا بيراجع بيانات {venueNames} دلوقتي، وهيوصلك إيميل أول ما يتم قبول ملعبك على InstaPadel — عادةً خلال 24 ساعة.
-        </p>
-        <Link href="/" className="btn btn-ghost btn-block" style={{ marginTop: 20 }}>رجوع للرئيسية</Link>
+        <p className="auth-sub">فريقنا بيراجع بيانات {venueNames} دلوقتي، وهيوصلك إيميل أول ما يتم قبول ملعبك على InstaPadel — عادةً خلال 24 ساعة.</p>
+        <Link href="/" className="btn btn-ghost btn-block" style={{ marginTop: 20 }}>
+          رجوع للرئيسية
+        </Link>
       </div>
     </div>
   );

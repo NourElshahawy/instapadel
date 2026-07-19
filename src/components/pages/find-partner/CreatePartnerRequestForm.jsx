@@ -14,7 +14,8 @@ export default function CreatePartnerRequestForm({
   const [form, setForm] = useState({
     courtId: courts[0]?.id || "",
     date: "",
-    time: "",
+    timeFrom: "",
+    timeTo: "",
     level: "متوسط",
     playersNeeded: 1,
     notes: "",
@@ -24,17 +25,23 @@ export default function CreatePartnerRequestForm({
 
   const update = (patch) => setForm((f) => ({ ...f, ...patch }));
 
-  const canSubmit = form.courtId && form.date && form.time;
+  const canSubmit =
+    form.courtId &&
+    form.date &&
+    form.timeFrom &&
+    form.timeTo &&
+    form.timeFrom < form.timeTo;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!canSubmit) return;
     setSubmitting(true);
     try {
-      const court = courts.find((c) => c.id === form.courtId); // c.id بدل c.slug
+      const court = courts.find((c) => c.id === form.courtId);
+      const timeLabel = `${formatTime(form.timeFrom)} - ${formatTime(form.timeTo)}`;
       await createPartnerRequest(
-        { ...form, courtName: court?.name || "" },
-        hostId,
+        { ...form, time: timeLabel, courtName: court?.name || "" },
+        currentUser.id,
       );
       setSubmitted(true);
     } catch (err) {
@@ -107,20 +114,49 @@ export default function CreatePartnerRequestForm({
             </div>
           </div>
           <div className="col-6">
-            <div className="field-group mb-0">
-              <label>الوقت</label>
-              <div className="field-input-wrap">
-                <input
-                  type="text"
-                  className="field-input"
-                  placeholder="مثال: 6:00 م - 7:00 م"
-                  value={form.time}
-                  onChange={(e) => update({ time: e.target.value })}
-                  required
-                />
+            <div className="row g-3">
+              <div className="col-6">
+                <div className="field-group mb-0">
+                  <label>من الساعة</label>
+                  <div className="field-input-wrap">
+                    <input
+                      type="time"
+                      className="field-input"
+                      value={form.timeFrom}
+                      onChange={(e) => update({ timeFrom: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-6">
+                <div className="field-group mb-0">
+                  <label>إلى الساعة</label>
+                  <div className="field-input-wrap">
+                    <input
+                      type="time"
+                      className="field-input"
+                      value={form.timeTo}
+                      onChange={(e) => update({ timeTo: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          {form.timeFrom && form.timeTo && form.timeFrom >= form.timeTo && (
+            <p
+              style={{
+                color: "#ff6b6b",
+                fontSize: ".8rem",
+                marginTop: -8,
+                marginBottom: 12,
+              }}
+            >
+              وقت النهاية لازم يكون بعد وقت البداية
+            </p>
+          )}
         </div>
 
         <div className="field-group">
@@ -186,4 +222,11 @@ export default function CreatePartnerRequestForm({
       </form>
     </div>
   );
+}
+
+function formatTime(time24) {
+  const [h, m] = time24.split(":").map(Number);
+  const period = h >= 12 ? "م" : "ص";
+  const h12 = h % 12 || 12;
+  return `${h12}:${String(m).padStart(2, "0")} ${period}`;
 }

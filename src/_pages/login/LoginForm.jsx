@@ -43,11 +43,7 @@ export default function LoginForm() {
       if (redirectTo) {
         router.push(redirectTo);
       } else if (profile?.role === "owner") {
-        router.push(
-          profile.owner_status === "approved"
-            ? "/owner/dashboard"
-            : "/owner/pending-approval",
-        );
+        router.push(profile.owner_status === "approved" ? "/owner/dashboard" : "/owner/pending-approval");
       } else if (profile?.role === "admin") {
         router.push("/admin/dashboard");
       } else {
@@ -56,9 +52,7 @@ export default function LoginForm() {
       router.refresh();
     } catch (err) {
       if (err.message?.includes("Email not confirmed")) {
-        setError(
-          "لازم تأكد إيميلك الأول من الرسالة اللي بعتناها لك وقت التسجيل.",
-        );
+        setError("لازم تأكد إيميلك الأول من الرسالة اللي بعتناها لك وقت التسجيل.");
       } else {
         setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
       }
@@ -78,74 +72,37 @@ export default function LoginForm() {
     <div className="auth-form-col">
       <div className="auth-topbar d-flex d-lg-none">
         <Link href="/" className="brand">
-          <Image
-            src="/assets/imgs/logo.png"
-            alt="InstaPadel"
-            width={100}
-            height={56}
-          />
+          <Image src="/assets/imgs/logo1-removebg-preview.png" alt="InstaPadel" width={100} height={56} />
         </Link>
       </div>
 
       <div className="auth-card">
         <h1>مرحبًا بعودتك</h1>
-        <p className="auth-sub">
-          سجّل الدخول لتحجز ملعبك التالي في أقل من دقيقة.
-        </p>
+        <p className="auth-sub">سجّل الدخول لتحجز ملعبك التالي في أقل من دقيقة.</p>
 
-        <button
-          type="button"
-          className="social-btn"
-          onClick={handleGoogleLogin}
-        >
+        <button type="button" className="social-btn" onClick={handleGoogleLogin}>
           <i className="fa-brands fa-google" />
           تابع باستخدام Google
         </button>
 
         <div className="auth-divider">أو سجّل الدخول بالبريد الإلكتروني</div>
 
-        {error && (
-          <p style={{ color: "#ff6b6b", fontSize: ".85rem", marginBottom: 16 }}>
-            {error}
-          </p>
-        )}
+        {error && <p style={{ color: "#ff6b6b", fontSize: ".85rem", marginBottom: 16 }}>{error}</p>}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="field-group">
             <label htmlFor="loginEmail">البريد الإلكتروني</label>
             <div className="field-input-wrap">
               <i className="fa-solid fa-envelope field-icon" />
-              <input
-                className="field-input"
-                type="email"
-                id="loginEmail"
-                name="email"
-                placeholder="nour123@gmail.com"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
+              <input className="field-input" type="email" id="loginEmail" name="email" placeholder="nour123@gmail.com" value={form.email} onChange={handleChange} required />
             </div>
           </div>
 
-          <PasswordField
-            id="loginPassword"
-            label="كلمة المرور"
-            placeholder="أدخل كلمة المرور"
-            value={form.password}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, password: e.target.value }))
-            }
-          />
+          <PasswordField id="loginPassword" label="كلمة المرور" placeholder="أدخل كلمة المرور" value={form.password} onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))} />
 
           <div className="field-row-between">
             <label className="remember-check">
-              <input
-                type="checkbox"
-                name="remember"
-                checked={form.remember}
-                onChange={handleChange}
-              />
+              <input type="checkbox" name="remember" checked={form.remember} onChange={handleChange} />
               تذكرني
             </label>
             <Link href="/forgot-password" className="auth-link">
@@ -153,11 +110,7 @@ export default function LoginForm() {
             </Link>
           </div>
 
-          <button
-            type="submit"
-            className="btn btn-accent btn-block"
-            disabled={status === "loading"}
-          >
+          <button type="submit" className="btn btn-accent btn-block" disabled={status === "loading"}>
             {status === "loading" ? "جاري تسجيل الدخول…" : "تسجيل الدخول"}
           </button>
         </form>

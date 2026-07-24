@@ -36,7 +36,7 @@ export default function Hero() {
 
       <div className="container hero-content">
         <span className="hero-badge" data-aos="fade-up">
-          <Image src="/assets/imgs/logo.png" className="pulse-img" alt="" width={20} height={20} />
+          <Image src="/assets/imgs/logo1-removebg-preview.png" className="pulse-img" alt="" width={20} height={20} />
           إمكانية الوصول المباشر إلى أكثر من 10 ملاعب
         </span>
 

@@ -10,13 +10,21 @@ export default function LegalPage() {
     <div className="legal-shell">
       <aside className="legal-toc">
         <p className="toc-label">المحتويات</p>
-        <a href="#terms" className="toc-link">شروط الخدمة</a>
+        <a href="#terms" className="toc-link">
+          شروط الخدمة
+        </a>
         {TERMS_SECTIONS.map((s) => (
-          <a key={s.title} href={`#terms-${slug(s.title)}`} className="toc-link toc-sub">{s.title}</a>
+          <a key={s.title} href={`#terms-${slug(s.title)}`} className="toc-link toc-sub">
+            {s.title}
+          </a>
         ))}
-        <a href="#privacy" className="toc-link" style={{ marginTop: 14 }}>سياسة الخصوصية</a>
+        <a href="#privacy" className="toc-link" style={{ marginTop: 14 }}>
+          سياسة الخصوصية
+        </a>
         {PRIVACY_SECTIONS.map((s) => (
-          <a key={s.title} href={`#privacy-${slug(s.title)}`} className="toc-link toc-sub">{s.title}</a>
+          <a key={s.title} href={`#privacy-${slug(s.title)}`} className="toc-link toc-sub">
+            {s.title}
+          </a>
         ))}
       </aside>
 
@@ -24,14 +32,17 @@ export default function LegalPage() {
         <div className="legal-hero">
           <h1>الشروط والخصوصية</h1>
           <div className="legal-meta">
-            <span><span className="material-symbols-rounded">calendar_today</span> آخر تحديث: 20 يوليو 2026</span>
-            <span><span className="material-symbols-rounded">gavel</span> يسري في الدول العربية</span>
+            <span>
+              <i className="fa-solid fa-calendar-days"></i> آخر تحديث: 20 يوليو 2026
+            </span>
+
+            <span>
+              <i className="fa-solid fa-scale-balanced"></i> يسري في الدول العربية
+            </span>
           </div>
           <div className="legal-intro-box">
-            <span className="material-symbols-rounded">info</span>
-            <p>
-              باستخدامك لمنصة InstaPadel، فإنك توافق على شروط الخدمة وسياسة الخصوصية الموضحة أدناه. يرجى قراءتها بعناية قبل إنشاء حسابك.
-            </p>
+            <i className="fa-solid fa-circle-info"></i>
+            <p>باستخدامك لمنصة InstaPadel، فإنك توافق على شروط الخدمة وسياسة الخصوصية الموضحة أدناه. يرجى قراءتها بعناية قبل إنشاء حسابك.</p>
           </div>
         </div>
 
@@ -41,7 +52,9 @@ export default function LegalPage() {
           </div>
           {TERMS_SECTIONS.map((s, i) => (
             <div className="legal-section" id={`terms-${slug(s.title)}`} key={s.title}>
-              <h3><span className="section-num">{i + 1}</span> {s.title.replace(/^\d+\.\s*/, "")}</h3>
+              <h3>
+                <span className="section-num">{i + 1}</span> {s.title.replace(/^\d+\.\s*/, "")}
+              </h3>
               <p>{s.body}</p>
             </div>
           ))}
@@ -55,17 +68,22 @@ export default function LegalPage() {
           </div>
           {PRIVACY_SECTIONS.map((s, i) => (
             <div className="legal-section" id={`privacy-${slug(s.title)}`} key={s.title}>
-              <h3><span className="section-num">{i + 1}</span> {s.title.replace(/^\d+\.\s*/, "")}</h3>
+              <h3>
+                <span className="section-num">{i + 1}</span> {s.title.replace(/^\d+\.\s*/, "")}
+              </h3>
               <p>{s.body}</p>
             </div>
           ))}
         </section>
 
         <div className="legal-footer-note">
-          <span className="material-symbols-rounded">mail</span>
+          <i className="fa-solid fa-envelope"></i>
           <p>
             لأي استفسار بخصوص الشروط أو سياسة الخصوصية، أو لطلب حذف بياناتك، تواصل معنا على{" "}
-            <a href="mailto:Enour1847@gmail.com" className="legal-link">Enour1847@gmail.com</a>.
+            <a href="mailto:Enour1847@gmail.com" className="legal-link">
+              Enour1847@gmail.com
+            </a>
+            .
           </p>
         </div>
       </div>

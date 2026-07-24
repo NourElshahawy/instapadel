@@ -71,7 +71,7 @@
   position: absolute;
   width: 40px;
   height: 20px;
-  background-image: url(/assets/imgs/logo.png);
+  background-image: url(/assets/imgs/logo1-removebg-preview.png);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -152,17 +152,20 @@
   flex-direction: column;
   gap: 4px;
 }
+
 .nav-account-header {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 8px 16px 18px;
 }
+
 .nav-account-name {
   color: var(--white);
   font-weight: 700;
   font-size: 0.95rem;
 }
+
 .nav-account-link {
   display: flex;
   align-items: center;
@@ -178,17 +181,21 @@
   cursor: pointer;
   transition: all 0.25s var(--ease);
 }
+
 .nav-account-link:hover {
   background: var(--bg-elevated);
   color: var(--white);
 }
+
 .nav-account-link i {
   font-size: 18px;
   color: var(--accent);
 }
+
 .nav-account-link.danger {
   color: #ff6b6b;
 }
+
 .nav-account-link.danger i {
   color: #ff6b6b;
 }
@@ -199,6 +206,7 @@
     flex-direction: column;
     gap: 5px;
   }
+
   .nav-links {
     position: fixed;
     inset: 0 0 0 auto;
@@ -232,4 +240,9 @@
   .navbar-cta .btn-ghost {
     display: none;
   }
+}
+
+.navbar-ph.is-scrolled {
+  background: var(--nav-bg);
+  backdrop-filter: blur(18px) saturate(140%);
 }

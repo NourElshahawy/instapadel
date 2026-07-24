@@ -492,3 +492,18 @@
         padding: 20px;
     }
 }
+
+
+.level-badge.متوسط {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.partner-status-tag.open {
+    color: var(--accent);
+}
+
+.create-request-fab {
+    background: var(--grad);
+    color: #fff;
+}

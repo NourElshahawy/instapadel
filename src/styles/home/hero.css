@@ -131,3 +131,16 @@
     max-width: 600px;
     margin: 0 auto 48px;
 }
+
+.hero-badge {
+    border-color: var(--border-glass-strong);
+}
+
+.search-submit {
+    background: var(--grad);
+}
+
+.submit-icon,
+.submit-text {
+    color: #fff;
+}

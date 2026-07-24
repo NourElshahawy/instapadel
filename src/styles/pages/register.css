@@ -142,7 +142,7 @@
     object-fit: cover;
 }
 
-.avatar-upload-circle .material-symbols-rounded {
+.avatar-upload-circle i {
     font-size: 26px;
     color: var(--text-faint);
 }

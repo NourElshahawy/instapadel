@@ -97,7 +97,7 @@ export default function RegisterForm() {
     <div className="auth-form-col">
       <div className="auth-topbar d-flex d-lg-none">
         <Link href="/" className="brand">
-          <Image src="/assets/imgs/logo.png" alt="InstaPadel" width={100} height={56} />
+          <Image src="/assets/imgs/logo1-removebg-preview.png" alt="InstaPadel" width={100} height={56} />
         </Link>
       </div>
 

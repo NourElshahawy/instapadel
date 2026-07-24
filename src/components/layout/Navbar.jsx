@@ -7,6 +7,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { signOut } from "@/services/authClient";
 import { useRouter } from "next/navigation";
 import ProfileMenu from "./ProfileMenu";
+import ThemeToggle from "./ThemeToggle";
+// import ThemeToggle from "@/components/ThemeToggle";
+
 
 const NAV_LINKS = [
   { href: "/", label: "الرئيسية" },
@@ -36,7 +39,7 @@ export default function Navbar() {
     <header className={`navbar-ph ${isScrolled ? "is-scrolled" : ""}`}>
       <div className="container d-flex align-items-center justify-content-between">
         <Link href="/" className="brand">
-          <Image src="/assets/imgs/logo.png" alt="InstaPadel" width={100} height={56} priority />
+          <Image src="/assets/imgs/logo1-removebg-preview.png" alt="InstaPadel" width={100} height={56} priority />
         </Link>
 
         <nav className={`nav-links ${isOpen ? "is-open" : ""}`} id="navLinks">
@@ -45,7 +48,7 @@ export default function Navbar() {
           </button>
 
           <Link href="/" className="brand logo-mobil" onClick={closeMenu}>
-            <Image src="/assets/imgs/logo.png" alt="InstaPadel" width={100} height={56} />
+            <Image src="/assets/imgs/logo1-removebg-preview.png" alt="InstaPadel" width={100} height={56} />
           </Link>
 
           <div className="nav-links-primary">
@@ -54,6 +57,7 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+            <ThemeToggle />
           </div>
 
           {!loading && (
@@ -67,6 +71,7 @@ export default function Navbar() {
                       ) : (
                         profile?.name?.charAt(0)?.toUpperCase() || "U"
                       )}
+
                     </span>
                     <span className="nav-account-name">{profile?.name || "مستخدم"}</span>
                   </div>
@@ -101,7 +106,6 @@ export default function Navbar() {
             </div>
           )}
         </nav>
-
         <div className="navbar-cta">
           {loading ? null : user ? (
             <div className="d-none d-lg-block">
@@ -115,6 +119,7 @@ export default function Navbar() {
               <Link href="/register" className="btn btn-ghost btn-sm">
                 انشاء حساب
               </Link>
+              <ThemeToggle />
             </>
           )}
           <button className="nav-toggle" aria-label="Toggle menu" onClick={() => setIsOpen((v) => !v)}>

@@ -17,7 +17,7 @@ export default function MatchedContactCard({ player }) {
               <i className="fa-brands fa-whatsapp" />
             </a>
             <a className="mcc-btn call" href={`tel:+${intlPhone}`} aria-label="اتصال">
-              <span className="material-symbols-rounded">call</span>
+              <i className="fa-solid fa-phone"></i>{" "}
             </a>
           </>
         ) : (

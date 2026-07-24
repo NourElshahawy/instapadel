@@ -369,3 +369,48 @@
     z-index: -3;
     pointer-events: none;
 }
+
+
+.btn-accent {
+    background: var(--grad);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(109, 40, 255, .28);
+}
+
+.btn-accent:hover {
+    border: 1px solid var(--primary-3);
+    box-shadow: 0 14px 34px rgba(109, 40, 255, .4);
+    transform: translateY(-2px);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--white);
+    border-color: var(--border-glass-strong);
+}
+
+.btn-ghost:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.eyebrow {
+    color: var(--primary);
+}
+
+.eyebrow::before {
+    background: var(--primary);
+}
+
+.accent-underline {
+    color: var(--primary);
+}
+
+.icon-circle {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+i {
+    color: var(--primary);
+}

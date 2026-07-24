@@ -190,3 +190,11 @@ body.auth-page {
         width: 90%;
     }
 }
+
+.social-btn:hover {
+    border-color: var(--primary);
+}
+
+.auth-link {
+    color: var(--primary);
+}

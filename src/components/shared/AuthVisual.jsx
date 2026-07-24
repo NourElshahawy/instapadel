@@ -6,7 +6,7 @@ export default function AuthVisual({ heading, features, quote }) {
   return (
     <div className="auth-visual d-none d-lg-flex">
       {/* <Link href="/" className="brand">
-        <Image src="/assets/imgs/logo.png" alt="InstaPadel" width={140} height={80} />
+        <Image src="/assets/imgs/logo1-removebg-preview.png" alt="InstaPadel" width={140} height={80} />
       </Link> */}
 
       <div className="auth-visual-content">
@@ -14,8 +14,8 @@ export default function AuthVisual({ heading, features, quote }) {
         <div className="auth-feature-list">
           {features.map((f) => (
             <div className="item" key={f.text}>
-                  <i className={`fa-solid fa-${f.icon}`}></i>
-                  {f.text}
+              <i className={`fa-solid fa-${f.icon}`}></i>
+              {f.text}
             </div>
           ))}
         </div>

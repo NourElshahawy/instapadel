@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "@/services/authClient";
+import ThemeToggle from "./ThemeToggle";
 
 export default function ProfileMenu({ name, role, avatarUrl }) {
   const router = useRouter();
@@ -32,11 +33,14 @@ export default function ProfileMenu({ name, role, avatarUrl }) {
         <span className="profile-menu-avatar">{avatarUrl ? <img src={avatarUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} /> : initial}</span>
       </button>
 
+
       {open && (
         <div className="profile-menu-dropdown">
           <div className="profile-menu-header">
             <span className="profile-menu-avatar">{avatarUrl ? <img src={avatarUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} /> : initial}</span>
             <span className="profile-menu-name">{name || "مستخدم"}</span>
+
+            <ThemeToggle />
           </div>
 
           {role === "owner" && (

@@ -16,6 +16,7 @@
     text-transform: uppercase;
     letter-spacing: .08em;
     margin-bottom: 20px;
+    text-align: right;
 }
 
 .footer-col a {

@@ -1034,3 +1034,44 @@
 .review-stars { display: flex; gap: 6px; font-size: 28px; }
 .review-star { color: var(--border-glass-strong); cursor: pointer; transition: color .2s; }
 .review-star.is-active { color: #ffc453; }
+
+
+.slot-card.available {
+    border-color: rgba(0, 229, 168, .25);
+}
+
+.slot-card.available .slot-status {
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+}
+
+.slot-card.selected {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+}
+
+.slot-card.selected .slot-check {
+    background: var(--primary);
+}
+
+.book-now {
+    background: var(--grad);
+    color: #fff;
+}
+
+.confirm-btn {
+    background: var(--grad);
+    color: #fff;
+}
+
+.day-card.active {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    box-shadow: 0 0 0 1px var(--primary);
+}
+
+.day-card.active strong,
+.day-card.active small,
+.day-card.active span {
+    color: var(--primary);
+}

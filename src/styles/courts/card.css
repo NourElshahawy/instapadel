@@ -214,3 +214,25 @@
         transform: scale(1.8);
     }
 }
+
+
+.court-badge-live {
+    color: var(--accent);
+}
+
+.court-badge-live .pulse-dot {
+    background: var(--accent);
+}
+
+.court-badge-live .pulse-dot::after {
+    border-color: var(--accent);
+}
+
+.court-price-tag {
+    color: var(--white);
+}
+
+.slot-chip {
+    background: var(--primary-soft);
+    color: var(--primary);
+}

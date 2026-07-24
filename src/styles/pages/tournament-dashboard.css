@@ -12,6 +12,8 @@
     --td-live: #FF4B4B;
     --td-gold: #F2B705;
     --td-warning: #FFB238;
+    --td-court: var(--accent);
+    --td-gold: #F2B705;
 }
 
 .td-page {
@@ -443,9 +445,11 @@
     font-weight: 600;
     flex: 1;
 }
+
 .td-match-team.team1 {
     text-align: right;
 }
+
 .td-match-team.team2 {
     text-align: left;
 }
@@ -637,4 +641,14 @@
     .td-live-dot {
         animation: none !important;
     }
+}
+
+.td-badge {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.td-fab--court {
+    background: var(--grad);
+    color: #fff;
 }

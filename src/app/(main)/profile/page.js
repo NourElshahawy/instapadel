@@ -40,7 +40,7 @@ const { data: profile } = await supabase.from("profiles").select("name, phone, r
         </div>
       </div>
 
-      <BookingHistorySection bookings={bookings || []} />
+      <BookingHistorySection bookings={bookings || []} currentUserId={user.id} />
       <TournamentsSection tournaments={tournaments} />
       <PartnerRequestsSection requests={partnerRequests} />
     </div>

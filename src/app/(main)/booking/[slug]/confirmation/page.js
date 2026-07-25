@@ -22,15 +22,13 @@ export default async function ConfirmationPage({ params, searchParams }) {
 
   const sp = await searchParams;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   let bookingRow = null;
   if (sp.bookingId) {
-    const { data } = await supabase
-      .from("bookings")
-      .select("id, status, payment_status")
-      .eq("id", sp.bookingId)
-      .maybeSingle();
+    const { data } = await supabase.from("bookings").select("id, status, payment_status, reviewed").eq("id", sp.bookingId).maybeSingle();
     bookingRow = data;
   }
 
@@ -48,7 +46,9 @@ export default async function ConfirmationPage({ params, searchParams }) {
     email: user?.email || "—",
     createdAt: "اليوم",
     status: bookingRow?.status || "confirmed",
+    courtId: sp.subCourtId || null,
+    reviewed: bookingRow?.reviewed || false, // ← لازم لـ ReviewPrompt
   };
 
-  return <BookingConfirmationPage booking={booking} />;
+  return <BookingConfirmationPage booking={booking} userId={user?.id} />;
 }

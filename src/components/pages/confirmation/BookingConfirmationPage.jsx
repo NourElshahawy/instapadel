@@ -4,11 +4,13 @@ import EmailNotice from "./EmailNotice";
 import StatusTracker from "./StatusTracker";
 import BookAgainCard from "./BookAgainCard";
 import BookingSummarySidebar from "./BookingSummarySidebar";
+import ReviewPrompt from "@/components/pages/booking/confirmation/ReviewPrompt";
 // import "@/styles/pages/booking-confirmation.css";
 
-export default function BookingConfirmationPage({ booking }) {
+export default function BookingConfirmationPage({ booking, userId }) {
   const [showEmailNotice, setShowEmailNotice] = useState(true);
   const [isPaid, setIsPaid] = useState(false);
+  const [showReview, setShowReview] = useState(!booking.reviewed);
 
   return (
     <main className="confirmation-main">
@@ -30,6 +32,14 @@ export default function BookingConfirmationPage({ booking }) {
             </div>
 
             <StatusTracker booking={booking} isPaid={isPaid} onMarkPaid={() => setIsPaid(true)} />
+
+            {showReview && (
+              <div className="review-modal-overlay">
+                <div className="review-modal-box">
+                  <ReviewPrompt bookingId={booking.id} courtId={booking.courtId} userId={userId} onSubmitted={() => setShowReview(false)} />
+                </div>
+              </div>
+            )}
             <BookAgainCard />
           </div>
 

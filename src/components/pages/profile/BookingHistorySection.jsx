@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
 import { cancelBooking } from "@/services/bookingClient";
-import ReviewPrompt from "@/components/pages/booking/confirmation/ReviewPrompt"; 
+import ReviewPrompt from "@/components/pages/booking/confirmation/ReviewPrompt";
+import ConfirmModal from "@/components/shared/ConfirmModal";
+import { useToast } from "@/components/shared/ToastProvider";
 
 export default function BookingHistorySection({
   bookings: initialBookings,
@@ -9,17 +11,21 @@ export default function BookingHistorySection({
 }) {
   const [bookings, setBookings] = useState(initialBookings);
   const [cancellingId, setCancellingId] = useState(null);
+  const [confirmTarget, setConfirmTarget] = useState(null); // ← بديل confirm()
+  const { showToast } = useToast(); // ← بديل alert()
 
-  const handleCancel = async (id) => {
-    if (!confirm("متأكد إنك عايز تلغي الحجز ده؟")) return;
+  const requestCancel = (id) => setConfirmTarget(id);
+
+  const handleCancel = async () => {
+    const id = confirmTarget;
+    setConfirmTarget(null);
     setCancellingId(id);
     try {
       await cancelBooking(id);
-      setBookings((prev) =>
-        prev.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b)),
-      );
+      setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b)));
+      showToast("تم إلغاء الحجز بنجاح", "success");
     } catch {
-      alert("حصل خطأ أثناء الإلغاء");
+      showToast("حصل خطأ أثناء الإلغاء", "error");
     } finally {
       setCancellingId(null);
     }
@@ -41,7 +47,7 @@ export default function BookingHistorySection({
       ) : (
         bookings.map((b) => {
           const isPast = new Date(b.date) < new Date();
-          const needsReview = isPast && b.status === "confirmed" && !b.reviewed; // محتاج نجيب حالة reviewed من الداتا
+          const needsReview = isPast && b.status === "confirmed" && !b.reviewed;
 
           return (
             <div key={b.id}>
@@ -53,33 +59,15 @@ export default function BookingHistorySection({
                   <span>
                     {b.date} · {b.time}
                   </span>
-                  {b.status === "cancelled" && (
-                    <span
-                      style={{
-                        color: "#ff6b6b",
-                        fontSize: ".76rem",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {" "}
-                      ملغي
-                    </span>
-                  )}
+                  {b.status === "cancelled" && <span style={{ color: "#ff6b6b", fontSize: ".76rem", fontWeight: 700 }}> ملغي</span>}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <span className="bhc-price">{b.price} ج.م</span>
                   {b.status === "confirmed" && (
                     <button
-                      onClick={() => handleCancel(b.id)}
+                      onClick={() => requestCancel(b.id)}
                       disabled={cancellingId === b.id}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "#ff6b6b",
-                        fontSize: ".76rem",
-                        cursor: "pointer",
-                      }}
-                    >
+                      style={{ background: "none", border: "none", color: "#ff6b6b", fontSize: ".76rem", cursor: "pointer" }}>
                       {cancellingId === b.id ? "..." : "إلغاء"}
                     </button>
                   )}
@@ -91,11 +79,7 @@ export default function BookingHistorySection({
                   courtId={b.court_id}
                   userId={currentUserId}
                   onSubmitted={() => {
-                    setBookings((prev) =>
-                      prev.map((x) =>
-                        x.id === b.id ? { ...x, reviewed: true } : x,
-                      ),
-                    );
+                    setBookings((prev) => prev.map((x) => (x.id === b.id ? { ...x, reviewed: true } : x)));
                   }}
                 />
               )}
@@ -103,6 +87,17 @@ export default function BookingHistorySection({
           );
         })
       )}
+
+      <ConfirmModal
+        isOpen={confirmTarget !== null}
+        title="تأكيد إلغاء الحجز"
+        message="متأكد إنك عايز تلغي الحجز ده؟ الخطوة دي مش هترجع تاني."
+        confirmLabel="نعم، ألغِ الحجز"
+        cancelLabel="تراجع"
+        danger
+        onConfirm={handleCancel}
+        onCancel={() => setConfirmTarget(null)}
+      />
     </div>
   );
 }

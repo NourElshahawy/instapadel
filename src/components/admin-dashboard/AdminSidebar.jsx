@@ -6,6 +6,7 @@ const LINKS = [
   { href: "/admin/dashboard", label: "نظرة عامة", icon: "📊" },
   { href: "/admin/dashboard/venues", label: "موافقة الملاعب", icon: "🏟️" },
   { href: "/admin/dashboard/bookings", label: "كل الحجوزات", icon: "📅" },
+  { href: "/admin/dashboard/reviews", label: "التقييمات", icon: "⭐" },
   { href: "/admin/dashboard/tournaments", label: "البطولات", icon: "🏆" },
   { href: "/admin/dashboard/users", label: "المستخدمين", icon: "👥" },
   { href: "/admin/dashboard/news", label: "الأخبار", icon: "📰" },

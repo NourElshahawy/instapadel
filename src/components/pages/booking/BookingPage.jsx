@@ -144,6 +144,7 @@ export default function BookingPage({ court }) {
     const params = new URLSearchParams({
       court: court.name,
       subCourt: subCourt.name,
+      subCourtId: subCourt.id,
       date: summary.dateLabel,
       time: summary.time,
       price: String(summary.total),

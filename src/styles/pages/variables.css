@@ -175,7 +175,9 @@ img {
 [data-theme="light"] .booking-days,
 [data-theme="light"] .hero-details,
 [data-theme="light"] .step-bar,
-[data-theme="light"] .court-badge-live{
+[data-theme="light"] .court-badge-live,
+[data-theme="light"] .confirm-modal-box,
+[data-theme="light"] .toast-success{
   background: radial-gradient(circle at 30% 20%, #00d68f38, transparent 55%), radial-gradient(circle at 80% 80%, #00d68f24, transparent 50%), var(--bg-secondary);
 }
 

@@ -22,7 +22,7 @@ export default function Footer() {
                 <a href="https://instagram.com/NourElshahawy" target="_blank" rel="noreferrer" aria-label="Instagram">
                   <i className="fa-brands fa-instagram" />
                 </a>
-                <a href="https://facebook.com/NourElshahawy" target="_blank" rel="noreferrer" aria-label="Facebook">
+                <a href="https://www.facebook.com/share/1BNVDW1vNS/?mibextid=wwXIfr" target="_blank" rel="noreferrer" aria-label="Facebook">
                   <i className="fa-brands fa-facebook" />
                 </a>
                 <a href="https://wa.me/201065801252" target="_blank" rel="noreferrer" aria-label="WhatsApp">

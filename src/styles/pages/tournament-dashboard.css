@@ -618,9 +618,11 @@
 .td-fab--court {
     background: var(--td-court);
     color: #052421;
+    text-align: center;
 }
 
 .td-fab--gold {
+    text-align: center;
     background: var(--td-gold);
     color: #2b1c00;
 }

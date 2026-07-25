@@ -7,7 +7,7 @@ const LEVELS = ["مبتدئ", "متوسط", "محترف"];
 
 export default function CreatePartnerRequestForm({
   courts,
-  currentUser,
+  // currentUser,
   onClose,
   hostId,
 }) {
@@ -39,12 +39,10 @@ export default function CreatePartnerRequestForm({
     try {
       const court = courts.find((c) => c.id === form.courtId);
       const timeLabel = `${formatTime(form.timeFrom)} - ${formatTime(form.timeTo)}`;
-      await createPartnerRequest(
-        { ...form, time: timeLabel, courtName: court?.name || "" },
-        currentUser.id,
-      );
+      await createPartnerRequest({ ...form, time: timeLabel, courtName: court?.name || "" }, hostId);
       setSubmitted(true);
     } catch (err) {
+      console.error("PARTNER REQUEST ERROR:", err);
       alert("حصل خطأ أثناء نشر الطلب");
     } finally {
       setSubmitting(false);

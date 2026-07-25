@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import BookingPage from "@/components/pages/booking/BookingPage";
 import { getCourtDetails } from "@/services/courtService";
-
+export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const court = await getCourtDetails(slug);

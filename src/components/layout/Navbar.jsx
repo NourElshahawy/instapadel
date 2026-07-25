@@ -57,7 +57,7 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
           </div>
 
           {!loading && (
@@ -71,9 +71,9 @@ export default function Navbar() {
                       ) : (
                         profile?.name?.charAt(0)?.toUpperCase() || "U"
                       )}
-
                     </span>
                     <span className="nav-account-name">{profile?.name || "مستخدم"}</span>
+                  <ThemeToggle />
                   </div>
 
                   {profile?.role === "owner" && (

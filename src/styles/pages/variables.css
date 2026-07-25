@@ -171,8 +171,19 @@ img {
 [data-theme="light"] .auth-form-col,
 [data-theme="light"] .auth-visual-quote,
 [data-theme="light"] .booking-summary,
-[data-theme="light"] .booking-success.show{
+[data-theme="light"] .booking-success.show,
+[data-theme="light"] .booking-days,
+[data-theme="light"] .hero-details,
+[data-theme="light"] .step-bar,
+[data-theme="light"] .court-badge-live{
   background: radial-gradient(circle at 30% 20%, #00d68f38, transparent 55%), radial-gradient(circle at 80% 80%, #00d68f24, transparent 50%), var(--bg-secondary);
+}
+
+[data-theme="light"] .booking-days,
+[data-theme="light"] .hero-details,
+[data-theme="light"] .step-bar{
+  padding: 20px;
+  border-radius: 10px;
 }
 
 [data-theme="light"] .court-price-tag,
@@ -190,6 +201,10 @@ img {
 {
 color: var(--primary);
 }
+[data-theme="light"] .email-icon,
+[data-theme="light"] .tracker-step.is-done .ts-icon{
+  background: transparent;
+}
 
  .profile-menu-header {
     justify-content: space-between;
@@ -198,3 +213,4 @@ color: var(--primary);
 :root[data-theme="light"] {
   --accent: var(--primary);
 }
+

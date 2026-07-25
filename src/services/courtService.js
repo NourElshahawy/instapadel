@@ -117,7 +117,14 @@ export async function getFeaturedCourts() {
 
 export async function getCourtDetails(slug) {
   const courts = await getAllCourts();
-  const court = courts.find((c) => c.slug === slug);
+  // console.log("SLUG REQUESTED:", slug);
+  // console.log(
+  //   "AVAILABLE SLUGS:",
+  //   courts.map((c) => c.slug),
+  // );
+
+  const decodedSlug = decodeURIComponent(slug);
+  const court = courts.find((c) => c.slug === decodedSlug);
   if (!court) return null;
 
   const supabase = await createClient();

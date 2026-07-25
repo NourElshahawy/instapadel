@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import HeroActionsBar from "./HeroActionsBar";
 import VenueSummaryCard from "./VenueSummaryCard";
@@ -13,10 +13,13 @@ import ConfirmSheet from "./ConfirmSheet";
 import BookingSuccessToast from "./BookingSuccessToast";
 import { buildDefaultSlots } from "@/services/courtLogic";
 import { createClient } from "@/lib/supabase/client";
-
+import BookingGuideModal from "./BookingGuideModal";
 // import "@/styles/pages/booking.css";
 
 export default function BookingPage({ court }) {
+  const [showGuide, setShowGuide] = useState(true);
+  const daysSectionRef = useRef(null);
+  const slotsSectionRef = useRef(null);
   const router = useRouter();
 
   const [subCourt, setSubCourt] = useState(null);
@@ -27,7 +30,6 @@ export default function BookingPage({ court }) {
   const [showToast, setShowToast] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
 
-
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
@@ -37,26 +39,26 @@ export default function BookingPage({ court }) {
     setSubCourt(sc);
     setSelectedDay(null);
     setSelectedSlots([]);
+
+    setTimeout(() => {
+      daysSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 150);
   };
 
   const handleSelectDay = (d) => {
     setSelectedDay(d);
     setSelectedSlots([]);
+
+    setTimeout(() => {
+      slotsSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 150);
   };
 
   const summary = useMemo(() => {
     const total = selectedSlots.reduce((sum, s) => sum + s.price, 0);
-    const time = selectedSlots.length
-      ? `${selectedSlots[0].start} الي ${selectedSlots[selectedSlots.length - 1].end}`
-      : "";
-    const duration = selectedSlots.length
-      ? selectedSlots.length === 1
-        ? "ساعة واحدة"
-        : `${selectedSlots.length} ساعات`
-      : "";
-    const dateLabel = selectedDay
-      ? `${selectedDay.dow} ${selectedDay.dom} ${selectedDay.month}`
-      : "";
+    const time = selectedSlots.length ? `${selectedSlots[0].start} الي ${selectedSlots[selectedSlots.length - 1].end}` : "";
+    const duration = selectedSlots.length ? (selectedSlots.length === 1 ? "ساعة واحدة" : `${selectedSlots.length} ساعات`) : "";
+    const dateLabel = selectedDay ? `${selectedDay.dow} ${selectedDay.dom} ${selectedDay.month}` : "";
     const dateISO = selectedDay?.date || ""; // ← جديد: الـ ISO date جاي من court-details.json / الداتا الأصلية
     return { total, time, duration, dateLabel, dateISO };
   }, [selectedSlots, selectedDay]);
@@ -64,9 +66,7 @@ export default function BookingPage({ court }) {
   const daySlots = useMemo(() => {
     if (!subCourt || !selectedDay) return [];
 
-    const bookedStartTimes = court.bookings
-      .filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date)
-      .map((b) => b.time.split(" الي ")[0]); // ناخد أول جزء بس (وقت البداية) للمقارنة
+    const bookedStartTimes = court.bookings.filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date).map((b) => b.time.split(" الي ")[0]); // ناخد أول جزء بس (وقت البداية) للمقارنة
 
     return buildDefaultSlots(subCourt.pricePerHour).map((slot) => ({
       ...slot,
@@ -79,11 +79,7 @@ export default function BookingPage({ court }) {
     setSelectedSlots((prev) => {
       const exists = prev.some((s) => s.start === slot.start);
       if (exists) return prev.filter((s) => s.start !== slot.start);
-      return [...prev, slot].sort(
-        (a, b) =>
-          daySlots.findIndex((s) => s.start === a.start) -
-          daySlots.findIndex((s) => s.start === b.start),
-      );
+      return [...prev, slot].sort((a, b) => daySlots.findIndex((s) => s.start === a.start) - daySlots.findIndex((s) => s.start === b.start));
     });
   };
 
@@ -113,18 +109,13 @@ export default function BookingPage({ court }) {
       status: "confirmed",
     }));
 
-    const { data: bookingRows, error } = await supabase
-      .from("bookings")
-      .insert(rows)
-      .select();
+    const { data: bookingRows, error } = await supabase.from("bookings").insert(rows).select();
 
     if (error) {
       setConfirming(false);
       if (error.code === "23505") {
         // unique constraint violation — حد تاني حجز نفس السلوت قبلك
-        alert(
-          "للأسف حد تاني حجز واحد أو أكتر من المواعيد دي قبلك. حدّث الصفحة واختار مواعيد تانية.",
-        );
+        alert("للأسف حد تاني حجز واحد أو أكتر من المواعيد دي قبلك. حدّث الصفحة واختار مواعيد تانية.");
         window.location.reload();
       } else {
         alert("حصل خطأ أثناء الحجز، حاول تاني");
@@ -159,9 +150,7 @@ export default function BookingPage({ court }) {
     });
 
     setTimeout(() => {
-      router.push(
-        `/booking/${court.slug}/confirmation?${params.toString()}&bookingId=${bookingRows[0].id}`,
-      );
+      router.push(`/booking/${court.slug}/confirmation?${params.toString()}&bookingId=${bookingRows[0].id}`);
     }, 1400);
   };
 
@@ -179,45 +168,24 @@ export default function BookingPage({ court }) {
       {/* <HeroActionsBar courtSlug={court.slug} /> */}
 
       <main className="booking-page">
-        <VenueSummaryCard court={court} />
+        {/* <VenueSummaryCard court={court} /> */}
+        {/* <HeroImageSlider images={court.heroImages} /> */}
+        <StepBar hasCourtSub={!!subCourt} hasDate={!!selectedDay} hasTime={selectedSlots.length > 0} />
 
-        <HeroImageSlider images={court.heroImages} />
+        <CourtGallerySelector subCourts={court.subCourts || []} selectedId={subCourt?.id} onSelect={handleSelectSubCourt} />
 
-        <StepBar
-          hasCourtSub={!!subCourt}
-          hasDate={!!selectedDay}
-          hasTime={selectedSlots.length > 0}
-        />
+        <div ref={daysSectionRef}>
+          <DaySelector days={court.days || []} selectedDate={selectedDay?.date} onSelect={handleSelectDay} locked={!subCourt} />
+        </div>
 
-        <CourtGallerySelector
-          subCourts={court.subCourts || []}
-          selectedId={subCourt?.id}
-          onSelect={handleSelectSubCourt}
-        />
-
-        <DaySelector
-          days={court.days || []}
-          selectedDate={selectedDay?.date}
-          onSelect={handleSelectDay}
-          locked={!subCourt}
-        />
-
-        <SlotsGrid
-          slots={daySlots}
-          selectedTimes={selectedSlots.map((s) => s.start)}
-          onToggle={handleToggleSlot}
-          locked={!subCourt || !selectedDay}
-        />
+        <div ref={slotsSectionRef}>
+          <SlotsGrid slots={daySlots} selectedTimes={selectedSlots.map((s) => s.start)} onToggle={handleToggleSlot} locked={!subCourt || !selectedDay} />
+        </div>
       </main>
 
-      <BookingSummaryFooter
-        date={summary.dateLabel}
-        time={summary.time}
-        duration={summary.duration}
-        price={summary.total}
-        onBookNow={handleBookNowClick}
-        disabled={!canBook}
-      />
+      {showGuide && <BookingGuideModal onClose={() => setShowGuide(false)} />}
+
+      <BookingSummaryFooter date={summary.dateLabel} time={summary.time} duration={summary.duration} price={summary.total} onBookNow={handleBookNowClick} disabled={!canBook} />
 
       <ConfirmSheet
         isOpen={sheetOpen}

@@ -1050,9 +1050,9 @@
     background: var(--primary-soft);
 }
 
-.slot-card.selected .slot-check {
+/* .slot-card.selected .slot-check {
     background: var(--primary);
-}
+} */
 
 .book-now {
     background: var(--grad);
@@ -1074,4 +1074,102 @@
 .day-card.active small,
 .day-card.active span {
     color: var(--primary);
+}
+
+.booking-guide-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, .7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.booking-guide-card {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-glass-strong);
+    border-radius: var(--r-lg);
+    padding: 32px 24px 24px;
+    animation: guidePop .35s var(--ease);
+}
+
+@keyframes guidePop {
+    from {
+        opacity: 0;
+        transform: scale(.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.booking-guide-skip {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: none;
+    border: none;
+    color: var(--text-faint);
+    font-size: .78rem;
+    cursor: pointer;
+}
+
+.booking-guide-skip:hover {
+    color: var(--white);
+}
+
+.booking-guide-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 26px;
+    margin-bottom: 16px;
+}
+
+.booking-guide-card h3 {
+    font-size: 1.15rem;
+    color: var(--white);
+    margin-bottom: 8px;
+}
+
+.booking-guide-card p {
+    font-size: .88rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.booking-guide-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.booking-guide-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--border-glass-strong);
+    transition: all .3s var(--ease);
+}
+
+.booking-guide-dot.is-active {
+    width: 20px;
+    border-radius: 4px;
+    background: var(--primary);
 }

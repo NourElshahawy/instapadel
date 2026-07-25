@@ -169,7 +169,9 @@ img {
 [data-theme="light"] .news-card-body,
 [data-theme="light"] .partner-card,
 [data-theme="light"] .auth-form-col,
-[data-theme="light"] .auth-visual-quote {
+[data-theme="light"] .auth-visual-quote,
+[data-theme="light"] .booking-summary,
+[data-theme="light"] .booking-success.show{
   background: radial-gradient(circle at 30% 20%, #00d68f38, transparent 55%), radial-gradient(circle at 80% 80%, #00d68f24, transparent 50%), var(--bg-secondary);
 }
 
@@ -181,7 +183,6 @@ img {
 }
 
 [data-theme="light"] .read-more-link,
-/* [data-theme="light"] .news-featured-content h3, */
 [data-theme="light"] .news-card-body h3,
 [data-theme="light"] .news-feature-info h2,
 [data-theme="light"] :is(.fas, .far, .fab, .fa-solid, .fa-regular, .fa-brands, .fa-classic, .fa):before,

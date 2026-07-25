@@ -4,6 +4,7 @@ import { ToastProvider } from "@/components/shared/ToastProvider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Urbanist, Plus_Jakarta_Sans } from "next/font/google";
+import WhatsAppFloatButton from "@/components/shared/WhatsAppFloatButton";
 
 const urbanist = Urbanist({
   subsets: ["latin"],
@@ -21,6 +22,7 @@ export default function MainLayout({ children }) {
     <ToastProvider>
       <Navbar />
       {children}
+      <WhatsAppFloatButton />
       <Footer />
     </ToastProvider>
   );

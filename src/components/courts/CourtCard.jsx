@@ -14,7 +14,7 @@ export default function CourtCard({ court }) {
           <span className="pulse-dot" /> {court.isLive ? "Live" : "مغلق"}
         </span>
         <span className="court-rating">
-          <i className="fa-solid fa-star"></i> {court.rating}
+          <i className="fa-solid fa-star"></i> {court.rating > 0 ? court.rating : "جديد"}
         </span>
         <ImageWithFallback src={court.image} alt={`${court.name} court`} />
         <span className="court-price-tag">
@@ -41,7 +41,7 @@ export default function CourtCard({ court }) {
             <span>الملاعب</span>
           </div>
           <div className="stat">
-            <b>{court.rating}</b>
+            <b>{court.rating > 0 ? court.rating : "جديد"}</b>
             <span>التقييم</span>
           </div>
           <div className="stat">

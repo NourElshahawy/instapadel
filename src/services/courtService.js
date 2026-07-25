@@ -80,7 +80,7 @@ export async function getAllCourts({ date } = {}) {
         location: venue.address,
         locationLink: null,
         isLive: true,
-        rating: avgRating || "جديد",
+        rating: avgRating ? Number(avgRating) : 0,
         pricePerHour: minPrice,
         priceRangeLabel: minPrice === maxPrice ? `${minPrice}` : `${minPrice}-${maxPrice}`,
         courtsCount: venue.courts.length,

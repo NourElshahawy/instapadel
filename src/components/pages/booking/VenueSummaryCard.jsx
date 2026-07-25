@@ -13,7 +13,7 @@ export default function VenueSummaryCard({ court }) {
           <h1>{court.name}</h1>
           <div className="court-meta-row">
             <span className="court-rating-inline">
-              <i className="fa-solid fa-star" /> {court.rating}
+              <i className="fa-solid fa-star" /> {court.rating > 0 ? court.rating : "جديد"}
               {court.reviewsCount && <small>({court.reviewsCount})</small>}
             </span>
             {court.locationLink ? (

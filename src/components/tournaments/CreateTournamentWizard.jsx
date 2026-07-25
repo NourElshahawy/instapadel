@@ -177,7 +177,7 @@ function StepCourtSelect({ courts, data, updateData }) {
                   <h6>{court.name}</h6>
                   <div className="court-pick-meta">
                     <span>
-                      <i className="fa-solid fa-star"></i> {court.rating}
+                      <i className="fa-solid fa-star"></i> {court.rating > 0 ? court.rating : "جديد"}
                     </span>
                     <span>
                       <i className="fa-solid fa-location-dot"></i> {court.location}

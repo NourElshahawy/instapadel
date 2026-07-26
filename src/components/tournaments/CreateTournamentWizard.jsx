@@ -2,8 +2,20 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { createTournament } from "@/services/tournamentClient";
+import GuideModal from "@/components/shared/GuideModal";
 
 // import "@/styles/pages/tournament-wizard.css";
+
+const TOURNAMENT_GUIDE_STEPS = [
+  { icon: "fa-pen", title: "اكتب بيانات البطولة", text: "حدد اسم البطولة، نوعها (فردي أو زوجي)، وعدد الفرق." },
+  { icon: "fa-location-dot", title: "اختار الملعب", text: "حدد الملعب اللي البطولة هتقام فيه." },
+  { icon: "fa-calendar-days", title: "حدد المواعيد", text: "اختار تاريخ بداية البطولة، وممكن تحدد آخر موعد للتسجيل." },
+  {
+    icon: "fa-bell",
+    title: "التحديثات تلقائية",
+    text: 'لما عدد الفرق يكتمل، تقدر تدوس "ابدأ البطولة" ويتولّد الجدول تلقائيًا. وهيتحدّث خبر البطولة في صفحة الأخبار مع كل مرحلة: بداية التسجيل، بدء البطولة، وإعلان البطل في النهاية.',
+  },
+];
 
 const TEAM_OPTIONS = [4, 8, 16, 32];
 const STEPS = [
@@ -29,13 +41,18 @@ export default function CreateTournamentWizard({ courts = [], organizerId }) {
   const [data, setData] = useState(INITIAL_DATA);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [showGuide, setShowGuide] = useState(true);
 
   const updateData = (patch) => setData((prev) => ({ ...prev, ...patch }));
 
   const canGoNext = useMemo(() => {
     if (step === 1) return data.name.trim().length >= 3;
     if (step === 2) return !!data.courtId;
-    if (step === 3) return !!data.startDate;
+    if (step === 3) {
+      if (!data.startDate) return false;
+      if (data.registrationDeadline && data.registrationDeadline >= data.startDate) return false;
+      return true;
+    }
     return true;
   }, [step, data]);
 
@@ -57,45 +74,48 @@ export default function CreateTournamentWizard({ courts = [], organizerId }) {
   };
 
   return (
-    <section className="wizard-section section">
-      <div className="container">
-        <div className="wizard-steps mb-4">
-          {STEPS.map((s) => (
-            <div key={s.id} className={`wizard-step-pill ${step === s.id ? "active" : ""} ${step > s.id ? "done" : ""}`}>
-              <span className="wizard-step-num">{step > s.id ? <i className="fa-solid fa-check"></i> : s.id}</span>
-              <span className="wizard-step-label">{s.label}</span>
+    <>
+      {showGuide && <GuideModal steps={TOURNAMENT_GUIDE_STEPS} onClose={() => setShowGuide(false)} finalLabel="يلا ننشئ البطولة" />}
+      <section className="wizard-section section">
+        <div className="container">
+          <div className="wizard-steps mb-4">
+            {STEPS.map((s) => (
+              <div key={s.id} className={`wizard-step-pill ${step === s.id ? "active" : ""} ${step > s.id ? "done" : ""}`}>
+                <span className="wizard-step-num">{step > s.id ? <i className="fa-solid fa-check"></i> : s.id}</span>
+                <span className="wizard-step-label">{s.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="wizard-card">
+            {step === 1 && <StepBasicInfo data={data} updateData={updateData} />}
+            {step === 2 && <StepCourtSelect courts={courts} data={data} updateData={updateData} />}
+            {step === 3 && <StepSchedule data={data} updateData={updateData} />}
+            {step === 4 && <StepReview data={data} />}
+
+            {error && <p className="wizard-error">{error}</p>}
+
+            <div className="wizard-actions">
+              {step > 1 && (
+                <button className="btn btn-ghost btn-sm" onClick={goBack} disabled={submitting}>
+                  <i className="fa-solid fa-arrow-right"></i> السابق
+                </button>
+              )}
+
+              {step < 4 ? (
+                <button className="btn btn-ghost btn-sm" onClick={goNext} disabled={!canGoNext}>
+                  التالي <i className="fa-solid fa-arrow-left"></i>
+                </button>
+              ) : (
+                <button className="btn btn-ghost btn-sm" onClick={handleSubmit} disabled={submitting}>
+                  {submitting ? "جاري الإنشاء..." : "إنشاء البطولة"}
+                </button>
+              )}
             </div>
-          ))}
-        </div>
-
-        <div className="wizard-card">
-          {step === 1 && <StepBasicInfo data={data} updateData={updateData} />}
-          {step === 2 && <StepCourtSelect courts={courts} data={data} updateData={updateData} />}
-          {step === 3 && <StepSchedule data={data} updateData={updateData} />}
-          {step === 4 && <StepReview data={data} />}
-
-          {error && <p className="wizard-error">{error}</p>}
-
-          <div className="wizard-actions">
-            {step > 1 && (
-              <button className="btn btn-ghost btn-sm" onClick={goBack} disabled={submitting}>
-                <i className="fa-solid fa-arrow-right"></i> السابق
-              </button>
-            )}
-
-            {step < 4 ? (
-              <button className="btn btn-ghost btn-sm" onClick={goNext} disabled={!canGoNext}>
-                التالي <i className="fa-solid fa-arrow-left"></i>
-              </button>
-            ) : (
-              <button className="btn btn-ghost btn-sm" onClick={handleSubmit} disabled={submitting}>
-                {submitting ? "جاري الإنشاء..." : "إنشاء البطولة"}
-              </button>
-            )}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
 
@@ -199,6 +219,21 @@ function StepCourtSelect({ courts, data, updateData }) {
 }
 
 function StepSchedule({ data, updateData }) {
+  const todayISO = new Date().toISOString().split("T")[0];
+
+  // آخر موعد ممكن للتسجيل هو يوم قبل بداية البطولة (لو محدد تاريخ بداية أصلاً)
+  const maxDeadline = data.startDate ? addDaysISO(data.startDate, -1) : undefined;
+
+  const deadlineTooLate = data.registrationDeadline && data.startDate && data.registrationDeadline >= data.startDate;
+
+  const handleStartDateChange = (value) => {
+    updateData({ startDate: value });
+    // لو آخر موعد للتسجيل بقى بعد تاريخ البداية الجديد (أو نفسه)، امسحه عشان نمنع تعارض
+    if (data.registrationDeadline && value && data.registrationDeadline >= value) {
+      updateData({ startDate: value, registrationDeadline: "" });
+    }
+  };
+
   return (
     <div className="wizard-step-content">
       <h4 className="wizard-step-title">
@@ -207,13 +242,23 @@ function StepSchedule({ data, updateData }) {
 
       <div className="form-group mb-3">
         <label>تاريخ بداية البطولة</label>
-        <input type="date" className="form-control" value={data.startDate} onChange={(e) => updateData({ startDate: e.target.value })} />
+        <input type="date" className="form-control" min={todayISO} value={data.startDate} onChange={(e) => handleStartDateChange(e.target.value)} />
         <small className="wizard-hint">مواعيد المباريات بالساعة هتتحدد لاحقًا بعد تأكيد البطولة والملعب</small>
       </div>
 
       <div className="form-group mb-3">
         <label>آخر موعد للتسجيل (اختياري)</label>
-        <input type="date" className="form-control" value={data.registrationDeadline} onChange={(e) => updateData({ registrationDeadline: e.target.value })} />
+        <input
+          type="date"
+          className="form-control"
+          min={todayISO}
+          max={maxDeadline}
+          disabled={!data.startDate}
+          value={data.registrationDeadline}
+          onChange={(e) => updateData({ registrationDeadline: e.target.value })}
+        />
+        {!data.startDate ? <small className="wizard-hint">حدد تاريخ بداية البطولة الأول</small> : <small className="wizard-hint">لازم يكون قبل تاريخ بداية البطولة بيوم على الأقل</small>}
+        {deadlineTooLate && <p style={{ color: "#ff6b6b", fontSize: ".8rem", marginTop: 6 }}>آخر موعد للتسجيل لازم يكون قبل تاريخ بداية البطولة</p>}
       </div>
 
       <div className="form-group mb-3">
@@ -222,6 +267,12 @@ function StepSchedule({ data, updateData }) {
       </div>
     </div>
   );
+}
+
+function addDaysISO(dateISO, days) {
+  const d = new Date(dateISO);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split("T")[0];
 }
 
 function StepReview({ data }) {

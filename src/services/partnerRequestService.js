@@ -21,11 +21,13 @@ export async function getPartnerRequestById(id) {
 
   const { data, error } = await supabase
     .from("partner_requests")
-    .select(`
-      *,
-      host:profiles!partner_requests_host_id_fkey (name, phone),
-      partner_request_joins (id, status, player_id, profiles (name, phone, email))
-    `)
+    .select(
+      `
+    *,
+    host:profiles!partner_requests_host_id_fkey (name, phone, avatar_url),
+    partner_request_joins (id, status, player_id, profiles (name, phone, email, avatar_url))
+  `,
+    )
     .eq("id", id)
     .single();
 
@@ -54,6 +56,7 @@ function mapRequest(r) {
       joinId: j.id,
       name: j.profiles?.name || "مستخدم",
       phone: j.profiles?.phone,
+      avatarUrl: j.profiles?.avatar_url,
       email: j.profiles?.email, // ← هنا مكانه الصح، جوه الـ map بتاعة playersJoined
       status: j.status,
     })),

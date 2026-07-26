@@ -1,9 +1,6 @@
 export default function SlotsGrid({ slots, selectedTimes, onToggle, locked }) {
   return (
-    <section
-      className={`booking-slots ${locked ? "section-locked" : ""}`}
-      data-requires="اليوم"
-    >
+    <section className={`booking-slots ${locked ? "section-locked" : ""}`} data-requires="اليوم">
       <div className="section-title">
         <h2>اختر الموعد المناسب</h2>
         <span>اضغط لاختيار الموعد</span>
@@ -26,16 +23,17 @@ export default function SlotsGrid({ slots, selectedTimes, onToggle, locked }) {
       <div className="slots-grid">
         {slots.map((slot) => {
           const isBooked = slot.status === "booked";
+          const isPast = slot.status === "past";
+          const isDisabled = isBooked || isPast;
           const isSelected = selectedTimes.includes(slot.start);
 
           return (
             <button
               key={slot.start}
               type="button"
-              className={`slot-card ${isBooked ? "booked" : "available"} ${isSelected ? "selected" : ""}`}
-              disabled={isBooked}
-              onClick={() => onToggle(slot)}
-            >
+              className={`slot-card ${isBooked ? "booked" : isPast ? "past" : "available"} ${isSelected ? "selected" : ""}`}
+              disabled={isDisabled}
+              onClick={() => onToggle(slot)}>
               <span className="slot-status" />
               {isSelected && (
                 <span className="slot-check">
@@ -46,6 +44,7 @@ export default function SlotsGrid({ slots, selectedTimes, onToggle, locked }) {
               <h3>الي</h3>
               <h3>{slot.end}</h3>
               {isBooked && <p>محجوز</p>}
+              {isPast && <p>فات الموعد</p>}
             </button>
           );
         })}

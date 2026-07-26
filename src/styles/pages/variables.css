@@ -185,7 +185,11 @@ img {
 [data-theme="light"] .td-progress-track,
 [data-theme="light"] .td-countdown,
 [data-theme="light"] .td-stat-card,
-[data-theme="light"] .td-hero--live{
+[data-theme="light"] .td-hero--live,
+    [data-theme="light"] .td-bracket-card,
+    [data-theme="light"] .td-bracket-card.is-final,
+    [data-theme="light"] .td-match-card,
+    [data-theme="light"] .td-fab--muted{
   background: radial-gradient(circle at 30% 20%, #00d68f38, transparent 55%), radial-gradient(circle at 80% 80%, #00d68f24, transparent 50%), var(--bg-secondary);
 }
 
@@ -199,7 +203,8 @@ img {
 [data-theme="light"] .court-price-tag,
 [data-theme="light"] .auth-visual-content h2,
 [data-theme="light"] .auth-feature-list .item,
-[data-theme="light"] .news-featured-content h3{
+[data-theme="light"] .news-featured-content h3,
+[data-theme="light"] .news-date{
   color: #fdeded;
 }
 
@@ -212,12 +217,16 @@ img {
 [data-theme="light"] .td-timeline-text,
 [data-theme="light"] .td-hero-title,
 [data-theme="light"] .td-match-team,
-[data-theme="light"] .td-match-score
+[data-theme="light"] .td-match-score,
+[data-theme="light"] .td-bracket-result,
+[data-theme="light"] .radio-pill,
+[data-theme="light"] .form-control
 {
 color: var(--primary);
 }
 [data-theme="light"] .email-icon,
-[data-theme="light"] .tracker-step.is-done .ts-icon{
+[data-theme="light"] .tracker-step.is-done .ts-icon,
+[data-theme="light"] .jp-btn.accept{
   background: transparent;
 }
 

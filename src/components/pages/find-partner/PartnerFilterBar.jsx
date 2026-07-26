@@ -8,7 +8,11 @@ export default function PartnerFilterBar({ courts, filters, setFilters }) {
       <div className="field-input-wrap">
         <select className="field-input" value={filters.courtId} onChange={(e) => setFilters((f) => ({ ...f, courtId: e.target.value }))}>
           <option value="all">كل الملاعب</option>
-          {courts.map((c) => <option key={c.id} value={c.slug}>{c.name}</option>)}
+          {courts.map((c) => (
+            <option key={c.id} value={c.slug}>
+              {c.name}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -18,14 +22,19 @@ export default function PartnerFilterBar({ courts, filters, setFilters }) {
 
       <div className="field-input-wrap">
         <select className="field-input" value={filters.level} onChange={(e) => setFilters((f) => ({ ...f, level: e.target.value }))}>
-          {LEVELS.map((l) => <option key={l} value={l === "الكل" ? "all" : l}>{l}</option>)}
+          {LEVELS.map((l) => (
+            <option key={l} value={l === "الكل" ? "all" : l}>
+              {l}
+            </option>
+          ))}
         </select>
       </div>
 
       <div className="field-input-wrap">
-        <select className="field-input" value={filters.showCompleted} onChange={(e) => setFilters((f) => ({ ...f, showCompleted: e.target.value }))}>
+        <select className="field-input" value={filters.status} onChange={(e) => setFilters((f) => ({ ...f, status: e.target.value }))}>
           <option value="active">الطلبات النشطة فقط</option>
-          <option value="all">عرض المكتملة كمان</option>
+          <option value="completed">المكتملة فقط</option>
+          <option value="all">الكل</option>
         </select>
       </div>
     </div>

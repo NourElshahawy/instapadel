@@ -8,29 +8,24 @@ import EmptyState from "@/components/shared/EmptyState";
 import ParallaxBg from "@/components/ui/ParallaxBg";
 import ListingHero from "@/components/shared/ListingHero";
 
-const DEFAULT_FILTERS = { courtId: "all", date: "", level: "all", showCompleted: "active" };
-
+const DEFAULT_FILTERS = { courtId: "all", date: "", level: "all", status: "active" };
 
 export default function PartnerRequestsListing({ requests, courts }) {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
   const filtered = useMemo(() => {
-  return requests.filter((r) => {
-    const matchesCourt = filters.courtId === "all" || r.courtId === filters.courtId;
-    const matchesDate = !filters.date || r.date === filters.date;
-    const matchesLevel = filters.level === "all" || r.level === filters.level;
-    const matchesCompleted = filters.showCompleted === "all" || r.status !== "matched";
-    return matchesCourt && matchesDate && matchesLevel && matchesCompleted;
-  });
-}, [requests, filters]);
+    return requests.filter((r) => {
+      const matchesCourt = filters.courtId === "all" || r.courtId === filters.courtId;
+      const matchesDate = !filters.date || r.date === filters.date;
+      const matchesLevel = filters.level === "all" || r.level === filters.level;
+      const matchesStatus = filters.status === "all" || (filters.status === "active" && r.status !== "matched") || (filters.status === "completed" && r.status === "matched");
+      return matchesCourt && matchesDate && matchesLevel && matchesStatus;
+    });
+  }, [requests, filters]);
 
   return (
     <>
-      <ListingHero
-        titlehead="البحث عن شريك"
-        title="دور على شريك للعب"
-        count={filtered.length}
-      />
+      <ListingHero titlehead="البحث عن شريك" title="دور على شريك للعب" count={filtered.length} />
 
       <section className="courts-section section">
         <ParallaxBg image="/assets/imgs/courts-bg.png" />
@@ -53,7 +48,7 @@ export default function PartnerRequestsListing({ requests, courts }) {
       </section>
 
       <Link href="/find-partner/create" className="create-request-fab">
-        <i className="fa-solid fa-plus" style={{color:"#000"}} /> إنشاء طلب
+        <i className="fa-solid fa-plus" style={{ color: "#000" }} /> إنشاء طلب
       </Link>
     </>
   );

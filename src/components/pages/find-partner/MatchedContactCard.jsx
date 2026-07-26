@@ -5,7 +5,9 @@ export default function MatchedContactCard({ player }) {
 
   return (
     <div className="matched-contact-card">
-      <span className="partner-avatar">{player.name?.charAt(0)}</span>
+      <span className="partner-avatar" style={{ overflow: "hidden" }}>
+        {player.avatarUrl ? <img src={player.avatarUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : player.name?.charAt(0)}
+      </span>
       <div className="mcc-info">
         <b>{player.name}</b>
         <span style={{ fontSize: ".8rem", color: "var(--text-muted)" }}>{player.level}</span>

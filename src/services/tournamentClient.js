@@ -76,20 +76,28 @@ export async function startTournament(tournamentId, rounds, matches) {
     team_b_name: m.teamB,
   }));
 
-  const { data: insertedMatches, error: matchesError } = await supabase
-    .from("tournament_matches")
-    .insert(rows)
-    .select(); // ← نرجّع الصفوف الحقيقية بالـ UUID اللي Supabase ولّده
+  const { data: insertedMatches, error: matchesError } = await supabase.from("tournament_matches").insert(rows).select();
 
   if (matchesError) throw matchesError;
 
-  const { error: updateError } = await supabase
-    .from("tournaments")
-    .update({ status: "ready", first_match_at: new Date().toISOString() })
-    .eq("id", tournamentId);
+  const { error: updateError } = await supabase.from("tournaments").update({ status: "ready", first_match_at: new Date().toISOString() }).eq("id", tournamentId);
   if (updateError) throw updateError;
 
-  return insertedMatches; // ← جديد، مهم
+  // نحدّث الخبر عشان يعكس إن البطولة بدأت
+  const { data: tournament } = await supabase.from("tournaments").select("name, venue_name").eq("id", tournamentId).single();
+
+  if (tournament) {
+    await supabase
+      .from("news")
+      .update({
+        title: `⚡ بدأت بطولة ${tournament.name}`,
+        body: `انطلقت منافسات بطولة ${tournament.name} في ${tournament.venue_name}. تابع النتائج أول بأول.`,
+      })
+      .eq("source_type", "tournament")
+      .eq("source_id", tournamentId);
+  }
+
+  return insertedMatches;
 }
 
 export async function submitMatchResult(matchId, scoreA, scoreB, nextMatchId, nextSlot, winnerName, isFinal, tournamentId) {

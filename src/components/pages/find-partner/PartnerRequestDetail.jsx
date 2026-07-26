@@ -106,8 +106,8 @@ export default function PartnerRequestDetail({ initialRequest, currentUserId }) 
                 {request.playersJoined.map((p) => (
                   <div className="join-player-row" key={p.id}>
                     <div className="jp-info">
-                      <span className="partner-avatar" style={{ width: 34, height: 34, fontSize: ".8rem" }}>
-                        {p.name?.charAt(0)}
+                      <span className="partner-avatar" style={{ width: 34, height: 34, fontSize: ".8rem", overflow: "hidden" }}>
+                        {p.avatarUrl ? <img src={p.avatarUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : p.name?.charAt(0)}
                       </span>
                       <div>
                         <b>{p.name}</b>

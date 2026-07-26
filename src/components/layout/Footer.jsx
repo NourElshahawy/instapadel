@@ -19,7 +19,7 @@ export default function Footer() {
               </Link>
               <p>أسرع طريقة للعثور على ملعب بادل وحجزه في المنصورة — مواعيد فورية، أندية موثقة، دفع آمن.</p>
               <div className="social-row">
-                <a href="https://instagram.com/NourElshahawy" target="_blank" rel="noreferrer" aria-label="Instagram">
+                <a href="https://www.instagram.com/nour_elshahawy537?igsh=YnpybjFwY2c3aWtu&utm_source=qr" target="_blank" rel="noreferrer" aria-label="Instagram">
                   <i className="fa-brands fa-instagram" />
                 </a>
                 <a href="https://www.facebook.com/share/1BNVDW1vNS/?mibextid=wwXIfr" target="_blank" rel="noreferrer" aria-label="Facebook">

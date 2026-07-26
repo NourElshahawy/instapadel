@@ -31,7 +31,7 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="col-6 col-lg-2 footer-col">
+            <div className="col-md-6 col-lg-2 footer-col">
               <h4>المنصة</h4>
               <Link href="/">الرئيسية</Link>
               <Link href="/courts">احجز ملعباً</Link>
@@ -39,7 +39,7 @@ export default function Footer() {
               <Link href="/news">أخبار البادل</Link>
             </div>
 
-            <div className="col-6 col-lg-2 footer-col">
+            <div className="col-md-6 col-lg-2 footer-col">
               <h4>الدعم</h4>
               <Link href="#">مركز المساعدة</Link>
               <Link href="#">الإلغاءات</Link>

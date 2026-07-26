@@ -16,8 +16,7 @@ export default function AddVenueForm({ ownerId, onCreated }) {
   const [courts, setCourts] = useState([{ name: "", type: "regular", price: "" }]);
   const [submitting, setSubmitting] = useState(false);
 
-  const toggleAmenity = (value) =>
-    setVenue((v) => ({ ...v, amenities: v.amenities.includes(value) ? v.amenities.filter((a) => a !== value) : [...v.amenities, value] }));
+  const toggleAmenity = (value) => setVenue((v) => ({ ...v, amenities: v.amenities.includes(value) ? v.amenities.filter((a) => a !== value) : [...v.amenities, value] }));
 
   const updateCourt = (i, patch) => setCourts((cs) => cs.map((c, idx) => (idx === i ? { ...c, ...patch } : c)));
   const addCourtRow = () => setCourts((cs) => [...cs, { name: "", type: "regular", price: "" }]);
@@ -61,13 +60,13 @@ export default function AddVenueForm({ ownerId, onCreated }) {
       </div>
 
       <div className="row g-3">
-        <div className="col-6">
+        <div className="col-md-6">
           <div className="field-group mb-0">
             <label>العنوان</label>
             <input className="field-input" value={venue.address} onChange={(e) => setVenue((v) => ({ ...v, address: e.target.value }))} />
           </div>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <div className="field-group mb-0">
             <label>رقم الهاتف</label>
             <input className="field-input phone-rtl-fix" value={venue.phone} onChange={(e) => setVenue((v) => ({ ...v, phone: e.target.value }))} required />
@@ -95,7 +94,7 @@ export default function AddVenueForm({ ownerId, onCreated }) {
               <div className="col-12">
                 <input className="field-input" placeholder="اسم الملعب" value={c.name} onChange={(e) => updateCourt(i, { name: e.target.value })} />
               </div>
-              <div className="col-6">
+              <div className="col-md-6">
                 <select className="field-input" value={c.type} onChange={(e) => updateCourt(i, { type: e.target.value })}>
                   <option value="regular">عادي</option>
                   <option value="panoramic">بانوراما</option>
@@ -103,23 +102,29 @@ export default function AddVenueForm({ ownerId, onCreated }) {
                   <option value="outdoor">مكشوف</option>
                 </select>
               </div>
-              <div className="col-6">
+              <div className="col-md-6">
                 <input className="field-input" type="number" placeholder="السعر/ساعة" value={c.price} onChange={(e) => updateCourt(i, { price: e.target.value })} />
               </div>
             </div>
             {courts.length > 1 && (
-              <button type="button" className="btn-remove-court" onClick={() => removeCourtRow(i)}>إزالة</button>
+              <button type="button" className="btn-remove-court" onClick={() => removeCourtRow(i)}>
+                إزالة
+              </button>
             )}
           </div>
         ))}
-        <button type="button" className="btn-add-court" onClick={addCourtRow}>+ أضف ملعب فرعي</button>
+        <button type="button" className="btn-add-court" onClick={addCourtRow}>
+          + أضف ملعب فرعي
+        </button>
       </div>
 
       <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
         <button type="submit" className="owner-btn-save" disabled={!canSubmit || submitting}>
           {submitting ? "جاري الإرسال…" : "إرسال للمراجعة"}
         </button>
-        <button type="button" className="owner-btn-cancel" onClick={() => setOpen(false)}>إلغاء</button>
+        <button type="button" className="owner-btn-cancel" onClick={() => setOpen(false)}>
+          إلغاء
+        </button>
       </div>
     </form>
   );

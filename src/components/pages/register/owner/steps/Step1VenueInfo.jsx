@@ -24,7 +24,7 @@ export default function Step1VenueInfo({ venue, updateVenue }) {
       </div>
 
       <div className="row g-3">
-        <div className="col-6">
+        <div className="col-md-6">
           <div className="field-group mb-0">
             <label>رقم الهاتف</label>
             <div className="field-input-wrap">
@@ -33,7 +33,7 @@ export default function Step1VenueInfo({ venue, updateVenue }) {
             </div>
           </div>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <div className="field-group mb-0">
             <label>البريد الإلكتروني</label>
             <div className="field-input-wrap">
@@ -57,7 +57,7 @@ export default function Step1VenueInfo({ venue, updateVenue }) {
       </div>
 
       <div className="row g-3">
-        <div className="col-6">
+        <div className="col-md-6">
           <div className="field-group mb-0">
             <label>كلمة المرور</label>
             <div className="field-input-wrap">

@@ -94,7 +94,7 @@ export default function CreatePartnerRequestForm({
           </div>
 
           <div className="row g-3">
-            <div className="col-6">
+            <div className="col-md-6">
               <div className="field-group mb-0">
                 <label>التاريخ</label>
                 <div className="field-input-wrap">
@@ -102,9 +102,9 @@ export default function CreatePartnerRequestForm({
                 </div>
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-md-6">
               <div className="row g-3">
-                <div className="col-6">
+                <div className="col-md-6">
                   <div className="field-group mb-0">
                     <label>من الساعة</label>
                     <div className="field-input-wrap">
@@ -112,7 +112,7 @@ export default function CreatePartnerRequestForm({
                     </div>
                   </div>
                 </div>
-                <div className="col-6">
+                <div className="col-md-6">
                   <div className="field-group mb-0">
                     <label>إلى الساعة</label>
                     <div className="field-input-wrap">

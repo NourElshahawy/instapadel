@@ -55,7 +55,7 @@ export default function AddCourtForm({ venueId, onAdded }) {
         <div className="col-12">
           <input className="field-input" placeholder="اسم الملعب" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <select className="field-input" value={type} onChange={(e) => setType(e.target.value)}>
             <option value="regular">عادي</option>
             <option value="panoramic">بانوراما</option>
@@ -63,7 +63,7 @@ export default function AddCourtForm({ venueId, onAdded }) {
             <option value="outdoor">مكشوف</option>
           </select>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <input className="field-input" type="number" placeholder="السعر/ساعة" value={price} onChange={(e) => setPrice(e.target.value)} required />
         </div>
         <div className="col-12">

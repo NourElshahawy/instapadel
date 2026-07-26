@@ -20,7 +20,7 @@ export default function CourtRow({ court, index, onChange, onRemove, canRemove }
             </div>
           </div>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <div className="field-group mb-0">
             <label>نوع الملعب</label>
             <div className="field-input-wrap">
@@ -34,7 +34,7 @@ export default function CourtRow({ court, index, onChange, onRemove, canRemove }
             </div>
           </div>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <div className="field-group mb-0">
             <label>السعر / ساعة (جنيه)</label>
             <div className="field-input-wrap">

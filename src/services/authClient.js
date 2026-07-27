@@ -71,6 +71,12 @@ export async function updatePassword(newPassword) {
   if (error) throw error;
 }
 
+export async function updatePhone(userId, phone) {
+  const supabase = createClient();
+  const { error } = await supabase.from("profiles").update({ phone }).eq("id", userId);
+  if (error) throw error;
+  return phone;
+}
 
 export async function updateAvatar(userId, avatarFile) {
   const supabase = createClient();

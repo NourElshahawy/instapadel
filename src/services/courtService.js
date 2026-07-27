@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { buildNextSevenDays, buildDefaultSlots } from "./courtLogic";
-import { getEgyptISODate } from "./courtLogic"
+import { getEgyptISODate } from "./courtLogic";
 export async function getAllCourts({ date } = {}) {
   const supabase = await createClient();
 
@@ -31,7 +31,7 @@ export async function getAllCourts({ date } = {}) {
   let bookingsForDate = [];
   if (date) {
     const { data } = await supabase
-      .from("bookings")
+      .from("booking_slots")
       .select("court_id, time")
       .in("court_id", allCourtIds.length ? allCourtIds : ["00000000-0000-0000-0000-000000000000"])
       .eq("date", date)
@@ -67,9 +67,7 @@ export async function getAllCourts({ date } = {}) {
       const totalBookings = venue.courts.reduce((sum, c) => sum + (countByCourtId[c.id] || 0), 0);
 
       const venueRatings = venue.courts.flatMap((c) => ratingByCourtId[c.id] || []);
-      const avgRating = venueRatings.length > 0
-        ? (venueRatings.reduce((a, b) => a + b, 0) / venueRatings.length).toFixed(1)
-        : null;
+      const avgRating = venueRatings.length > 0 ? (venueRatings.reduce((a, b) => a + b, 0) / venueRatings.length).toFixed(1) : null;
 
       return {
         id: venue.id,
@@ -128,15 +126,11 @@ export async function getCourtDetails(slug) {
   if (!court) return null;
 
   const supabase = await createClient();
-  const { data: venue } = await supabase
-    .from("venues")
-    .select("*, courts(*)")
-    .eq("id", court.venueId)
-    .single();
+  const { data: venue } = await supabase.from("venues").select("*, courts(*)").eq("id", court.venueId).single();
 
   const courtIds = (venue?.courts || []).map((c) => c.id);
   const { data: bookings } = await supabase
-    .from("bookings")
+    .from("booking_slots")
     .select("court_id, date, time")
     .in("court_id", courtIds.length ? courtIds : ["00000000-0000-0000-0000-000000000000"])
     .eq("status", "confirmed");

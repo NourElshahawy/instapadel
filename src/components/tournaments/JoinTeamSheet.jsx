@@ -51,7 +51,7 @@ export default function JoinTeamSheet({ tournament, onClose, onSubmit }) {
             </div>
           )}
 
-          <button type="submit" className="confirm-btn" disabled={!canSubmit || submitting}>
+          <button type="submit" className="confirm-btn" disabled={submitting}>
             {submitting ? "جاري التسجيل…" : "تأكيد الاشتراك"}
           </button>
           <button type="button" className="cancel-sheet-btn" onClick={onClose} disabled={submitting}>

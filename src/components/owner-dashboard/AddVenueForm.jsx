@@ -92,7 +92,7 @@ export default function AddVenueForm({ ownerId, onCreated }) {
           <div key={i} className="court-row">
             <div className="row g-3">
               <div className="col-12">
-                <input className="field-input" placeholder="اسم الملعب" value={c.name} onChange={(e) => updateCourt(i, { name: e.target.value })} />
+                <input className="field-input" placeholder="اسم الملعب" value={c.name} onChange={(e) => updateCourt(i, { name: e.target.value })} required />
               </div>
               <div className="col-md-6">
                 <select className="field-input" value={c.type} onChange={(e) => updateCourt(i, { type: e.target.value })}>
@@ -103,7 +103,7 @@ export default function AddVenueForm({ ownerId, onCreated }) {
                 </select>
               </div>
               <div className="col-md-6">
-                <input className="field-input" type="number" placeholder="السعر/ساعة" value={c.price} onChange={(e) => updateCourt(i, { price: e.target.value })} />
+                <input className="field-input" type="number" placeholder="السعر/ساعة" value={c.price} onChange={(e) => updateCourt(i, { price: e.target.value })} required />
               </div>
             </div>
             {courts.length > 1 && (
@@ -119,7 +119,7 @@ export default function AddVenueForm({ ownerId, onCreated }) {
       </div>
 
       <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
-        <button type="submit" className="owner-btn-save" disabled={!canSubmit || submitting}>
+        <button type="submit" className="owner-btn-save" disabled={submitting}>
           {submitting ? "جاري الإرسال…" : "إرسال للمراجعة"}
         </button>
         <button type="button" className="owner-btn-cancel" onClick={() => setOpen(false)}>

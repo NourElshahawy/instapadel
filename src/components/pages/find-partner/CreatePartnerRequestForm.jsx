@@ -37,7 +37,8 @@ export default function CreatePartnerRequestForm({
 
   const update = (patch) => setForm((f) => ({ ...f, ...patch }));
 
-  const canSubmit = form.courtId && form.date && form.timeFrom && form.timeTo && form.timeFrom < form.timeTo;
+  const timeConflict = form.timeFrom && form.timeTo && form.timeFrom >= form.timeTo;
+  const canSubmit = form.courtId && form.date && form.timeFrom && form.timeTo && !timeConflict;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -166,7 +167,7 @@ export default function CreatePartnerRequestForm({
             <textarea className="field-input field-textarea" placeholder="مستوى اللعب، لو محتاجين لاعب معين، إلخ..." value={form.notes} onChange={(e) => update({ notes: e.target.value })} />
           </div>
 
-          <button type="submit" className="btn btn-accent btn-block" disabled={!canSubmit || submitting}>
+          <button type="submit" className="btn btn-accent btn-block" disabled={timeConflict || submitting}>
             {submitting ? "جاري النشر…" : "نشر الطلب"}
           </button>
         </form>

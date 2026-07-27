@@ -4,6 +4,7 @@ import BookingHistorySection from "@/components/pages/profile/BookingHistorySect
 import TournamentsSection from "@/components/pages/profile/TournamentsSection";
 import PartnerRequestsSection from "@/components/pages/profile/PartnerRequestsSection";
 import { getMyTournaments, getMyPartnerRequests } from "@/services/profileService";
+import AvatarEditor from "@/components/pages/profile/AvatarEditor";
 // import "@/styles/pages/profile.css";
 
 export const metadata = { title: "الملف الشخصي — InstaPadel" };
@@ -25,13 +26,7 @@ const { data: profile } = await supabase.from("profiles").select("name, phone, r
   return (
     <div className="profile-page" dir="rtl">
       <div className="profile-header">
-        <span className="profile-menu-avatar">
-          {profile?.avatar_url ? (
-            <img src={profile.avatar_url} alt={profile.name} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
-          ) : (
-            profile?.name?.charAt(0)?.toUpperCase() || "U"
-          )}
-        </span>
+        <AvatarEditor userId={user.id} name={profile?.name} avatarUrl={profile?.avatar_url} />
         <div>
           <h1>{profile?.name}</h1>
           <p>

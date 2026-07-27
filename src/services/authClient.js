@@ -1,6 +1,6 @@
 "use client";
 import { createClient } from "@/lib/supabase/client";
-
+import { resizeImageFile } from "@/lib/resizeImage";
 export async function signUpPlayer({ name, email, phone, password, avatarFile }) {
   const supabase = createClient();
   const { data, error } = await supabase.auth.signUp({
@@ -11,8 +11,9 @@ export async function signUpPlayer({ name, email, phone, password, avatarFile })
   if (error) throw error;
 
   if (avatarFile && data.user) {
+    const resized = await resizeImageFile(avatarFile);
     const path = `${data.user.id}/${Date.now()}.jpg`;
-    const { error: uploadError } = await supabase.storage.from("avatars").upload(path, avatarFile);
+    const { error: uploadError } = await supabase.storage.from("avatars").upload(path, resized);
     if (uploadError) {
       console.error("Avatar upload failed:", uploadError.message);
     } else {
@@ -68,4 +69,20 @@ export async function updatePassword(newPassword) {
   const supabase = createClient();
   const { error } = await supabase.auth.updateUser({ password: newPassword });
   if (error) throw error;
+}
+
+
+export async function updateAvatar(userId, avatarFile) {
+  const supabase = createClient();
+  const resized = await resizeImageFile(avatarFile);
+  const path = `${userId}/${Date.now()}.jpg`;
+
+  const { error: uploadError } = await supabase.storage.from("avatars").upload(path, resized);
+  if (uploadError) throw uploadError;
+
+  const { data: publicUrl } = supabase.storage.from("avatars").getPublicUrl(path);
+  const { error: updateError } = await supabase.from("profiles").update({ avatar_url: publicUrl.publicUrl }).eq("id", userId);
+  if (updateError) throw updateError;
+
+  return publicUrl.publicUrl;
 }

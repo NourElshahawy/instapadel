@@ -5,10 +5,33 @@ import ReviewPrompt from "@/components/pages/booking/confirmation/ReviewPrompt";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { useToast } from "@/components/shared/ToastProvider";
 
-export default function BookingHistorySection({
-  bookings: initialBookings,
-  currentUserId,
-}) {
+function groupBookings(rows) {
+  const groups = {};
+  rows.forEach((b) => {
+    const key = b.group_id || b.id;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(b);
+  });
+  return Object.values(groups).map((items) => {
+    const sorted = [...items].sort((a, b) => a.time.localeCompare(b.time));
+    const first = sorted[0];
+    const last = sorted[sorted.length - 1];
+    return {
+      groupId: first.group_id || first.id,
+      bookingId: first.id,
+      venue_name: first.venue_name,
+      court_name: first.court_name,
+      court_id: first.court_id,
+      date: first.date,
+      status: first.status,
+      reviewed: first.reviewed,
+      price: sorted.reduce((sum, x) => sum + x.price, 0),
+      time: sorted.length === 1 ? first.time : `${first.time.split(" الي ")[0]} الي ${last.time.split(" الي ")[1]}`,
+    };
+  });
+}
+
+export default function BookingHistorySection({ bookings: initialBookings, currentUserId }) {
   const [bookings, setBookings] = useState(initialBookings);
   const [cancellingId, setCancellingId] = useState(null);
   const [confirmTarget, setConfirmTarget] = useState(null); // ← بديل confirm()
@@ -22,7 +45,7 @@ export default function BookingHistorySection({
     setCancellingId(id);
     try {
       await cancelBooking(id);
-      setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b)));
+      setBookings((prev) => prev.map((b) => ((b.group_id || b.id) === id ? { ...b, status: "cancelled" } : b)));
       showToast("تم إلغاء الحجز بنجاح", "success");
     } catch {
       showToast("حصل خطأ أثناء الإلغاء", "error");
@@ -45,12 +68,12 @@ export default function BookingHistorySection({
           </a>
         </div>
       ) : (
-        bookings.map((b) => {
+        groupBookings(bookings).map((b) => {
           const isPast = new Date(b.date) < new Date();
           const needsReview = isPast && b.status === "confirmed" && !b.reviewed;
 
           return (
-            <div key={b.id}>
+            <div key={b.groupId}>
               <div className="booking-history-card">
                 <div className="bhc-info">
                   <b>
@@ -65,21 +88,21 @@ export default function BookingHistorySection({
                   <span className="bhc-price">{b.price} ج.م</span>
                   {b.status === "confirmed" && (
                     <button
-                      onClick={() => requestCancel(b.id)}
-                      disabled={cancellingId === b.id}
+                      onClick={() => requestCancel(b.groupId)}
+                      disabled={cancellingId === b.groupId}
                       style={{ background: "none", border: "none", color: "#ff6b6b", fontSize: ".76rem", cursor: "pointer" }}>
-                      {cancellingId === b.id ? "..." : "إلغاء"}
+                      {cancellingId === b.groupId ? "..." : "إلغاء"}
                     </button>
                   )}
                 </div>
               </div>
               {needsReview && (
                 <ReviewPrompt
-                  bookingId={b.id}
+                  bookingId={b.bookingId}
                   courtId={b.court_id}
                   userId={currentUserId}
                   onSubmitted={() => {
-                    setBookings((prev) => prev.map((x) => (x.id === b.id ? { ...x, reviewed: true } : x)));
+                    setBookings((prev) => prev.map((x) => ((x.group_id || x.id) === b.groupId ? { ...x, reviewed: true } : x)));
                   }}
                 />
               )}

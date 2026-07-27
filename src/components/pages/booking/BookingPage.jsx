@@ -173,6 +173,7 @@ export default function BookingPage({ court }) {
       return;
     }
 
+    const groupId = crypto.randomUUID();
     const rows = selectedSlots.map((slot) => ({
       user_id: user.id,
       court_id: subCourt.id,
@@ -182,6 +183,7 @@ export default function BookingPage({ court }) {
       time: `${slot.start} الي ${slot.end}`,
       price: slot.price,
       status: "confirmed",
+      group_id: groupId,
     }));
 
     const { data: bookingRows, error } = await supabase

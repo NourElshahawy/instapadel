@@ -1,3 +1,7 @@
+export function getEgyptISODate(date = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Cairo" }).format(date);
+}
+
 export function buildNextSevenDays() {
   const days = [];
   const dowNames = ["الأحد", "الإثنين", "الثلاثاء", "الأربع", "الخميس", "الجمعة", "السبت"];
@@ -6,7 +10,7 @@ export function buildNextSevenDays() {
     const d = new Date();
     d.setDate(d.getDate() + i);
     days.push({
-      date: d.toISOString().split("T")[0],
+      date: getEgyptISODate(d),
       dow: dowNames[d.getDay()],
       dom: String(d.getDate()),
       month: monthNames[d.getMonth()],

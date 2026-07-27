@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { buildNextSevenDays, buildDefaultSlots } from "./courtLogic";
-
+import { getEgyptISODate } from "./courtLogic"
 export async function getAllCourts({ date } = {}) {
   const supabase = await createClient();
 
@@ -141,7 +141,7 @@ export async function getCourtDetails(slug) {
     .in("court_id", courtIds.length ? courtIds : ["00000000-0000-0000-0000-000000000000"])
     .eq("status", "confirmed");
 
-  const todayISO = new Date().toISOString().split("T")[0];
+  const todayISO = getEgyptISODate();
 
   return {
     ...court,

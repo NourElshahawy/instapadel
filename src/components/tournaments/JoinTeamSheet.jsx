@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
 
-export default function JoinTeamSheet({ tournament, onClose, onSubmit }) {
+export default function JoinTeamSheet({ tournament, phone, onClose, onSubmit }) {
   const [submitting, setSubmitting] = useState(false);
-const [form, setForm] = useState({ captainName: "", partnerName: "" });
-const hasValidPhone = !!phone && /^01[0125]\d{8}$/.test(phone);
-const canSubmit = form.captainName.trim() && hasValidPhone && (!isDouble || form.partnerName.trim());
+  const [form, setForm] = useState({ captainName: "", partnerName: "" });
+  const isDouble = tournament.type === "double";
+  const hasValidPhone = !!phone && /^01[0125]\d{8}$/.test(phone);
+  const canSubmit = form.captainName.trim() && hasValidPhone && (!isDouble || form.partnerName.trim());
   const update = (patch) => setForm((f) => ({ ...f, ...patch }));
 
   const handleSubmit = async (e) => {

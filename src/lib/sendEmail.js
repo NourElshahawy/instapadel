@@ -3,6 +3,8 @@ import { bookingConfirmationEmail } from "./email-templates/bookingConfirmation"
 import { paymentReceivedEmail } from "./email-templates/paymentReceived";
 import { tournamentInviteEmail } from "./email-templates/tournamentInvite";
 import { partnerRequestAcceptedEmail } from "./email-templates/partnerRequestAccepted";
+import { tournamentFullEmail } from "./email-templates/tournamentFull";
+import { tournamentStartedEmail } from "./email-templates/tournamentStarted";
 
 export async function sendBookingConfirmationEmail(to, data) {
   if (!resend) {
@@ -57,5 +59,34 @@ export async function sendPartnerRequestAcceptedEmail(to, data) {
     });
   } catch (err) {
     console.error("Failed to send partner accepted email:", err);
+  }
+}
+
+// آخر الملف
+export async function sendTournamentFullEmail(to, data) {
+  if (!resend) return;
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `اكتمل عدد فرق بطولة ${data.tournamentName}`,
+      html: tournamentFullEmail(data),
+    });
+  } catch (err) {
+    console.error("Failed to send tournament full email:", err);
+  }
+}
+
+export async function sendTournamentStartedEmail(to, data) {
+  if (!resend) return;
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `بدأت بطولة ${data.tournamentName}`,
+      html: tournamentStartedEmail(data),
+    });
+  } catch (err) {
+    console.error("Failed to send tournament started email:", err);
   }
 }

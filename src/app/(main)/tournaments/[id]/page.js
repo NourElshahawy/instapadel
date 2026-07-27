@@ -18,20 +18,22 @@ export default async function TournamentPage({ params }) {
   if (!tournament) notFound();
 
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+const {
+  data: { user },
+} = await supabase.auth.getUser();
+const { data: profile } = user ? await supabase.from("profiles").select("phone").eq("id", user.id).single() : { data: null };
 
-  return (
-    <TournamentDashboard
-      tournament={tournament}
-      currentUser={{
-        id: user?.id,
-        isOrganizer: tournament.organizerId === user?.id, // مش isOwner — منظم مش لازم يملك ملعب
-        isRegistered: tournament.teams?.some((t) => t.captainId === user?.id),
-      }}
-      onManage={`/tournaments/${id}/manage`}
-      onCreateNew="/tournaments/create"
-    />
-  );
+return (
+  <TournamentDashboard
+    tournament={tournament}
+    currentUser={{
+      id: user?.id,
+      phone: profile?.phone || null,
+      isOrganizer: tournament.organizerId === user?.id,
+      isRegistered: tournament.teams?.some((t) => t.captainId === user?.id),
+    }}
+    onManage={`/tournaments/${id}/manage`}
+    onCreateNew="/tournaments/create"
+  />
+);
 }

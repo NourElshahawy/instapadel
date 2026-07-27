@@ -46,6 +46,10 @@ export default function RegisterForm() {
       setError("كلمة المرور غير متطابقة");
       return;
     }
+    if (!/^01[0125]\d{8}$/.test(form.phone.trim())) {
+      setError("رقم الهاتف لازم يكون رقم مصري صحيح (01 وبعده 9 أرقام)");
+      return;
+    }
 
     setStatus("loading");
     try {

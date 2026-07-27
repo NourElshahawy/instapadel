@@ -3,10 +3,14 @@ import { createClient } from "@/lib/supabase/client";
 
 export async function createTournament(data, organizerId) {
   const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const { data: row, error } = await supabase
     .from("tournaments")
     .insert({
       organizer_id: organizerId,
+      organizer_email: user?.email || null,
       name: data.name,
       type: data.type,
       venue_name: data.courtName,
@@ -45,14 +49,16 @@ export async function createTournament(data, organizerId) {
 }
 export async function joinTournament(tournamentId, teamData, captainId) {
   const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const { data, error } = await supabase
     .from("tournament_teams")
     .insert({
       tournament_id: tournamentId,
       captain_id: captainId,
-      name: teamData.partnerName
-        ? `${teamData.captainName} & ${teamData.partnerName}`
-        : teamData.captainName,
+      captain_email: user?.email || null,
+      name: teamData.partnerName ? `${teamData.captainName} & ${teamData.partnerName}` : teamData.captainName,
       captain_name: teamData.captainName,
       captain_phone: teamData.captainPhone,
       partner_name: teamData.partnerName || null,

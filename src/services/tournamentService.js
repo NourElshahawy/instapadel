@@ -61,10 +61,13 @@ export async function getTournamentById(id) {
     topThree: [],
     gallery: [],
     news: [],
+    organizerId: tournament.organizer_id,
+    organizerEmail: tournament.organizer_email,
     teams: (teams || []).map((t) => ({
       id: t.id,
       name: t.name,
       captainId: t.captain_id,
+      captainEmail: t.captain_email,
       captainName: t.captain_name,
       captainPhone: t.captain_phone,
       status: t.status,

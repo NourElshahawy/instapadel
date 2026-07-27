@@ -28,6 +28,16 @@ export default function TournamentManageDashboard({ tournament: initialTournamen
     }));
 
     setTournament((t) => ({ ...t, rounds, matches: mappedMatches, status: "ready" }));
+
+    fetch("/api/notifications/tournament-started", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        recipients: tournament.teams.map((t) => ({ email: t.captainEmail, captainName: t.captainName })),
+        tournamentName: tournament.name,
+        venueName: tournament.venue,
+      }),
+    }).catch(() => {});
   };
 
   const handleScoreSubmit = async (matchId, scoreA, scoreB) => {

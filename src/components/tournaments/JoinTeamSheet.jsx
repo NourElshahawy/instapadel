@@ -2,12 +2,10 @@
 import { useState } from "react";
 
 export default function JoinTeamSheet({ tournament, onClose, onSubmit }) {
-  const [form, setForm] = useState({ captainName: "", captainPhone: "", partnerName: "" });
   const [submitting, setSubmitting] = useState(false);
-
-  const isDouble = tournament.type === "double";
-  const canSubmit = form.captainName.trim() && form.captainPhone.trim() && (!isDouble || form.partnerName.trim());
-
+const [form, setForm] = useState({ captainName: "", partnerName: "" });
+const hasValidPhone = !!phone && /^01[0125]\d{8}$/.test(phone);
+const canSubmit = form.captainName.trim() && hasValidPhone && (!isDouble || form.partnerName.trim());
   const update = (patch) => setForm((f) => ({ ...f, ...patch }));
 
   const handleSubmit = async (e) => {
@@ -35,10 +33,20 @@ export default function JoinTeamSheet({ tournament, onClose, onSubmit }) {
 
           <div className="field-group">
             <label>رقم الهاتف</label>
-            <div className="field-input-wrap">
-              <i className="fa-solid fa-phone field-icon"></i>
-              <input className="field-input phone-rtl-fix" type="tel" value={form.captainPhone} onChange={(e) => update({ captainPhone: e.target.value })} placeholder="01xx xxx xxxx" required />
-            </div>
+            {hasValidPhone ? (
+              <div className="field-input-wrap">
+                <i className="fa-solid fa-phone field-icon"></i>
+                <input className="field-input phone-rtl-fix" value={phone} disabled readOnly />
+              </div>
+            ) : (
+              <p style={{ color: "#ff6b6b", fontSize: ".8rem" }}>
+                رقم الهاتف في حسابك مش موجود أو مش بصيغة صحيحة. حدّثه في{" "}
+                <a href="/profile" className="auth-link">
+                  الملف الشخصي
+                </a>{" "}
+                الأول عشان تقدر تشترك.
+              </p>
+            )}
           </div>
 
           {isDouble && (

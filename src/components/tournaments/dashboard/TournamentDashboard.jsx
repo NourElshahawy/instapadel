@@ -27,28 +27,49 @@ function resolveStage(tournament) {
   return "registration";
 }
 
-export default function TournamentDashboard({ tournament: initialTournament, currentUser = {},  onManage, onCreateNew }) {
+export default function TournamentDashboard({ tournament: initialTournament, currentUser = {}, onManage, onCreateNew }) {
   const [tournament, setTournament] = useState(initialTournament);
   const [joinOpen, setJoinOpen] = useState(false);
 
   const stage = useMemo(() => resolveStage(tournament), [tournament]);
 
   const handleJoinSubmit = async (teamData) => {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
 
-  const newTeamRow = await joinTournament(tournament.id, teamData, user.id);
+    const newTeamRow = await joinTournament(tournament.id, { ...teamData, captainPhone: currentUser.phone }, user.id);
+    const updatedTeams = [
+      ...tournament.teams,
+      {
+        id: newTeamRow.id,
+        name: newTeamRow.name,
+        captainId: user.id,
+        captainName: teamData.captainName,
+        captainPhone: teamData.captainPhone,
+        status: "confirmed",
+        rating: 0,
+      },
+    ];
 
-  setTournament((t) => ({
-    ...t,
-    teams: [...t.teams, {
-      id: newTeamRow.id, name: newTeamRow.name, captainId: user.id,
-      captainName: teamData.captainName, captainPhone: teamData.captainPhone, status: "confirmed", rating: 0,
-    }],
-  }));
-  setJoinOpen(false);
-};
+    setTournament((t) => ({ ...t, teams: updatedTeams }));
+    setJoinOpen(false);
+
+    if (updatedTeams.length === tournament.maxTeams && tournament.organizerEmail) {
+      fetch("/api/notifications/tournament-full", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: tournament.organizerEmail,
+          tournamentName: tournament.name,
+          venueName: tournament.venue,
+          maxTeams: tournament.maxTeams,
+        }),
+      }).catch(() => {});
+    }
+  };
 
   const fab = useMemo(() => {
     if (stage === "completed") return { label: "أنشئ بطولة جديدة", href: onCreateNew, tone: "gold" };
@@ -107,7 +128,7 @@ export default function TournamentDashboard({ tournament: initialTournament, cur
 
       {fab && <FloatingActionButton label={fab.label} href={fab.href} onClick={fab.action} tone={fab.tone} disabled={!fab.action && !fab.href} />}
 
-      {joinOpen && <JoinTeamSheet tournament={tournament} onClose={() => setJoinOpen(false)} onSubmit={handleJoinSubmit} />}
+      {joinOpen && <JoinTeamSheet tournament={tournament} phone={currentUser.phone} onClose={() => setJoinOpen(false)} onSubmit={handleJoinSubmit} />}
     </div>
   );
 }

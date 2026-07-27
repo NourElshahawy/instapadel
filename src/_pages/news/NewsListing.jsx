@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import NewsFeatureBanner from "./NewsFeatureBanner";
 import NewsFilterTabs from "./NewsFilterTabs";
 import NewsCard from "./NewsCard";
@@ -13,9 +14,34 @@ import ParallaxBg from "@/components/ui/ParallaxBg";
 
 const PAGE_SIZE = 6;
 
-export default function NewsListing({ news }) {
+export default function NewsListing({ news: initialNews }) {
+  const [news, setNews] = useState(initialNews || []);
   const [category, setCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const channel = supabase
+      .channel("news-feed")
+      .on("postgres_changes", { event: "*", schema: "public", table: "news" }, (payload) => {
+        const row = payload.new && Object.keys(payload.new).length ? payload.new : payload.old;
+        if (!row) return;
+
+        setNews((prev) => {
+          if (payload.eventType === "DELETE" || row.status !== "published") {
+            return prev.filter((n) => n.id !== row.id);
+          }
+          const exists = prev.some((n) => n.id === row.id);
+          if (exists) return prev.map((n) => (n.id === row.id ? { ...n, ...row } : n));
+          return [row, ...prev]; // خبر جديد يتحط الأول
+        });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const safeNews = news || [];
   const featured = safeNews[0];

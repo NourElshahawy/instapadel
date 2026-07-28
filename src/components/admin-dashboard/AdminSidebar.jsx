@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import NotificationBell from "@/components/layout/NotificationBell";
 
 const LINKS = [
   { href: "/admin/dashboard", label: "نظرة عامة", icon: "📊" },
@@ -17,9 +18,12 @@ export default function AdminSidebar({ adminName }) {
 
   return (
     <aside className="owner-sidebar">
-      <div>
-        <p className="owner-sidebar-greeting">مرحبًا</p>
-        <p className="owner-sidebar-name">{adminName} (أدمن)</p>
+      <div className="d-flex align-items-center justify-content-between">
+        <div>
+          <p className="owner-sidebar-greeting">مرحبًا</p>
+          <p className="owner-sidebar-name">{adminName} (أدمن)</p>
+        </div>
+        <NotificationBell />
       </div>
       <nav className="owner-nav">
         {LINKS.map((link) => (

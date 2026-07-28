@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import NotificationBell from "@/components/layout/NotificationBell";
 // import "@/styles/pages/owner-dashboard.css";
 
 const LINKS = [
@@ -15,9 +16,12 @@ export default function OwnerSidebar({ ownerName }) {
 
   return (
     <aside className="owner-sidebar">
-      <div>
-        <p className="owner-sidebar-greeting">مرحبًا بعودتك</p>
-        <p className="owner-sidebar-name">{ownerName}</p>
+      <div className="d-flex align-items-center justify-content-between">
+        <div>
+          <p className="owner-sidebar-greeting">مرحبًا بعودتك</p>
+          <p className="owner-sidebar-name">{ownerName}</p>
+        </div>
+        <NotificationBell />
       </div>
 
       <nav className="owner-nav">

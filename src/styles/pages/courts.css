@@ -102,6 +102,39 @@
     letter-spacing: .04em;
 }
 
+.search-input-wrap {
+    position: relative;
+}
+
+.search-input-wrap i {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: .85rem;
+    pointer-events: none;
+}
+
+.filter-search-input {
+    width: 100%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--r-sm);
+    padding: 10px 40px 10px 14px;
+    color: var(--white);
+    font-size: .88rem;
+}
+
+.filter-search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.filter-search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
 .range-value {
     display: flex;
     justify-content: space-between;

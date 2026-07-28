@@ -1,5 +1,6 @@
 "use client";
 import { createClient } from "@/lib/supabase/client";
+import { insertNotification, insertNotifications } from "@/services/notificationService";
 
 export async function createPartnerRequest(form, hostId) {
   const supabase = createClient();
@@ -43,20 +44,32 @@ export async function createPartnerRequest(form, hostId) {
 }
 export async function joinPartnerRequest(requestId, playerId) {
   const supabase = createClient();
-  const { error } = await supabase
-    .from("partner_request_joins")
-    .insert({ request_id: requestId, player_id: playerId });
+  const { error } = await supabase.from("partner_request_joins").insert({ request_id: requestId, player_id: playerId });
   if (error) throw error;
 
-  await supabase
-    .from("partner_requests")
-    .update({ status: "partially_filled" })
-    .eq("id", requestId)
-    .eq("status", "open");
+  await supabase.from("partner_requests").update({ status: "partially_filled" }).eq("id", requestId).eq("status", "open");
+
+  // إشعار لصاحب الطلب إن حد طلب الانضمام
+  const [{ data: request }, { data: player }] = await Promise.all([
+    supabase.from("partner_requests").select("host_id, court_name").eq("id", requestId).single(),
+    supabase.from("profiles").select("name").eq("id", playerId).single(),
+  ]);
+
+  if (request?.host_id) {
+    await insertNotification(supabase, {
+      userId: request.host_id,
+      type: "partner_join_request",
+      title: `${player?.name || "لاعب"} طلب الانضمام لطلبك`,
+      body: `طلب الانضمام لملعب ${request.court_name}`,
+      link: `/find-partner/${requestId}`,
+    });
+  }
 }
 
 export async function respondToJoin(joinId, requestId, accept, playersNeeded) {
   const supabase = createClient();
+
+  const { data: joinRow } = await supabase.from("partner_request_joins").select("player_id").eq("id", joinId).single();
 
   const { error } = await supabase
     .from("partner_request_joins")
@@ -64,15 +77,28 @@ export async function respondToJoin(joinId, requestId, accept, playersNeeded) {
     .eq("id", joinId);
   if (error) throw error;
 
+  const { data: request } = await supabase.from("partner_requests").select("court_name").eq("id", requestId).single();
+
+  // إشعار للاعب اللي طلب الانضمام: اتقبل ولا اتراض
+  if (joinRow?.player_id) {
+    await insertNotification(supabase, {
+      userId: joinRow.player_id,
+      type: accept ? "partner_join_accepted" : "partner_join_rejected",
+      title: accept ? "تم قبولك في الطلب 🎉" : "تم رفض طلب انضمامك",
+      body: request?.court_name ? `طلب ملعب ${request.court_name}` : null,
+      link: `/find-partner/${requestId}`,
+    });
+  }
+
   if (accept) {
     const { count } = await supabase.from("partner_request_joins").select("*", { count: "exact", head: true }).eq("request_id", requestId).eq("status", "accepted");
 
     if (count >= playersNeeded) {
+      const { data: fullRequest } = await supabase.from("partner_requests").select("host_id").eq("id", requestId).single();
+
       await supabase.from("partner_requests").update({ status: "matched" }).eq("id", requestId);
 
       // نحدّث الخبر بدل ما يفضل "محتاج لاعب" وهو خلاص اكتمل
-      const { data: request } = await supabase.from("partner_requests").select("court_name").eq("id", requestId).single();
-
       if (request) {
         await supabase
           .from("news")
@@ -80,6 +106,18 @@ export async function respondToJoin(joinId, requestId, accept, playersNeeded) {
           .eq("source_type", "partner_request")
           .eq("source_id", requestId);
       }
+
+      // إشعار للمضيف وكل اللاعبين اللي اتقبلوا إن الفريق اكتمل
+      const { data: acceptedJoins } = await supabase.from("partner_request_joins").select("player_id").eq("request_id", requestId).eq("status", "accepted");
+
+      const recipientIds = [fullRequest?.host_id, ...(acceptedJoins || []).map((j) => j.player_id)];
+
+      await insertNotifications(supabase, recipientIds, {
+        type: "partner_request_matched",
+        title: "اكتمل الفريق! 🎉",
+        body: request?.court_name ? `الفريق اكتمل في ${request.court_name}` : null,
+        link: `/find-partner/${requestId}`,
+      });
     }
   }
 }

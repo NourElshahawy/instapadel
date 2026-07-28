@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import NotificationBell from "@/components/layout/NotificationBell";
 
 const LINKS = [
   { href: "/admin/dashboard", label: "نظرة عامة", icon: "📊" },
@@ -17,7 +18,12 @@ export default function AdminMobileHeader({ adminName }) {
   return (
     <div className="owner-mobile-header" style={{ position: "relative" }}>
       <span className="owner-mobile-header-title">لوحة {adminName}</span>
-      <button className="owner-mobile-toggle" onClick={() => setOpen((v) => !v)}>{open ? "✕" : "☰"}</button>
+      <div className="d-flex align-items-center gap-2">
+        <NotificationBell />
+        <button className="owner-mobile-toggle" onClick={() => setOpen((v) => !v)}>
+          {open ? "✕" : "☰"}
+        </button>
+      </div>
 
       {open && (
         <div className="owner-mobile-menu">
@@ -28,7 +34,9 @@ export default function AdminMobileHeader({ adminName }) {
               </Link>
             ))}
           </nav>
-          <Link href="/" className="owner-sidebar-back">← رجوع للموقع</Link>
+          <Link href="/" className="owner-sidebar-back">
+            ← رجوع للموقع
+          </Link>
         </div>
       )}
     </div>

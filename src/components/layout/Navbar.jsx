@@ -8,8 +8,8 @@ import { signOut } from "@/services/authClient";
 import { useRouter } from "next/navigation";
 import ProfileMenu from "./ProfileMenu";
 import ThemeToggle from "./ThemeToggle";
+import NotificationBell from "./NotificationBell";
 // import ThemeToggle from "@/components/ThemeToggle";
-
 
 const NAV_LINKS = [
   { href: "/", label: "الرئيسية" },
@@ -73,7 +73,8 @@ export default function Navbar() {
                       )}
                     </span>
                     <span className="nav-account-name">{profile?.name || "مستخدم"}</span>
-                  <ThemeToggle />
+                    <NotificationBell />
+                    <ThemeToggle />
                   </div>
 
                   {profile?.role === "owner" && (
@@ -108,7 +109,8 @@ export default function Navbar() {
         </nav>
         <div className="navbar-cta">
           {loading ? null : user ? (
-            <div className="d-none d-lg-block">
+            <div className="d-none d-lg-flex align-items-center gap-2">
+              <NotificationBell />
               <ProfileMenu name={profile?.name} role={profile?.role} avatarUrl={profile?.avatar_url} />
             </div>
           ) : (

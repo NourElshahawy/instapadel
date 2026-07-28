@@ -1,5 +1,6 @@
 "use client";
 import { createClient } from "@/lib/supabase/client";
+import { insertNotification, insertNotifications } from "@/services/notificationService";
 
 export async function createTournament(data, organizerId) {
   const supabase = createClient();
@@ -67,6 +68,35 @@ export async function joinTournament(tournamentId, teamData, captainId) {
     .single();
 
   if (error) throw error;
+
+  const { data: tournament } = await supabase.from("tournaments").select("name, organizer_id, max_teams").eq("id", tournamentId).single();
+
+  if (tournament?.organizer_id) {
+    await insertNotification(supabase, {
+      userId: tournament.organizer_id,
+      type: "tournament_team_joined",
+      title: `فريق جديد سجّل في بطولة ${tournament.name}`,
+      body: `فريق "${data.name}" سجّل في البطولة`,
+      link: `/tournaments/${tournamentId}`,
+    });
+
+    // لو اكتمل عدد الفرق، نبلّغ المنظم وكل الكباتن
+    const { count } = await supabase.from("tournament_teams").select("*", { count: "exact", head: true }).eq("tournament_id", tournamentId);
+
+    if (tournament.max_teams && count >= tournament.max_teams) {
+      const { data: teams } = await supabase.from("tournament_teams").select("captain_id").eq("tournament_id", tournamentId);
+
+      const recipientIds = [tournament.organizer_id, ...(teams || []).map((t) => t.captain_id)];
+
+      await insertNotifications(supabase, recipientIds, {
+        type: "tournament_full",
+        title: "اكتمل فريق البطولة! 🏆",
+        body: `اكتمل عدد الفرق في بطولة ${tournament.name}، البطولة جاهزة تبدأ`,
+        link: `/tournaments/${tournamentId}`,
+      });
+    }
+  }
+
   return data;
 }
 
@@ -101,6 +131,19 @@ export async function startTournament(tournamentId, rounds, matches) {
       })
       .eq("source_type", "tournament")
       .eq("source_id", tournamentId);
+
+    // إشعار لكل كباتن الفرق إن البطولة بدأت
+    const { data: teams } = await supabase.from("tournament_teams").select("captain_id").eq("tournament_id", tournamentId);
+    await insertNotifications(
+      supabase,
+      (teams || []).map((t) => t.captain_id),
+      {
+        type: "tournament_started",
+        title: `بدأت بطولة ${tournament.name} ⚡`,
+        body: `انطلقت المنافسات في ${tournament.venue_name}`,
+        link: `/tournaments/${tournamentId}`,
+      },
+    );
   }
 
   return insertedMatches;
@@ -149,6 +192,17 @@ export async function submitMatchResult(matchId, scoreA, scoreB, nextMatchId, ne
           ...updatedFields,
         });
       }
+
+      // إشعار للمنظم وكل الكباتن إن البطولة خلصت
+      const { data: teams } = await supabase.from("tournament_teams").select("captain_id, name").eq("tournament_id", tournamentId);
+      const recipientIds = [tournament.organizer_id, ...(teams || []).map((t) => t.captain_id)];
+
+      await insertNotifications(supabase, recipientIds, {
+        type: "tournament_finished",
+        title: `🏆 انتهت بطولة ${tournament.name}`,
+        body: `${winnerName} فاز بلقب البطولة`,
+        link: `/tournaments/${tournamentId}`,
+      });
     }
   }
 }

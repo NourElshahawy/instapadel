@@ -189,7 +189,8 @@ img {
     [data-theme="light"] .td-bracket-card,
     [data-theme="light"] .td-bracket-card.is-final,
     [data-theme="light"] .td-match-card,
-    [data-theme="light"] .td-fab--muted{
+    [data-theme="light"] .td-fab--muted,
+      [data-theme="light"] .filter-search-input{
   background: radial-gradient(circle at 30% 20%, #00d68f38, transparent 55%), radial-gradient(circle at 80% 80%, #00d68f24, transparent 50%), var(--bg-secondary);
 }
 

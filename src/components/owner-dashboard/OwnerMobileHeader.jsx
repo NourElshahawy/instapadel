@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import NotificationBell from "@/components/layout/NotificationBell";
 
 const LINKS = [
   { href: "/owner/dashboard", label: "نظرة عامة", icon: "📊" },
@@ -14,9 +15,12 @@ export default function OwnerMobileHeader({ ownerName }) {
   return (
     <div className="owner-mobile-header" style={{ position: "relative" }}>
       <span className="owner-mobile-header-title">لوحة {ownerName}</span>
-      <button className="owner-mobile-toggle" onClick={() => setOpen((v) => !v)}>
-        {open ? "✕" : "☰"}
-      </button>
+      <div className="d-flex align-items-center gap-2">
+        <NotificationBell />
+        <button className="owner-mobile-toggle" onClick={() => setOpen((v) => !v)}>
+          {open ? "✕" : "☰"}
+        </button>
+      </div>
 
       {open && (
         <div className="owner-mobile-menu">

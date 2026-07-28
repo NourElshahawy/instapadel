@@ -18,16 +18,19 @@ export default function CourtsListing({ courts , searchFilters }) {
   const [filters, setFilters] = useState({
     maxPrice: highestPrice,
     minRating: 0,
+    searchQuery: "",
   });
   const [sortMode, setSortMode] = useState("recommended");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredCourts = useMemo(() => {
+    const query = filters.searchQuery.trim().toLowerCase();
     let list = courts.filter((c) => {
       const matchesPrice = c.pricePerHour <= filters.maxPrice;
       const matchesRating = c.rating >= filters.minRating;
-      return matchesPrice && matchesRating;
+      const matchesSearch = !query || c.name.toLowerCase().includes(query);
+      return matchesPrice && matchesRating && matchesSearch;
     });
 
     if (sortMode === "price-asc") list = [...list].sort((a, b) => a.pricePerHour - b.pricePerHour);
@@ -51,7 +54,7 @@ export default function CourtsListing({ courts , searchFilters }) {
   };
 
   const clearAll = () => {
-    setFilters({ maxPrice: highestPrice, minRating: 0 });
+    setFilters({ maxPrice: highestPrice, minRating: 0, searchQuery: "" });
     setSortMode("recommended");
     setCurrentPage(1);
   };

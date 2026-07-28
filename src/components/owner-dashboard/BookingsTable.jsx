@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useReactTable, getCoreRowModel, flexRender, createColumnHelper } from "@tanstack/react-table";
 import { updateBookingStatus } from "@/services/ownerBookingsClient";
+import ExportButtons from "./ExportButtons";
 
 const columnHelper = createColumnHelper();
 const STATUS_LABELS = { confirmed: "مؤكد", cancelled: "ملغي", completed: "منتهي" };
@@ -66,30 +67,50 @@ export default function BookingsTable({ initialBookings }) {
 
   const table = useReactTable({ data: bookings, columns, getCoreRowModel: getCoreRowModel() });
 
-  if (bookings.length === 0) return <p className="owner-table-empty">لسه مفيش حجوزات على ملاعبك.</p>;
+  const exportRows = bookings.map((b) => [
+    b.customerName,
+    b.customerPhone || "—",
+    b.customerEmail || "—",
+    b.courtName,
+    b.venueName || "—",
+    b.date,
+    b.time,
+    b.price,
+    STATUS_LABELS[b.status] || b.status,
+  ]);
 
   return (
-    <div className="owner-table-wrap">
-      <table className="owner-table">
-        <thead>
-          {table.getHeaderGroups().map((hg) => (
-            <tr key={hg.id}>
-              {hg.headers.map((h) => (
-                <th key={h.id}>{flexRender(h.column.columnDef.header, h.getContext())}</th>
+    <>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 14 }}>
+        <ExportButtons title="سجل الحجوزات" headers={["العميل", "الهاتف", "الإيميل", "الملعب", "المكان", "التاريخ", "الوقت", "السعر (ج.م)", "الحالة"]} rows={exportRows} filenameBase="سجل-الحجوزات" />
+      </div>
+
+      {bookings.length === 0 ? (
+        <p className="owner-table-empty">لسه مفيش حجوزات على ملاعبك.</p>
+      ) : (
+        <div className="owner-table-wrap">
+          <table className="owner-table">
+            <thead>
+              {table.getHeaderGroups().map((hg) => (
+                <tr key={hg.id}>
+                  {hg.headers.map((h) => (
+                    <th key={h.id}>{flexRender(h.column.columnDef.header, h.getContext())}</th>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
   );
 }

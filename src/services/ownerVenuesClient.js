@@ -1,4 +1,3 @@
-
 "use client";
 import { createClient } from "@/lib/supabase/client";
 
@@ -8,9 +7,9 @@ export async function updateCourtPrice(courtId, newPrice) {
   if (error) throw error;
 }
 
-export async function addCourtToVenue(venueId, courtData, photos = []) {
+// بيرفع صور جديدة على الـ storage ويرجع اللينكات العامة بتاعتها
+export async function uploadCourtPhotos(venueId, photos = []) {
   const supabase = createClient();
-
   const imageUrls = [];
   for (const photo of photos) {
     const blob = await (await fetch(photo.dataUrl)).blob();
@@ -21,6 +20,13 @@ export async function addCourtToVenue(venueId, courtData, photos = []) {
       imageUrls.push(publicUrl.publicUrl);
     }
   }
+  return imageUrls;
+}
+
+export async function addCourtToVenue(venueId, courtData, photos = []) {
+  const supabase = createClient();
+
+  const imageUrls = await uploadCourtPhotos(venueId, photos);
 
   const { data, error } = await supabase
     .from("courts")
@@ -31,6 +37,31 @@ export async function addCourtToVenue(venueId, courtData, photos = []) {
       price_per_hour: Number(courtData.price),
       images: imageUrls,
     })
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+// تعديل شامل لملعب موجود بعد الإنشاء: الاسم، النوع، السعر، والصور
+// existingImages: اللينكات اللي الأونر مسيبها زي ما هي (بعد ما يشيل اللي عايز يشيله)
+// newPhotos: صور جديدة (بصيغة {dataUrl}) هترفع وتتضاف على الصور القديمة
+export async function updateCourt(courtId, venueId, { name, type, price, existingImages = [], newPhotos = [] }) {
+  const supabase = createClient();
+
+  const uploadedUrls = await uploadCourtPhotos(venueId, newPhotos);
+  const images = [...existingImages, ...uploadedUrls];
+
+  const { data, error } = await supabase
+    .from("courts")
+    .update({
+      name,
+      type,
+      price_per_hour: Number(price),
+      images,
+    })
+    .eq("id", courtId)
     .select()
     .single();
 

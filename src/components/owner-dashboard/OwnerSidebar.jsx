@@ -2,14 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import NotificationBell from "@/components/layout/NotificationBell";
-// import "@/styles/pages/owner-dashboard.css";
-
-const LINKS = [
-  { href: "/owner/dashboard", label: "نظرة عامة", icon: "📊" },
-  { href: "/owner/dashboard/venues", label: "ملاعبي", icon: "🏟️" },
-  { href: "/owner/dashboard/bookings", label: "الحجوزات", icon: "📅" },
-  { href: "/owner/dashboard/news", label: "الأخبار", icon: "📰" },
-];
+import { OWNER_NAV_LINKS } from "./ownerNavLinks";
 
 export default function OwnerSidebar({ ownerName }) {
   const pathname = usePathname();
@@ -25,7 +18,7 @@ export default function OwnerSidebar({ ownerName }) {
       </div>
 
       <nav className="owner-nav">
-        {LINKS.map((link) => (
+        {OWNER_NAV_LINKS.map((link) => (
           <Link key={link.href} href={link.href} className={`owner-nav-link ${pathname === link.href ? "is-active" : ""}`}>
             <span>{link.icon}</span> {link.label}
           </Link>

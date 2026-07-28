@@ -189,11 +189,11 @@
     margin-top: 2px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 992px) {
     .notif-panel {
         position: fixed;
         top: 64px;
         left: 5vw;
-        width: 90vw;
+        width: 220px;
     }
 }

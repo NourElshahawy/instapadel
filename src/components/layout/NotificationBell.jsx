@@ -16,9 +16,8 @@ function timeAgo(dateStr) {
   return new Date(dateStr).toLocaleDateString("ar-EG", { day: "numeric", month: "long" });
 }
 
-export default function NotificationBell() {
+export default function NotificationBell({ notifications, unreadCount, loading, markAsRead, markAllAsRead }) {
   const { user } = useAuth();
-  const { notifications, unreadCount, loading, markAsRead, markAllAsRead } = useNotifications(user?.id);
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
 

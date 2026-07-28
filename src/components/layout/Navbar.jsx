@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useStickyNavbar } from "@/hooks/useStickyNavbar";
 import { useAuth } from "@/hooks/useAuth";
+import { useNotifications } from "@/hooks/useNotifications";
 import { signOut } from "@/services/authClient";
 import { useRouter } from "next/navigation";
 import ProfileMenu from "./ProfileMenu";
@@ -24,6 +25,7 @@ export default function Navbar() {
   const isScrolled = useStickyNavbar();
   const [isOpen, setIsOpen] = useState(false);
   const { user, profile, loading } = useAuth();
+  const notif = useNotifications(user?.id);
   const router = useRouter();
 
   const closeMenu = () => setIsOpen(false);
@@ -73,7 +75,7 @@ export default function Navbar() {
                       )}
                     </span>
                     <span className="nav-account-name">{profile?.name || "مستخدم"}</span>
-                    <NotificationBell />
+                    <NotificationBell {...notif} />
                     <ThemeToggle />
                   </div>
 
@@ -110,7 +112,7 @@ export default function Navbar() {
         <div className="navbar-cta">
           {loading ? null : user ? (
             <div className="d-none d-lg-flex align-items-center gap-2">
-              <NotificationBell />
+              <NotificationBell {...notif} />
               <ProfileMenu name={profile?.name} role={profile?.role} avatarUrl={profile?.avatar_url} />
             </div>
           ) : (

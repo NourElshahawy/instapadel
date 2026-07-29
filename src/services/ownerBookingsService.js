@@ -10,7 +10,7 @@ export async function getOwnerBookings(ownerId) {
 
   const { data: bookings, error } = await supabase
     .from("bookings")
-    .select("id, court_name, venue_name, date, time, price, status, payment_status, created_at, user_id, profiles(name, phone, email)")
+    .select("id, court_name, venue_name, date, time, price, status, payment_status, payment_claimed_at, created_at, user_id, profiles(name, phone, email)")
     .in("court_id", courtIds)
     .order("created_at", { ascending: false });
 
@@ -25,6 +25,7 @@ export async function getOwnerBookings(ownerId) {
     price: b.price,
     status: b.status,
     paymentStatus: b.payment_status,
+    paymentClaimedAt: b.payment_claimed_at,
     customerName: b.profiles?.name || "عميل",
     customerPhone: b.profiles?.phone,
     customerEmail: b.profiles?.email, // ← جديد

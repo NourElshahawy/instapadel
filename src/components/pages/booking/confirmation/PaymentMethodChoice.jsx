@@ -1,16 +1,24 @@
 "use client";
 import { useState } from "react";
 import InstaPayBlock from "../../confirmation/InstaPayBlock";
-// import InstaPayBlock from "./InstaPayBlock";
 
-export default function PaymentMethodChoice({ amount, bookingId, isPaid, onMarkPaid }) {
+export default function PaymentMethodChoice({ amount, bookingId, displayId, isPaid, isClaimed, onMarkPaid, userName, userEmail, venueName }) {
   const [method, setMethod] = useState(null); // null | "instapay" | "onsite"
 
   if (isPaid) {
     return (
       <div className="paid-badge">
         <i className="fa-solid fa-circle-check"></i>
-        تم إرسال الدفع — قيد المراجعة
+        تم تأكيد استلام الدفع
+      </div>
+    );
+  }
+
+  if (isClaimed) {
+    return (
+      <div className="paid-badge">
+        <i className="fa-solid fa-hourglass-half"></i>
+        تم إرسال الدفع — قيد المراجعة من الملعب
       </div>
     );
   }
@@ -21,7 +29,7 @@ export default function PaymentMethodChoice({ amount, bookingId, isPaid, onMarkP
         <button className="payment-method-back" onClick={() => setMethod(null)}>
           ← رجوع لاختيار طريقة الدفع
         </button>
-        <InstaPayBlock amount={amount} bookingId={bookingId} isPaid={isPaid} onMarkPaid={onMarkPaid} />
+        <InstaPayBlock amount={amount} bookingId={bookingId} displayId={displayId} onMarkPaid={onMarkPaid} userName={userName} userEmail={userEmail} venueName={venueName} />
       </>
     );
   }

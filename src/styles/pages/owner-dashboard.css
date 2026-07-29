@@ -687,3 +687,18 @@
     flex-wrap: wrap;
     gap: 10px;
 }
+
+.owner-status-chip.payment-paid {
+    background: rgba(0, 214, 143, .1);
+    color: var(--accent);
+}
+
+.owner-status-chip.payment-pending_claimed {
+    background: rgba(255, 193, 7, .12);
+    color: #ffc107;
+}
+
+.owner-status-chip.payment-pending {
+    background: rgba(148, 163, 184, .1);
+    color: #94a3b8;
+}

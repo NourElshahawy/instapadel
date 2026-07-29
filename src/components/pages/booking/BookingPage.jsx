@@ -48,26 +48,37 @@ export default function BookingPage({ court }) {
 
     const channel = supabase
       .channel(`bookings-venue-${court.id}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "bookings" },
-        // { event: "*", schema: "public", table: "booking_slots" }, // <-- ده الوحيد اللي اتغيّر (كان "bookings")
-        (payload) => {
-          const row = payload.new && Object.keys(payload.new).length ? payload.new : payload.old;
-          if (!row || !courtIds.includes(row.court_id)) return;
+      .on("postgres_changes", { event: "*", schema: "public", table: "booking_slots" }, (payload) => {
+        const row = payload.new && Object.keys(payload.new).length ? payload.new : payload.old;
+        if (!row || !courtIds.includes(row.court_id)) return;
 
-          setLiveBookings((prev) => {
-            const sameSlot = (b) => b.court_id === row.court_id && b.date === row.date && b.time === row.time;
+        setLiveBookings((prev) => {
+          const sameSlot = (b) => b.court_id === row.court_id && b.date === row.date && b.time === row.time;
 
-            if (payload.eventType === "DELETE" || row.status === "cancelled") {
-              return prev.filter((b) => !sameSlot(b));
-            }
+          if (payload.eventType === "DELETE" || row.status === "cancelled") {
+            return prev.filter((b) => !sameSlot(b));
+          }
 
-            if (prev.some(sameSlot)) return prev;
-            return [...prev, { court_id: row.court_id, date: row.date, time: row.time }];
-          });
-        },
-      )
+          if (row.status !== "confirmed") return prev;
+          if (prev.some(sameSlot)) return prev;
+          return [...prev, { court_id: row.court_id, date: row.date, time: row.time }];
+        });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "blocked_slots" }, (payload) => {
+        const row = payload.new && Object.keys(payload.new).length ? payload.new : payload.old;
+        if (!row || !courtIds.includes(row.court_id)) return;
+
+        setLiveBlockedSlots((prev) => {
+          const sameSlot = (b) => b.court_id === row.court_id && b.date === row.date && b.time === row.time;
+
+          if (payload.eventType === "DELETE") {
+            return prev.filter((b) => !sameSlot(b));
+          }
+
+          if (prev.some(sameSlot)) return prev;
+          return [...prev, { court_id: row.court_id, date: row.date, time: row.time }];
+        });
+      })
       .subscribe();
 
     return () => {

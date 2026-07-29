@@ -28,13 +28,13 @@ export default async function ConfirmationPage({ params, searchParams }) {
 
   let bookingRow = null;
   if (sp.bookingId) {
-    const { data } = await supabase.from("bookings").select("id, status, payment_status, reviewed").eq("id", sp.bookingId).maybeSingle();
-    bookingRow = data;
+const { data } = await supabase.from("bookings").select("id, status, payment_status, payment_claimed_at, reviewed, group_id").eq("id", sp.bookingId).maybeSingle();    bookingRow = data;
   }
 
   const booking = {
     id: bookingRow?.id || sp.bookingId || null, // ← الـ UUID الحقيقي، يُستخدم للعمليات (إلغاء، تحديث)
-    displayId: generateBookingId(), // ← الرقم التجميلي، للعرض بس
+    groupId: bookingRow?.group_id || bookingRow?.id || sp.bookingId || null,
+    displayId: bookingRow?.id ? `#IP-${bookingRow.id.slice(0, 8).toUpperCase()}` : generateBookingId(),
     venueName: sp.court || court.name,
     venueImage: court.coverImage || court.image,
     location: court.location,
@@ -48,6 +48,8 @@ export default async function ConfirmationPage({ params, searchParams }) {
     status: bookingRow?.status || "confirmed",
     courtId: sp.subCourtId || null,
     reviewed: bookingRow?.reviewed || false, // ← لازم لـ ReviewPrompt
+    paymentStatus: bookingRow?.status !== "cancelled" ? bookingRow?.payment_status || "pending" : null,
+    paymentClaimedAt: bookingRow?.payment_claimed_at || null,
   };
 
   return <BookingConfirmationPage booking={booking} userId={user?.id} />;

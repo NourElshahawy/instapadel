@@ -16,7 +16,7 @@ export default function BookingSummarySidebar({ booking, isPaid }) {
   }
   setCancelling(true);
   try {
-    await cancelBooking(booking.id); // ← UUID حقيقي دلوقتي
+    await cancelBooking(booking.groupId || booking.id);
     setCancelled(true);
   } catch {
     alert("حصل خطأ أثناء الإلغاء");

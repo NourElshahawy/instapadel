@@ -4,6 +4,25 @@ import { cancelBooking } from "@/services/bookingClient";
 import ReviewPrompt from "@/components/pages/booking/confirmation/ReviewPrompt";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { useToast } from "@/components/shared/ToastProvider";
+import Link from "next/link";
+// بيحول "3:00 م" أو "11:00 ص" لعدد دقايق من نص الليل، عشان نرتب صح
+function timeToMinutes(label) {
+  const match = label.trim().match(/^(\d{1,2}):(\d{2})\s*(ص|م)$/);
+  if (!match) return 0;
+  let [, h, m, period] = match;
+  h = parseInt(h, 10);
+  m = parseInt(m, 10);
+  if (period === "ص") {
+    if (h === 12) h = 0; // 12 ص = نص الليل
+  } else {
+    if (h !== 12) h += 12; // م بخلاف 12 الضهر
+  }
+  return h * 60 + m;
+}
+
+function startMinutes(rangeText) {
+  return timeToMinutes(rangeText.split(" الي ")[0]);
+}
 
 function groupBookings(rows) {
   const groups = {};
@@ -13,7 +32,7 @@ function groupBookings(rows) {
     groups[key].push(b);
   });
   return Object.values(groups).map((items) => {
-    const sorted = [...items].sort((a, b) => a.time.localeCompare(b.time));
+    const sorted = [...items].sort((a, b) => startMinutes(a.time) - startMinutes(b.time));
     const first = sorted[0];
     const last = sorted[sorted.length - 1];
     return {
@@ -34,8 +53,8 @@ function groupBookings(rows) {
 export default function BookingHistorySection({ bookings: initialBookings, currentUserId }) {
   const [bookings, setBookings] = useState(initialBookings);
   const [cancellingId, setCancellingId] = useState(null);
-  const [confirmTarget, setConfirmTarget] = useState(null); // ← بديل confirm()
-  const { showToast } = useToast(); // ← بديل alert()
+  const [confirmTarget, setConfirmTarget] = useState(null);
+  const { showToast } = useToast();
 
   const requestCancel = (id) => setConfirmTarget(id);
 
@@ -74,7 +93,7 @@ export default function BookingHistorySection({ bookings: initialBookings, curre
 
           return (
             <div key={b.groupId}>
-              <div className="booking-history-card">
+              <Link href={`/bookings/${b.bookingId}`} className="booking-history-card" style={{ textDecoration: "none", color: "inherit" }}>
                 <div className="bhc-info">
                   <b>
                     {b.venue_name} — {b.court_name}
@@ -88,14 +107,18 @@ export default function BookingHistorySection({ bookings: initialBookings, curre
                   <span className="bhc-price">{b.price} ج.م</span>
                   {b.status === "confirmed" && (
                     <button
-                      onClick={() => requestCancel(b.groupId)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        requestCancel(b.groupId);
+                      }}
                       disabled={cancellingId === b.groupId}
                       style={{ background: "none", border: "none", color: "#ff6b6b", fontSize: ".76rem", cursor: "pointer" }}>
                       {cancellingId === b.groupId ? "..." : "إلغاء"}
                     </button>
                   )}
                 </div>
-              </div>
+              </Link>
               {needsReview && (
                 <ReviewPrompt
                   bookingId={b.bookingId}

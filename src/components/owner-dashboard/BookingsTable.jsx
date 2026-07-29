@@ -1,11 +1,18 @@
 "use client";
 import { useState } from "react";
 import { useReactTable, getCoreRowModel, flexRender, createColumnHelper } from "@tanstack/react-table";
-import { updateBookingStatus } from "@/services/ownerBookingsClient";
+import { updateBookingStatus, confirmPaymentReceived } from "@/services/ownerBookingsClient";
 import ExportButtons from "./ExportButtons";
 
 const columnHelper = createColumnHelper();
 const STATUS_LABELS = { confirmed: "مؤكد", cancelled: "ملغي", completed: "منتهي" };
+const PAYMENT_LABELS = { paid: "مدفوع", pending_claimed: "بانتظار المراجعة", pending: "لسه مستنيين الدفع" };
+
+function getPaymentKey(b) {
+  if (b.paymentStatus === "paid") return "paid";
+  if (b.paymentClaimedAt) return "pending_claimed";
+  return "pending";
+}
 
 export default function BookingsTable({ initialBookings }) {
   const [bookings, setBookings] = useState(initialBookings);
@@ -18,6 +25,18 @@ export default function BookingsTable({ initialBookings }) {
       setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
     } catch {
       alert("حصل خطأ أثناء تحديث الحجز");
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
+  const handleConfirmPayment = async (id) => {
+    setLoadingId(id);
+    try {
+      await confirmPaymentReceived(id);
+      setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, paymentStatus: "paid" } : b)));
+    } catch {
+      alert("حصل خطأ أثناء تأكيد الدفع");
     } finally {
       setLoadingId(null);
     }
@@ -44,6 +63,24 @@ export default function BookingsTable({ initialBookings }) {
     columnHelper.accessor("status", {
       header: "الحالة",
       cell: (info) => <span className={`owner-status-chip ${info.getValue()}`}>{STATUS_LABELS[info.getValue()]}</span>,
+    }),
+    columnHelper.display({
+      id: "payment",
+      header: "الدفع",
+      cell: ({ row }) => {
+        const b = row.original;
+        const key = getPaymentKey(b);
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-start" }}>
+            <span className={`owner-status-chip payment-${key}`}>{PAYMENT_LABELS[key]}</span>
+            {key === "pending_claimed" && (
+              <button onClick={() => handleConfirmPayment(b.id)} disabled={loadingId === b.id} className="owner-btn-complete">
+                تأكيد استلام الدفع
+              </button>
+            )}
+          </div>
+        );
+      },
     }),
     columnHelper.display({
       id: "actions",
@@ -77,12 +114,18 @@ export default function BookingsTable({ initialBookings }) {
     b.time,
     b.price,
     STATUS_LABELS[b.status] || b.status,
+    PAYMENT_LABELS[getPaymentKey(b)],
   ]);
 
   return (
     <>
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 14 }}>
-        <ExportButtons title="سجل الحجوزات" headers={["العميل", "الهاتف", "الإيميل", "الملعب", "المكان", "التاريخ", "الوقت", "السعر (ج.م)", "الحالة"]} rows={exportRows} filenameBase="سجل-الحجوزات" />
+        <ExportButtons
+          title="سجل الحجوزات"
+          headers={["العميل", "الهاتف", "الإيميل", "الملعب", "المكان", "التاريخ", "الوقت", "السعر (ج.م)", "الحالة", "الدفع"]}
+          rows={exportRows}
+          filenameBase="سجل-الحجوزات"
+        />
       </div>
 
       {bookings.length === 0 ? (

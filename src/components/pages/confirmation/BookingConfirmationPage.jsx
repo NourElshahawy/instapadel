@@ -9,7 +9,8 @@ import ReviewPrompt from "@/components/pages/booking/confirmation/ReviewPrompt";
 
 export default function BookingConfirmationPage({ booking, userId }) {
   const [showEmailNotice, setShowEmailNotice] = useState(true);
-  const [isPaid, setIsPaid] = useState(false);
+  const [isPaid, setIsPaid] = useState(booking.paymentStatus === "paid");
+  const [isClaimed, setIsClaimed] = useState(!!booking.paymentClaimedAt);
   const [showReview, setShowReview] = useState(!booking.reviewed);
 
   return (
@@ -31,8 +32,7 @@ export default function BookingConfirmationPage({ booking, userId }) {
               </span>
             </div>
 
-            <StatusTracker booking={booking} isPaid={isPaid} onMarkPaid={() => setIsPaid(true)} />
-
+            <StatusTracker booking={booking} isPaid={isPaid} isClaimed={isClaimed} onMarkPaid={() => setIsClaimed(true)} />
             {showReview && (
               <div className="review-modal-overlay">
                 <div className="review-modal-box">

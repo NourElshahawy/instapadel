@@ -2,7 +2,7 @@
 
 import PaymentMethodChoice from "../booking/confirmation/PaymentMethodChoice";
 
-export default function StatusTracker({ booking, isPaid, onMarkPaid }) {
+export default function StatusTracker({ booking, isPaid, isClaimed, onMarkPaid }) {
   return (
     <div className="tracker-card">
       <h3>حالة الحجز</h3>
@@ -37,7 +37,17 @@ export default function StatusTracker({ booking, isPaid, onMarkPaid }) {
             <b>الدفع</b>
             <span>{isPaid ? "تم استلام الدفع" : "في انتظار الدفع عبر InstaPay"}</span>
             <span className="ts-time">{isPaid ? "الآن" : "—"}</span>
-            <PaymentMethodChoice amount={booking.price} bookingId={booking.displayId} isPaid={isPaid} onMarkPaid={onMarkPaid} />
+            <PaymentMethodChoice
+              amount={booking.price}
+              bookingId={booking.id}
+              displayId={booking.displayId}
+              isPaid={isPaid}
+              isClaimed={isClaimed}
+              onMarkPaid={onMarkPaid}
+              userName={booking.userName}
+              userEmail={booking.email}
+              venueName={booking.venueName}
+            />{" "}
           </div>
         </div>
 

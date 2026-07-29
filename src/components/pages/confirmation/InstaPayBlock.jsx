@@ -1,18 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
+import { markPaymentSent } from "@/services/bookingClient";
 
 const INSTAPAY_NUMBER = "01065801252";
 const HOLD_MINUTES = 15;
 
-export default function InstaPayBlock({ amount, bookingId, isPaid, onMarkPaid }) {
+export default function InstaPayBlock({ amount, bookingId, displayId, onMarkPaid, userName, userEmail, venueName }) {
   const [secondsLeft, setSecondsLeft] = useState(HOLD_MINUTES * 60);
   const [copied, setCopied] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (isPaid) return;
     const id = setInterval(() => setSecondsLeft((s) => Math.max(0, s - 1)), 1000);
     return () => clearInterval(id);
-  }, [isPaid]);
+  }, []);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(INSTAPAY_NUMBER);
@@ -20,14 +21,17 @@ export default function InstaPayBlock({ amount, bookingId, isPaid, onMarkPaid })
     setTimeout(() => setCopied(false), 1800);
   };
 
-  if (isPaid) {
-    return (
-      <div className="paid-badge">
-        <i className="fa-solid fa-circle-check"></i>
-        تم إرسال الدفع — قيد المراجعة
-      </div>
-    );
-  }
+  const handleMarkSent = async () => {
+    setSaving(true);
+    try {
+      await markPaymentSent(bookingId);
+      onMarkPaid();
+    } catch {
+      alert("حصل خطأ أثناء تسجيل الدفع، حاول تاني");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const mm = String(Math.floor(secondsLeft / 60)).padStart(2, "0");
   const ss = String(secondsLeft % 60).padStart(2, "0");
@@ -53,7 +57,7 @@ export default function InstaPayBlock({ amount, bookingId, isPaid, onMarkPaid })
         <div className="instapay-step">
           <span className="instapay-num">3</span>
           <span>
-            استخدم معرف الحجز <b>{bookingId}</b> كملاحظة التحويل
+            استخدم معرف الحجز <b>{displayId}</b> كملاحظة التحويل
           </span>
         </div>
       </div>
@@ -69,17 +73,8 @@ export default function InstaPayBlock({ amount, bookingId, isPaid, onMarkPaid })
         </button>
       </div>
 
-      <button
-        className="btn btn-accent btn-block"
-        onClick={async () => {
-          onMarkPaid();
-          fetch("/api/notifications/payment-received", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: userEmail, userName, venueName, price: amount, bookingId }),
-          }).catch(() => {});
-        }}>
-        لقد قمت بإرسال الدفع
+      <button className="btn btn-accent btn-block" onClick={handleMarkSent} disabled={saving}>
+        {saving ? "جاري الحفظ..." : "لقد قمت بإرسال الدفع"}
       </button>
 
       <p className="instapay-note">

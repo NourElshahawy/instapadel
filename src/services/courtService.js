@@ -18,7 +18,6 @@ export async function getAllCourts({ date } = {}) {
 
   const allCourtIds = venues.flatMap((v) => v.courts.map((c) => c.id));
 
-  // العدد الحقيقي والموحّد لكل الناس عبر RPC (بدل الاعتماد على select مباشر بيتأثر بـ RLS)
   const countByCourtId = {};
   await Promise.all(
     allCourtIds.map(async (courtId) => {
@@ -27,7 +26,6 @@ export async function getAllCourts({ date } = {}) {
     }),
   );
 
-  // فلترة حسب التاريخ لو موجود
   let bookingsForDate = [];
   if (date) {
     const { data } = await supabase
@@ -39,7 +37,6 @@ export async function getAllCourts({ date } = {}) {
     bookingsForDate = data || [];
   }
 
-  // تقييمات الكورتس (اتنقلت هنا جوه الفنكشن بدل ما تكون طليقة برا)
   const { data: allReviews } = await supabase
     .from("court_reviews")
     .select("court_id, rating")
@@ -115,11 +112,6 @@ export async function getFeaturedCourts() {
 
 export async function getCourtDetails(slug) {
   const courts = await getAllCourts();
-  // console.log("SLUG REQUESTED:", slug);
-  // console.log(
-  //   "AVAILABLE SLUGS:",
-  //   courts.map((c) => c.slug),
-  // );
 
   const decodedSlug = decodeURIComponent(slug);
   const court = courts.find((c) => c.slug === decodedSlug);
@@ -134,6 +126,13 @@ export async function getCourtDetails(slug) {
     .select("court_id, date, time")
     .in("court_id", courtIds.length ? courtIds : ["00000000-0000-0000-0000-000000000000"])
     .eq("status", "confirmed");
+
+  // نفس الـ blocked_slots اللي الأونر بيقفلها من صفحته (ownerScheduleService)
+  // لازم تتفلتر برضو هنا عشان العميل ميقدرش يحجز ساعة مقفولة من صفحة الحجز العامة
+  const { data: blockedSlots } = await supabase
+    .from("blocked_slots")
+    .select("court_id, date, time")
+    .in("court_id", courtIds.length ? courtIds : ["00000000-0000-0000-0000-000000000000"]);
 
   const todayISO = getEgyptISODate();
 
@@ -158,6 +157,9 @@ export async function getCourtDetails(slug) {
     }),
     days: buildNextSevenDays(),
     bookings: bookings || [],
+    // أي مكوّن بيبني الأوقات المتاحة (buildDefaultSlots + الفلترة) لازم يستبعد الأوقات
+    // الموجودة هنا برضو، مش بس اللي في bookings
+    blockedSlots: blockedSlots || [],
   };
 }
 

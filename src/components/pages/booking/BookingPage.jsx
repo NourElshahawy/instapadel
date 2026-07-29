@@ -31,6 +31,8 @@ export default function BookingPage({ court }) {
   const [showToast, setShowToast] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [liveBookings, setLiveBookings] = useState(court.bookings || []);
+  const [liveBlockedSlots, setLiveBlockedSlots] = useState(court.blockedSlots || []);
+
 
   useEffect(() => {
     const supabase = createClient();
@@ -110,7 +112,7 @@ export default function BookingPage({ court }) {
     if (!subCourt || !selectedDay) return [];
 
     const bookedStartTimes = liveBookings.filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date).map((b) => b.time.split(" الي ")[0]); // ناخد أول جزء بس (وقت البداية) للمقارنة
-
+    const blockedStartTimes = liveBlockedSlots.filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date).map((b) => b.time);
     const now = new Date();
     const todayISO = getEgyptISODate(now);
     const isToday = selectedDay.date === todayISO;
@@ -125,11 +127,15 @@ export default function BookingPage({ court }) {
     return buildDefaultSlots(subCourt.pricePerHour).map((slot, index) => {
       // ترتيب buildDefaultSlots بيبدأ من 12:00 ص (ساعة 0) لحد 11:00 م (ساعة 23)،
       // فالـ index هنا بيطابق رقم الساعة في اليوم مباشرة
+
       const isPast = isToday && index <= currentHour;
-      const status = bookedStartTimes.includes(slot.start) ? "booked" : isPast ? "past" : "available";
+      const isBooked = bookedStartTimes.includes(slot.start);
+      const isBlocked = blockedStartTimes.includes(slot.start);
+      const status = isBooked ? "booked" : isBlocked ? "booked" : isPast ? "past" : "available";
+      // const status = bookedStartTimes.includes(slot.start) ? "booked" : isPast ? "past" : "available";
       return { ...slot, status };
     });
-  }, [subCourt, selectedDay, liveBookings]);
+  }, [subCourt, selectedDay, liveBookings, liveBlockedSlots]);
 
   const handleToggleSlot = (slot) => {
     if (!selectedDay) return;

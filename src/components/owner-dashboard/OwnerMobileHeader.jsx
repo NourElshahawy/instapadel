@@ -7,6 +7,10 @@ const LINKS = [
   { href: "/owner/dashboard", label: "نظرة عامة", icon: "📊" },
   { href: "/owner/dashboard/venues", label: "ملاعبي", icon: "🏟️" },
   { href: "/owner/dashboard/bookings", label: "الحجوزات", icon: "📅" },
+  { href: "/owner/dashboard/customers", label: "العملاء", icon: "👥" },
+  { href: "/owner/dashboard/reviews", label: "التقييمات", icon: "⭐" },
+  { href: "/owner/dashboard/settings", label: "الإعدادات", icon: "⚙️" },
+  { href: "/owner/logout", label: "تسجيل الخروج", icon: "🚪" },
 ];
 
 export default function OwnerMobileHeader({ ownerName }) {

@@ -5,10 +5,20 @@ import CtaBand from "@/components/home/CtaBand";
 import WhyUs from "@/components/home/WhyUs";
 
 export const metadata = {
-  title: "InstaPadel — Book Padel Courts in Mansoura",
-  description: "InstaPadel gathers every padel court in Mansoura into one place. Compare prices, check real-time availability, and book your court in under a minute.",
+  title: "حجز ملعب بادل في المنصورة | InstaPadel",
+  description: "احجز ملعب بادل في المنصورة أونلاين في ثوانٍ. قارن أسعار كل ملاعب وكورتات البادل، شوف المواعيد المتاحة فورًا، واحجز أقرب ملعب بادل من موقعك مع InstaPadel.",
+  keywords: [
+    "حجز ملعب بادل المنصورة",
+    "ملاعب بادل المنصورة",
+    "ملعب بادل المنصورة",
+    "بادل المنصورة",
+    "حجز بادل المنصورة",
+    "حجز ملعب بادل",
+    "أقرب ملعب بادل من موقعي",
+    "Padel Mansoura",
+    "Padel Courts Mansoura",
+  ],
 };
-
 export default function HomePage() {
   return (
     <>

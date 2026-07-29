@@ -1,3 +1,6 @@
+@import "./owner-register.css";
+
+
 .owner-shell {
     display: flex;
     min-height: 100vh;

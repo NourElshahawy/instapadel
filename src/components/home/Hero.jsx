@@ -15,9 +15,9 @@ function getTodayISO() {
 }
 
 function addDaysISO(iso, days) {
-  const d = new Date(iso + "T00:00:00");
-  d.setDate(d.getDate() + days);
-  return d.toISOString().split("T")[0];
+  const [y, m, d] = iso.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d + days));
+  return date.toISOString().split("T")[0];
 }
 
 const SLOTS = buildDefaultSlots(0);

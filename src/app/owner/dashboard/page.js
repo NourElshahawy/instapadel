@@ -18,10 +18,10 @@ export default async function OwnerOverviewPage() {
       <h1 className="owner-page-title">نظرة عامة</h1>
 
       <div className="owner-stats-grid">
-        <StatCard label="إجمالي الإيرادات" value={`${stats.totalRevenue} ج.م`} />
+        <StatCard label="إيرادات مقبوضة فعليًا" value={`${stats.collectedRevenue} ج.م`} />
+        <StatCard label="إيرادات متوقعة (شاملة الغير مدفوع)" value={`${stats.expectedRevenue} ج.م`} />
         <StatCard label="عدد الحجوزات" value={stats.totalBookings} />
         <StatCard label="عدد الملاعب" value={stats.totalCourts} />
-        <StatCard label="أماكنك" value={stats.totalVenues} />
       </div>
 
       <div className="owner-card">

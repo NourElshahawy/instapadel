@@ -41,7 +41,8 @@ export default async function BookingInvoicePage({ params }) {
     .eq(baseRow.group_id ? "group_id" : "id", groupKey);
 
   const rows = groupRows && groupRows.length ? groupRows : [baseRow];
-  const sorted = [...rows].sort((a, b) => timeToMinutes(a.time.split(" الي ")[0]) - timeToMinutes(b.time.split(" الي ")[0]));
+  const sortKey = (r) => `${r.date}_${String(timeToMinutes(r.time.split(" الي ")[0])).padStart(4, "0")}`;
+  const sorted = [...rows].sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
   const first = sorted[0];
   const last = sorted[sorted.length - 1];
 
@@ -56,7 +57,7 @@ export default async function BookingInvoicePage({ params }) {
     location: courtRow?.venues?.address || "—",
     locationLink: null,
     subCourtName: first.court_name,
-    date: first.date,
+    date: first.date === last.date ? first.date : `${first.date} → ${last.date}`,
     time: sorted.length === 1 ? first.time : `${first.time.split(" الي ")[0]} الي ${last.time.split(" الي ")[1]}`,
     price: sorted.reduce((sum, r) => sum + Number(r.price), 0),
     email: user.email,

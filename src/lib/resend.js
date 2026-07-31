@@ -2,4 +2,4 @@ import { Resend } from "resend";
 
 export const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-export const FROM_EMAIL = "InstaPadel <onboarding@resend.dev>";
+export const FROM_EMAIL = "InstaPadel <no-reply@instapadel.tech>";

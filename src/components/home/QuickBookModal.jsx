@@ -103,7 +103,7 @@ export default function QuickBookModal({ slots, onClose }) {
 
   // خطوة دفع الديبوزيت بعد اختيار ملعب
   if (selectedCourt) {
-    const deposit = Math.round(selectedCourt.totalPrice / 2);
+    const deposit = selectedCourt.totalPrice;
     return (
       <div className="booking-guide-overlay" onClick={onClose}>
         <div className="quick-book-modal" onClick={(e) => e.stopPropagation()}>
@@ -125,9 +125,8 @@ export default function QuickBookModal({ slots, onClose }) {
           <div className="deposit-box">
             <div className="deposit-header">
               <span className="deposit-header-label">
-                <i className="fa-solid fa-shield-halved"></i> ديبوزيت لتأكيد الحجز
+                <i className="fa-solid fa-shield-halved"></i> المبلغ المطلوب لتأكيد الحجز
               </span>
-              <span className="deposit-header-note">الباقي {selectedCourt.totalPrice - deposit} ج.م يتدفع في الملعب</span>
             </div>
 
             <div className="deposit-amount-display">

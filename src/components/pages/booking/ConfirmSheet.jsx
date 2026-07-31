@@ -27,7 +27,7 @@ export default function ConfirmSheet({ isOpen, onClose, onConfirm, confirming, r
 
   if (!isOpen) return null;
 
-  const deposit = Math.round(review.price / 2);
+  const deposit = review.price;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(INSTAPAY_NUMBER);
@@ -72,9 +72,8 @@ export default function ConfirmSheet({ isOpen, onClose, onConfirm, confirming, r
         <div className="deposit-box">
           <div className="deposit-header">
             <span className="deposit-header-label">
-              <i className="fa-solid fa-shield-halved"></i> ديبوزيت لتأكيد الحجز
+              <i className="fa-solid fa-shield-halved"></i> المبلغ المطلوب لتأكيد الحجز
             </span>
-            <span className="deposit-header-note">الباقي {review.price - deposit} ج.م يتدفع في الملعب</span>
           </div>
 
           <div className="deposit-amount-display">

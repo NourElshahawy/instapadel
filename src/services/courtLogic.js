@@ -2,11 +2,11 @@ export function getEgyptISODate(date = new Date()) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Cairo" }).format(date);
 }
 
-export function buildNextSevenDays() {
+export function buildNextSevenDays(count = 30) {
   const days = [];
   const dowNames = ["الأحد", "الإثنين", "الثلاثاء", "الأربع", "الخميس", "الجمعة", "السبت"];
   const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < count; i++) {
     const d = new Date();
     d.setDate(d.getDate() + i);
     days.push({

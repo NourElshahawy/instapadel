@@ -323,3 +323,10 @@
     border: 1px solid var(--border-glass);
     border-radius: var(--r-sm);
 }
+
+.search-field-hint {
+    display: block;
+    font-size: .72rem;
+    color: var(--accent);
+    margin-top: 4px;
+}

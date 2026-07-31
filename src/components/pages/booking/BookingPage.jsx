@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { createBookingWithDeposit } from "@/services/depositBookingClient";
 import HeroActionsBar from "./HeroActionsBar";
 import VenueSummaryCard from "./VenueSummaryCard";
 import HeroImageSlider from "./HeroImageSlider";
@@ -216,7 +217,8 @@ export default function BookingPage({ court }) {
 
   const canBook = !!subCourt && selectedSlots.length > 0;
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (proofFile) => {
+    if (!proofFile) return;
     setConfirming(true);
 
     const supabase = createClient();
@@ -242,9 +244,10 @@ export default function BookingPage({ court }) {
       group_id: groupId,
     }));
 
-    const { data: bookingRows, error } = await supabase.from("bookings").insert(rows).select();
-
-    if (error) {
+    let bookingRows;
+    try {
+      bookingRows = await createBookingWithDeposit({ rows, proofFile });
+    } catch (error) {
       setConfirming(false);
       if (error.code === "23505") {
         // unique constraint violation — حد تاني حجز نفس السلوت قبلك

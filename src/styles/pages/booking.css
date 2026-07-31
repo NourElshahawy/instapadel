@@ -385,11 +385,17 @@
 }
 
 .days-slider {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding-bottom: 4px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 4px;
+}
+
+.day-card {
+    flex: 0 0 auto;
+    min-width: 76px;
+    scroll-snap-align: start;
 }
 .days-slider::-webkit-scrollbar { display: none; }
 .booking-days::after {
@@ -886,14 +892,15 @@
     border-radius: 28px 28px 0 0;
     padding: 12px 24px 36px;
     animation: sheetUp .45s ease;
+    max-height: 88vh;
+    overflow-y: auto;
 }
 
 .sheet-handle {
-    width: 40px;
-    height: 4px;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, .15);
-    margin: 0 auto 20px;
+    position: sticky;
+    top: 0;
+    background: var(--bg-secondary);
+    z-index: 1;
 }
 
 .sheet-content h2 {
@@ -1235,4 +1242,77 @@
     width: 16px;
     height: 16px;
     cursor: pointer;
+}
+
+.deposit-box {
+    background: linear-gradient(180deg, rgba(124, 58, 237, .07), rgba(124, 58, 237, 0));
+    border: 1px solid rgba(124, 58, 237, .25);
+    border-radius: var(--r-md);
+    padding: 20px;
+    margin: 18px 0;
+}
+
+.deposit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.deposit-header-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--white);
+}
+
+.deposit-header-label i {
+    color: var(--accent);
+}
+
+.deposit-header-note {
+    font-size: .72rem;
+    color: var(--text-muted);
+}
+
+.deposit-amount-display {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+    padding: 14px 0;
+    margin-bottom: 14px;
+    background: rgba(0, 0, 0, .2);
+    border-radius: var(--r-sm);
+}
+
+.deposit-amount-display span {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+}
+
+.deposit-amount-display small {
+    font-size: .95rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.deposit-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: .76rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+.deposit-notice i {
+    color: #ffc107;
+    margin-top: 2px;
+    flex-shrink: 0;
 }

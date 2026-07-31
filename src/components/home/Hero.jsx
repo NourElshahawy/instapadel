@@ -3,7 +3,7 @@ import Image from "next/image";
 import "../../styles/home/hero.css";
 import "../../styles/home/search.css";
 import ParallaxBg from "../ui/ParallaxBg";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { buildDefaultSlots } from "@/services/courtLogic";
 import QuickBookModal from "./QuickBookModal";
 
@@ -14,24 +14,36 @@ function getTodayISO() {
   return local.toISOString().split("T")[0];
 }
 
+function addDaysISO(iso, days) {
+  const d = new Date(iso + "T00:00:00");
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split("T")[0];
+}
+
 const SLOTS = buildDefaultSlots(0);
 
 export default function Hero() {
   const [date, setDate] = useState(getTodayISO());
-  const [startIndex, setStartIndex] = useState(16); // 4:00 م تقريبًا كبداية افتراضية
-  const [endIndex, setEndIndex] = useState(17); // ساعة واحدة افتراضيًا
+  const [startIndex, setStartIndex] = useState(16);
+  const [endIndex, setEndIndex] = useState(17);
   const [showModal, setShowModal] = useState(false);
 
-  const selectedSlots = SLOTS.slice(startIndex, endIndex + 1);
+  // لو "لحد الساعة" أصغر من "من الساعة"، معناها الامتداد لليوم اللي بعده
+  const crossesMidnight = endIndex < startIndex;
+
+  const selectedSlots = useMemo(() => {
+    if (!crossesMidnight) {
+      return SLOTS.slice(startIndex, endIndex + 1).map((s) => ({ ...s, date }));
+    }
+    const day1 = SLOTS.slice(startIndex).map((s) => ({ ...s, date }));
+    const nextDate = addDaysISO(date, 1);
+    const day2 = SLOTS.slice(0, endIndex + 1).map((s) => ({ ...s, date: nextDate }));
+    return [...day1, ...day2];
+  }, [date, startIndex, endIndex, crossesMidnight]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     setShowModal(true);
-  };
-
-  const handleStartChange = (i) => {
-    setStartIndex(i);
-    if (endIndex < i) setEndIndex(i);
   };
 
   return (
@@ -41,6 +53,7 @@ export default function Hero() {
       <span className="hero-shape s3" />
       <span className="hero-shape s4" />
       <ParallaxBg image="/assets/imgs/img1.jpg" />
+
       <div className="container hero-content">
         <span className="hero-badge" data-aos="fade-up">
           <Image src="/assets/imgs/logo1-removebg-preview.png" className="pulse-img" alt="" width={20} height={20} />
@@ -75,7 +88,7 @@ export default function Hero() {
               <label>
                 <i className="fa-solid fa-clock" /> من الساعة
               </label>
-              <select value={startIndex} onChange={(e) => handleStartChange(Number(e.target.value))}>
+              <select value={startIndex} onChange={(e) => setStartIndex(Number(e.target.value))}>
                 {SLOTS.map((s, i) => (
                   <option key={s.start} value={i}>
                     {s.start}
@@ -90,11 +103,12 @@ export default function Hero() {
               </label>
               <select value={endIndex} onChange={(e) => setEndIndex(Number(e.target.value))}>
                 {SLOTS.map((s, i) => (
-                  <option key={s.end} value={i} disabled={i < startIndex}>
+                  <option key={s.end} value={i}>
                     {s.end}
                   </option>
                 ))}
               </select>
+              {crossesMidnight && <span className="search-field-hint">هيمتد لليوم اللي بعده</span>}
             </div>
 
             <button type="button" className="search-submit" onClick={handleSearch}>
@@ -104,7 +118,8 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      {showModal && <QuickBookModal date={date} slots={selectedSlots} onClose={() => setShowModal(false)} />}{" "}
+
+      {showModal && <QuickBookModal slots={selectedSlots} onClose={() => setShowModal(false)} />}
     </section>
   );
 }

@@ -1,4 +1,7 @@
 export default function SlotsGrid({ slots, selectedTimes, onToggle, locked }) {
+  const lastSlot = slots[slots.length - 1];
+  const showCrossDayHint = lastSlot && lastSlot.end === "12:00 ص" && lastSlot.status === "available";
+
   return (
     <section className={`booking-slots ${locked ? "section-locked" : ""}`} data-requires="اليوم">
       <div className="section-title">
@@ -49,6 +52,12 @@ export default function SlotsGrid({ slots, selectedTimes, onToggle, locked }) {
           );
         })}
       </div>
+
+      {showCrossDayHint && (
+        <div className="cross-day-hint">
+          <i className="fa-solid fa-moon"></i>
+          عايز تكمل حجزك بعد نص الليل؟ تقدر تختار الساعة اللي بعدها من تاب اليوم اللي جاي        </div>
+      )}
     </section>
   );
 }

@@ -702,3 +702,61 @@
     background: rgba(148, 163, 184, .1);
     color: #94a3b8;
 }
+
+.owner-status-chip.mixed {
+    background: rgba(255, 152, 0, .12);
+    color: #ff9800;
+}
+
+.owner-btn-view-proof {
+    background: rgba(124, 58, 237, .1);
+    color: var(--accent);
+    border: 1px solid rgba(124, 58, 237, .25);
+    border-radius: var(--r-sm);
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.owner-btn-view-proof:hover {
+    background: rgba(124, 58, 237, .2);
+}
+
+.owner-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-glass);
+}
+
+.owner-pagination-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border-glass);
+    background: transparent;
+    color: var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.owner-pagination-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.owner-pagination-btn:disabled {
+    opacity: .3;
+    cursor: not-allowed;
+}
+
+.owner-pagination-info {
+    font-size: .85rem;
+    color: var(--text-muted);
+    min-width: 90px;
+    text-align: center;
+}

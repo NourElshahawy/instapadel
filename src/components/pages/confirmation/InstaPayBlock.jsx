@@ -5,15 +5,27 @@ import { markPaymentSent } from "@/services/bookingClient";
 const INSTAPAY_NUMBER = "01065801252";
 const HOLD_MINUTES = 15;
 
-export default function InstaPayBlock({ amount, bookingId, displayId, onMarkPaid, userName, userEmail, venueName }) {
+export default function InstaPayBlock({ amount, bookingId, displayId, onMarkPaid }) {
   const [secondsLeft, setSecondsLeft] = useState(HOLD_MINUTES * 60);
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [proofFile, setProofFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     const id = setInterval(() => setSecondsLeft((s) => Math.max(0, s - 1)), 1000);
     return () => clearInterval(id);
   }, []);
+
+  useEffect(() => {
+    if (!proofFile) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(proofFile);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [proofFile]);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(INSTAPAY_NUMBER);
@@ -21,10 +33,19 @@ export default function InstaPayBlock({ amount, bookingId, displayId, onMarkPaid
     setTimeout(() => setCopied(false), 1800);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) setProofFile(file);
+  };
+
   const handleMarkSent = async () => {
+    if (!proofFile) {
+      alert("لازم ترفع صورة سكرين شوت التحويل الأول");
+      return;
+    }
     setSaving(true);
     try {
-      await markPaymentSent(bookingId);
+      await markPaymentSent(bookingId, proofFile);
       onMarkPaid();
     } catch {
       alert("حصل خطأ أثناء تسجيل الدفع، حاول تاني");
@@ -60,6 +81,10 @@ export default function InstaPayBlock({ amount, bookingId, displayId, onMarkPaid
             استخدم معرف الحجز <b>{displayId}</b> كملاحظة التحويل
           </span>
         </div>
+        <div className="instapay-step">
+          <span className="instapay-num">4</span>
+          <span>ارفع صورة سكرين شوت التحويل</span>
+        </div>
       </div>
 
       <div className="instapay-number-box">
@@ -73,7 +98,19 @@ export default function InstaPayBlock({ amount, bookingId, displayId, onMarkPaid
         </button>
       </div>
 
-      <button className="btn btn-accent btn-block" onClick={handleMarkSent} disabled={saving}>
+      <label className="instapay-upload">
+        <input type="file" accept="image/*" onChange={handleFileChange} hidden />
+        {previewUrl ? (
+          <img src={previewUrl} alt="إثبات الدفع" className="instapay-upload-preview" />
+        ) : (
+          <>
+            <i className="fa-solid fa-camera"></i>
+            <span>ارفع صورة إثبات التحويل (إجباري)</span>
+          </>
+        )}
+      </label>
+
+      <button className="btn btn-accent btn-block" onClick={handleMarkSent} disabled={saving || !proofFile}>
         {saving ? "جاري الحفظ..." : "لقد قمت بإرسال الدفع"}
       </button>
 

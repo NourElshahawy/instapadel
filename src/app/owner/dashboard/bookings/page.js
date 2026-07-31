@@ -9,11 +9,14 @@ export default async function OwnerBookingsPage() {
   } = await supabase.auth.getUser();
   const bookings = await getOwnerBookings(user.id);
 
+  const { data: venues } = await supabase.from("venues").select("courts(id)").eq("owner_id", user.id);
+  const courtIds = (venues || []).flatMap((v) => v.courts.map((c) => c.id));
+
   return (
     <>
       <h1 className="owner-page-title">الحجوزات</h1>
       <div className="owner-card">
-        <BookingsTable initialBookings={bookings} />
+        <BookingsTable initialBookings={bookings} courtIds={courtIds} />
       </div>
     </>
   );

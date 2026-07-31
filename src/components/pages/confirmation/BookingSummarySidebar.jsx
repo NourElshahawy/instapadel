@@ -4,26 +4,26 @@ import { cancelBooking } from "@/services/bookingClient";
 import DownloadReceiptButton from "../booking/confirmation/DownloadReceiptButton";
 // import DownloadReceiptButton from "./DownloadReceiptButton";
 
-export default function BookingSummarySidebar({ booking, isPaid }) {
+export default function BookingSummarySidebar({ booking, isPaid, isClaimed }) {
   const [cancelled, setCancelled] = useState(booking.status === "cancelled");
   const [cancelling, setCancelling] = useState(false);
 
   const handleCancel = async () => {
-  if (!confirm("متأكد إنك عايز تلغي الحجز ده؟")) return;
-  if (!booking.id) {
-    alert("مش قادرين نلاقي الحجز ده، جرب تفتح الصفحة من جديد");
-    return;
-  }
-  setCancelling(true);
-  try {
-    await cancelBooking(booking.groupId || booking.id);
-    setCancelled(true);
-  } catch {
-    alert("حصل خطأ أثناء الإلغاء");
-  } finally {
-    setCancelling(false);
-  }
-};
+    if (!confirm("متأكد إنك عايز تلغي الحجز ده؟")) return;
+    if (!booking.id) {
+      alert("مش قادرين نلاقي الحجز ده، جرب تفتح الصفحة من جديد");
+      return;
+    }
+    setCancelling(true);
+    try {
+      await cancelBooking(booking.groupId || booking.id);
+      setCancelled(true);
+    } catch {
+      alert("حصل خطأ أثناء الإلغاء");
+    } finally {
+      setCancelling(false);
+    }
+  };
 
   const handleShare = async () => {
     const shareText = `حجزي في ${booking.venueName} — ${booking.date}، ${booking.time}`;
@@ -77,9 +77,9 @@ export default function BookingSummarySidebar({ booking, isPaid }) {
             <span>تم إلغاء الحجز</span>
           </div>
         ) : (
-          <div className={`payment-status-badge ${isPaid ? "is-paid" : ""}`}>
-            <i className={`fa-solid ${isPaid ? "fa-circle-check" : "fa-clock"}`}></i>
-            <span>{isPaid ? "تم الدفع" : "في انتظار الدفع"}</span>
+          <div className={`payment-status-badge ${isPaid ? "is-paid" : isClaimed ? "is-pending-review" : ""}`}>
+            <i className={`fa-solid ${isPaid ? "fa-circle-check" : isClaimed ? "fa-hourglass-half" : "fa-clock"}`}></i>
+            <span>{isPaid ? "تم الدفع" : isClaimed ? "قيد المراجعة" : "في انتظار الدفع"}</span>
           </div>
         )}
 

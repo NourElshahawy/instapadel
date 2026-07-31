@@ -32,7 +32,8 @@ function groupBookings(rows) {
     groups[key].push(b);
   });
   return Object.values(groups).map((items) => {
-    const sorted = [...items].sort((a, b) => startMinutes(a.time) - startMinutes(b.time));
+const sortKey = (b) => `${b.date}_${String(startMinutes(b.time)).padStart(4, "0")}`;
+    const sorted = [...items].sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
     const first = sorted[0];
     const last = sorted[sorted.length - 1];
     return {
@@ -41,7 +42,7 @@ function groupBookings(rows) {
       venue_name: first.venue_name,
       court_name: first.court_name,
       court_id: first.court_id,
-      date: first.date,
+      date: first.date === last.date ? first.date : `${first.date} → ${last.date}`,
       status: first.status,
       reviewed: first.reviewed,
       price: sorted.reduce((sum, x) => sum + x.price, 0),

@@ -17,8 +17,25 @@ import BookingGuideModal from "./BookingGuideModal";
 import { getEgyptISODate } from "@/services/courtLogic";
 // import "@/styles/pages/booking.css";
 
+function timeToMinutes(label) {
+  const match = label.trim().match(/^(\d{1,2}):(\d{2})\s*(ص|م)$/);
+  if (!match) return 0;
+  let [, h, m, period] = match;
+  h = parseInt(h, 10);
+  m = parseInt(m, 10);
+  if (period === "ص") {
+    if (h === 12) h = 0;
+  } else if (h !== 12) {
+    h += 12;
+  }
+  return h * 60 + m;
+}
+function slotSortKey(s) {
+  return `${s.date}_${String(timeToMinutes(s.start)).padStart(4, "0")}`;
+}
+
 export default function BookingPage({ court }) {
-  const [showGuide, setShowGuide] = useState(true);
+  const [showGuide, setShowGuide] = useState(false);
   const daysSectionRef = useRef(null);
   const slotsSectionRef = useRef(null);
   const router = useRouter();
@@ -33,10 +50,20 @@ export default function BookingPage({ court }) {
   const [liveBookings, setLiveBookings] = useState(court.bookings || []);
   const [liveBlockedSlots, setLiveBlockedSlots] = useState(court.blockedSlots || []);
 
-
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
+  }, []);
+
+
+  useEffect(() => {
+    try {
+      if (!localStorage.getItem("instapadel_hide_booking_guide")) {
+        setShowGuide(true);
+      }
+    } catch {
+      setShowGuide(true);
+    }
   }, []);
 
   // اشتراك لحظي في تغييرات الحجوزات لكل الكورتات الفرعية بتاعة الملعب ده،
@@ -101,7 +128,6 @@ export default function BookingPage({ court }) {
 
   const handleSelectDay = (d) => {
     setSelectedDay(d);
-    setSelectedSlots([]);
 
     setTimeout(() => {
       slotsSectionRef.current?.scrollIntoView({
@@ -113,12 +139,39 @@ export default function BookingPage({ court }) {
 
   const summary = useMemo(() => {
     const total = selectedSlots.reduce((sum, s) => sum + s.price, 0);
-    const time = selectedSlots.length ? `${selectedSlots[0].start} الي ${selectedSlots[selectedSlots.length - 1].end}` : "";
     const duration = selectedSlots.length ? (selectedSlots.length === 1 ? "ساعة واحدة" : `${selectedSlots.length} ساعات`) : "";
-    const dateLabel = selectedDay ? `${selectedDay.dow} ${selectedDay.dom} ${selectedDay.month}` : "";
-    const dateISO = selectedDay?.date || ""; // ← جديد: الـ ISO date جاي من court-details.json / الداتا الأصلية
-    return { total, time, duration, dateLabel, dateISO };
-  }, [selectedSlots, selectedDay]);
+
+    let time = "";
+    let dateLabel = "";
+    let dateISO = "";
+    let spansMultipleDays = false;
+
+    if (selectedSlots.length) {
+      const sorted = [...selectedSlots].sort((a, b) => slotSortKey(a).localeCompare(slotSortKey(b)));
+      const first = sorted[0];
+      const last = sorted[sorted.length - 1];
+      spansMultipleDays = first.date !== last.date;
+
+      const dayInfo = (d) => (court.days || []).find((x) => x.date === d);
+      const firstDay = dayInfo(first.date);
+      const lastDay = dayInfo(last.date);
+      const label = (d, day) => (day ? `${day.dow} ${day.dom} ${day.month}` : d);
+
+      if (spansMultipleDays) {
+        time = `${first.start} (${label(first.date, firstDay)}) الي ${last.end} (${label(last.date, lastDay)})`;
+        dateLabel = `${label(first.date, firstDay)} → ${label(last.date, lastDay)}`;
+      } else {
+        time = `${first.start} الي ${last.end}`;
+        dateLabel = label(first.date, firstDay);
+      }
+      dateISO = first.date;
+    } else if (selectedDay) {
+      dateLabel = `${selectedDay.dow} ${selectedDay.dom} ${selectedDay.month}`;
+      dateISO = selectedDay.date;
+    }
+
+    return { total, time, duration, dateLabel, dateISO, spansMultipleDays };
+  }, [selectedSlots, selectedDay, court.days]);
 
   const daySlots = useMemo(() => {
     if (!subCourt || !selectedDay) return [];
@@ -149,16 +202,19 @@ export default function BookingPage({ court }) {
     });
   }, [subCourt, selectedDay, liveBookings, liveBlockedSlots]);
 
+  const daysWithSelections = useMemo(() => [...new Set(selectedSlots.map((s) => s.date))], [selectedSlots]);
+
   const handleToggleSlot = (slot) => {
     if (!selectedDay) return;
+    const slotWithDate = { ...slot, date: selectedDay.date };
     setSelectedSlots((prev) => {
-      const exists = prev.some((s) => s.start === slot.start);
-      if (exists) return prev.filter((s) => s.start !== slot.start);
-      return [...prev, slot].sort((a, b) => daySlots.findIndex((s) => s.start === a.start) - daySlots.findIndex((s) => s.start === b.start));
+      const exists = prev.some((s) => s.date === slotWithDate.date && s.start === slotWithDate.start);
+      if (exists) return prev.filter((s) => !(s.date === slotWithDate.date && s.start === slotWithDate.start));
+      return [...prev, slotWithDate].sort((a, b) => slotSortKey(a).localeCompare(slotSortKey(b)));
     });
   };
 
-  const canBook = !!subCourt && !!selectedDay && selectedSlots.length > 0;
+  const canBook = !!subCourt && selectedSlots.length > 0;
 
   const handleConfirm = async () => {
     setConfirming(true);
@@ -179,7 +235,7 @@ export default function BookingPage({ court }) {
       court_id: subCourt.id,
       venue_name: court.name,
       court_name: subCourt.name,
-      date: summary.dateISO,
+      date: slot.date,
       time: `${slot.start} الي ${slot.end}`,
       price: slot.price,
       status: "confirmed",
@@ -264,11 +320,11 @@ export default function BookingPage({ court }) {
         <CourtGallerySelector subCourts={court.subCourts || []} selectedId={subCourt?.id} onSelect={handleSelectSubCourt} />
 
         <div ref={daysSectionRef}>
-          <DaySelector days={court.days || []} selectedDate={selectedDay?.date} onSelect={handleSelectDay} locked={!subCourt} />
+          <DaySelector days={court.days || []} selectedDate={selectedDay?.date} onSelect={handleSelectDay} locked={!subCourt} daysWithSelections={daysWithSelections} />
         </div>
 
         <div ref={slotsSectionRef}>
-          <SlotsGrid slots={daySlots} selectedTimes={selectedSlots.map((s) => s.start)} onToggle={handleToggleSlot} locked={!subCourt || !selectedDay} />
+          <SlotsGrid slots={daySlots} selectedTimes={selectedSlots.filter((s) => s.date === selectedDay?.date).map((s) => s.start)} onToggle={handleToggleSlot} locked={!subCourt || !selectedDay} />
         </div>
       </main>
 

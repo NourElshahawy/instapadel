@@ -380,7 +380,8 @@
 /* ===== Days ===== */
 .booking-days {
     position: relative;
-    padding: 28px 0 0;
+    padding: 150px 0 0;
+    margin-top: 12px;
 }
 
 .days-slider {
@@ -1182,4 +1183,56 @@
 .slot-card.past p {
     color: var(--text-faint, #55555f);
     font-size: 0.72rem;
+}
+
+
+.day-card {
+    position: relative;
+}
+
+.day-card-selection-dot {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.cross-day-hint {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: rgba(124, 58, 237, .08);
+    border: 1px solid rgba(124, 58, 237, .25);
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-size: .82rem;
+    line-height: 1.6;
+}
+
+.cross-day-hint i {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.booking-guide-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    margin: 14px 0;
+    font-size: .82rem;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.booking-guide-checkbox input {
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
 }

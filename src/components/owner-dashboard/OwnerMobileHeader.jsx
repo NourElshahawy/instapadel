@@ -2,25 +2,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import NotificationBell from "@/components/layout/NotificationBell";
+import { OWNER_NAV_LINKS } from "./ownerNavLinks";
 
-const LINKS = [
-  { href: "/owner/dashboard", label: "نظرة عامة", icon: "📊" },
-  { href: "/owner/dashboard/venues", label: "ملاعبي", icon: "🏟️" },
-  { href: "/owner/dashboard/bookings", label: "الحجوزات", icon: "📅" },
-  { href: "/owner/dashboard/customers", label: "العملاء", icon: "👥" },
-  { href: "/owner/dashboard/reviews", label: "التقييمات", icon: "⭐" },
-  { href: "/owner/dashboard/settings", label: "الإعدادات", icon: "⚙️" },
-  { href: "/owner/logout", label: "تسجيل الخروج", icon: "🚪" },
-];
-
-export default function OwnerMobileHeader({ ownerName }) {
+export default function OwnerMobileHeader({ ownerName, notifState }) {
   const [open, setOpen] = useState(false);
-
+  const { notifications, unreadCount, loading, markAsRead, markAllAsRead } = notifState;
   return (
     <div className="owner-mobile-header" style={{ position: "relative" }}>
       <span className="owner-mobile-header-title">لوحة {ownerName}</span>
       <div className="d-flex align-items-center gap-2">
-        <NotificationBell />
+        <NotificationBell notifications={notifications} unreadCount={unreadCount} loading={loading} markAsRead={markAsRead} markAllAsRead={markAllAsRead} />
         <button className="owner-mobile-toggle" onClick={() => setOpen((v) => !v)}>
           {open ? "✕" : "☰"}
         </button>
@@ -29,12 +20,15 @@ export default function OwnerMobileHeader({ ownerName }) {
       {open && (
         <div className="owner-mobile-menu">
           <nav className="owner-nav">
-            {LINKS.map((link) => (
+            {OWNER_NAV_LINKS.map((link) => (
               <Link key={link.href} href={link.href} className="owner-nav-link" onClick={() => setOpen(false)}>
                 {link.icon} {link.label}
               </Link>
             ))}
           </nav>
+          <Link href="/owner/logout" className="owner-nav-link" onClick={() => setOpen(false)}>
+            🚪 تسجيل الخروج
+          </Link>
           <Link href="/" className="owner-sidebar-back">
             ← رجوع للموقع
           </Link>

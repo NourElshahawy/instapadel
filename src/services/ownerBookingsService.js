@@ -10,7 +10,7 @@ export async function getOwnerBookings(ownerId) {
 
   const { data: bookings, error } = await supabase
     .from("bookings")
-    .select("id, court_name, venue_name, date, time, price, status, payment_status, payment_claimed_at, created_at, user_id, profiles(name, phone, email)")
+    .select("id, group_id, court_name, venue_name, date, time, price, status, payment_status, payment_claimed_at, payment_proof_url, created_at, user_id, profiles(name, phone, email)")
     .in("court_id", courtIds)
     .order("created_at", { ascending: false });
 
@@ -29,5 +29,7 @@ export async function getOwnerBookings(ownerId) {
     customerName: b.profiles?.name || "عميل",
     customerPhone: b.profiles?.phone,
     customerEmail: b.profiles?.email, // ← جديد
+    groupId: b.group_id || b.id,
+    paymentProofUrl: b.payment_proof_url,
   }));
 }

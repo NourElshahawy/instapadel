@@ -1,7 +1,8 @@
 "use client";
-import { useMemo, useState } from "react";
-import { useReactTable, getCoreRowModel, flexRender, createColumnHelper } from "@tanstack/react-table";
+import { useMemo, useState, useEffect } from "react";
+import { useReactTable, getCoreRowModel, getPaginationRowModel, flexRender, createColumnHelper } from "@tanstack/react-table";
 import ExportButtons from "./ExportButtons";
+import TablePagination from "./TablePagination";
 
 const columnHelper = createColumnHelper();
 
@@ -18,6 +19,12 @@ export default function CustomersTable({ customers }) {
     }
     return list;
   }, [customers, search, onlyReturning]);
+
+
+  useEffect(() => {
+    table.setPageIndex(0);
+  }, [search, onlyReturning]);
+
 
   const columns = [
     columnHelper.accessor("name", {
@@ -51,8 +58,13 @@ export default function CustomersTable({ customers }) {
     }),
   ];
 
-  const table = useReactTable({ data: filtered, columns, getCoreRowModel: getCoreRowModel() });
-
+  const table = useReactTable({
+    data: filtered,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: { pagination: { pageSize: 15 } },
+  });
   const exportRows = filtered.map((c) => [c.name, c.phone, c.email, c.totalBookings, c.totalSpent, c.favoriteCourt, new Date(c.lastBookingDate).toLocaleDateString("ar-EG")]);
 
   return (
@@ -94,6 +106,7 @@ export default function CustomersTable({ customers }) {
           </table>
         </div>
       )}
+      <TablePagination table={table} />
     </>
   );
 }

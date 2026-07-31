@@ -1,19 +1,9 @@
-// import BookingConfirmationPage from "@/components/pages/booking/confirmation/";
 import { getCourtDetails } from "@/services/courtService";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import BookingConfirmationPage from "@/components/pages/confirmation/BookingConfirmationPage";
 
 export const metadata = { title: "تأكيد الحجز — InstaPadel" };
-
-function generateBookingId() {
-  const today = new Date();
-  const y = today.getFullYear();
-  const m = String(today.getMonth() + 1).padStart(2, "0");
-  const d = String(today.getDate()).padStart(2, "0");
-  const rand = Math.floor(1000 + Math.random() * 9000);
-  return `#IP-${y}${m}${d}-${rand}`;
-}
 
 export default async function ConfirmationPage({ params, searchParams }) {
   const { slug } = await params;
@@ -28,13 +18,14 @@ export default async function ConfirmationPage({ params, searchParams }) {
 
   let bookingRow = null;
   if (sp.bookingId) {
-const { data } = await supabase.from("bookings").select("id, status, payment_status, payment_claimed_at, reviewed, group_id").eq("id", sp.bookingId).maybeSingle();    bookingRow = data;
+    const { data } = await supabase.from("bookings").select("id, group_id, status, payment_status, payment_claimed_at, reviewed").eq("id", sp.bookingId).maybeSingle();
+    bookingRow = data;
   }
 
   const booking = {
-    id: bookingRow?.id || sp.bookingId || null, // ← الـ UUID الحقيقي، يُستخدم للعمليات (إلغاء، تحديث)
+    id: bookingRow?.id || sp.bookingId || null,
     groupId: bookingRow?.group_id || bookingRow?.id || sp.bookingId || null,
-    displayId: bookingRow?.id ? `#IP-${bookingRow.id.slice(0, 8).toUpperCase()}` : generateBookingId(),
+    displayId: bookingRow?.group_id ? `#IP-${bookingRow.group_id.slice(0, 8).toUpperCase()}` : bookingRow?.id ? `#IP-${bookingRow.id.slice(0, 8).toUpperCase()}` : "—",
     venueName: sp.court || court.name,
     venueImage: court.coverImage || court.image,
     location: court.location,
@@ -47,7 +38,7 @@ const { data } = await supabase.from("bookings").select("id, status, payment_sta
     createdAt: "اليوم",
     status: bookingRow?.status || "confirmed",
     courtId: sp.subCourtId || null,
-    reviewed: bookingRow?.reviewed || false, // ← لازم لـ ReviewPrompt
+    reviewed: bookingRow?.reviewed || false,
     paymentStatus: bookingRow?.status !== "cancelled" ? bookingRow?.payment_status || "pending" : null,
     paymentClaimedAt: bookingRow?.payment_claimed_at || null,
   };

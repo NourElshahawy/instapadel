@@ -685,3 +685,54 @@
 .payment-method-back:hover {
   color: var(--white);
 }
+.status-pill.cancelled {
+  background: rgba(255, 107, 107, .1);
+  color: #ff6b6b;
+}
+
+.status-pill.pending {
+  background: rgba(255, 193, 7, .12);
+  color: #ffc107;
+}
+
+.tracker-step.is-cancelled .ts-icon {
+  background: rgba(255, 107, 107, .12);
+  color: #ff6b6b;
+}
+
+.instapay-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px;
+  margin: 14px 0;
+  border: 2px dashed var(--border-glass);
+  border-radius: var(--r-md);
+  color: var(--text-muted);
+  font-size: .84rem;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+
+.instapay-upload:hover {
+  border-color: var(--accent);
+}
+
+.instapay-upload i {
+  font-size: 22px;
+  color: var(--accent);
+}
+
+.instapay-upload-preview {
+  max-width: 100%;
+  max-height: 160px;
+  border-radius: var(--r-sm);
+  object-fit: contain;
+}
+
+.payment-status-badge.is-pending-review {
+  background: rgba(255, 193, 7, .12);
+  color: #ffc107;
+}

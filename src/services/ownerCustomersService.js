@@ -48,7 +48,7 @@ export async function getOwnerCustomers(ownerId) {
       totalSpent: c.totalSpent,
       lastBookingDate: c.lastBookingDate,
       favoriteCourt: Object.entries(c.courtCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "—",
-      isReturning: c.totalBookings > 1,
+      isReturning: c.totalBookings >= 20,
     }))
     .sort((a, b) => b.totalBookings - a.totalBookings);
 }

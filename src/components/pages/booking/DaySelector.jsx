@@ -1,4 +1,4 @@
-export default function DaySelector({ days, selectedDate, onSelect, locked }) {
+export default function DaySelector({ days, selectedDate, onSelect, locked, daysWithSelections = [] }) {
   return (
     <section className={`booking-days ${locked ? "section-locked" : ""}`} data-requires="الملعب">
       <div className="section-title">
@@ -12,6 +12,7 @@ export default function DaySelector({ days, selectedDate, onSelect, locked }) {
       <div className="days-slider">
         {days.map((d) => (
           <button key={d.date} type="button" className={`day-card ${selectedDate === d.date ? "active" : ""}`} onClick={() => onSelect(d)}>
+            {daysWithSelections.includes(d.date) && <span className="day-card-selection-dot" />}
             <small>{d.dow}</small>
             <strong>{d.dom}</strong>
             <span>{d.month}</span>

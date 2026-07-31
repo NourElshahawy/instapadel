@@ -9,11 +9,21 @@ const STEPS = [
 
 export default function BookingGuideModal({ onClose }) {
   const [step, setStep] = useState(0);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
   const isLast = step === STEPS.length - 1;
+
+  const handleClose = () => {
+    if (dontShowAgain) {
+      try {
+        localStorage.setItem("instapadel_hide_booking_guide", "1");
+      } catch {}
+    }
+    onClose();
+  };
 
   const handleNext = () => {
     if (isLast) {
-      onClose();
+      handleClose();
     } else {
       setStep((s) => s + 1);
     }
@@ -22,7 +32,7 @@ export default function BookingGuideModal({ onClose }) {
   return (
     <div className="booking-guide-overlay">
       <div className="booking-guide-card">
-        <button className="booking-guide-skip" onClick={onClose}>
+        <button className="booking-guide-skip" onClick={handleClose}>
           تخطي
         </button>
         <i className={`booking-guide-icon fa-solid ${STEPS[step].icon}`}></i>
@@ -33,6 +43,12 @@ export default function BookingGuideModal({ onClose }) {
             <span key={i} className={`booking-guide-dot ${i === step ? "is-active" : ""}`} />
           ))}
         </div>
+
+        <label className="booking-guide-checkbox">
+          <input type="checkbox" checked={dontShowAgain} onChange={(e) => setDontShowAgain(e.target.checked)} />
+          متعرضش الشرح ده تاني
+        </label>
+
         <button className="btn btn-accent btn-block" onClick={handleNext}>
           {isLast ? "يلا نبدأ" : "التالي"}
         </button>

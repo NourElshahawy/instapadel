@@ -48,7 +48,7 @@ export default async function BookingInvoicePage({ params }) {
   const { data: courtRow } = await supabase.from("courts").select("images, venue_id, venues(address)").eq("id", baseRow.court_id).maybeSingle();
 
   const booking = {
-    id: baseRow.id,
+    id: first.id,
     groupId: groupKey,
     displayId: `#IP-${groupKey.slice(0, 8).toUpperCase()}`,
     venueName: first.venue_name,

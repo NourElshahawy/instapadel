@@ -7,5 +7,5 @@ export const OWNER_NAV_LINKS = [
   // { href: "/owner/dashboard/staff", label: "الموظفين", icon: "🧑‍💼" },
   { href: "/owner/dashboard/reviews", label: "التقييمات", icon: "⭐" },
   { href: "/owner/dashboard/news", label: "الأخبار", icon: "📰" },
-  { href: "/owner/dashboard/settings", label: "الإعدادات", icon: "⚙️" },
+  // { href: "/owner/dashboard/settings", label: "الإعدادات", icon: "⚙️" },
 ];

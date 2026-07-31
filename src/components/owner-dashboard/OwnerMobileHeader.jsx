@@ -1,12 +1,21 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import NotificationBell from "@/components/layout/NotificationBell";
+import { signOut } from "@/services/authClient";
 import { OWNER_NAV_LINKS } from "./ownerNavLinks";
 
 export default function OwnerMobileHeader({ ownerName, notifState }) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   const { notifications, unreadCount, loading, markAsRead, markAllAsRead } = notifState;
+
+  const handleLogout = async () => {
+    setOpen(false);
+    await signOut();
+    router.push("/login");
+  };
   return (
     <div className="owner-mobile-header" style={{ position: "relative" }}>
       <span className="owner-mobile-header-title">لوحة {ownerName}</span>
@@ -26,9 +35,9 @@ export default function OwnerMobileHeader({ ownerName, notifState }) {
               </Link>
             ))}
           </nav>
-          <Link href="/owner/logout" className="owner-nav-link" onClick={() => setOpen(false)}>
+          <button type="button" onClick={handleLogout} className="owner-nav-link" style={{ background: "none", border: "none", width: "100%", textAlign: "start", cursor: "pointer" }}>
             🚪 تسجيل الخروج
-          </Link>
+          </button>
           <Link href="/" className="owner-sidebar-back">
             ← رجوع للموقع
           </Link>

@@ -295,3 +295,31 @@
 .submit-text {
     color: #fff;
 }
+
+.quick-book-modal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--r-md);
+    padding: 24px;
+    max-width: 460px;
+    width: 92%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.quick-book-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quick-book-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--r-sm);
+}

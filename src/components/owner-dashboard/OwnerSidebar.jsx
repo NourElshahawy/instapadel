@@ -1,12 +1,20 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import NotificationBell from "@/components/layout/NotificationBell";
+import { signOut } from "@/services/authClient";
 import { OWNER_NAV_LINKS } from "./ownerNavLinks";
 
 export default function OwnerSidebar({ ownerName, notifState }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { notifications, unreadCount, loading, markAsRead, markAllAsRead } = notifState;
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/login");
+  };
   return (
     <aside className="owner-sidebar">
       <div className="d-flex align-items-center justify-content-between">
@@ -25,9 +33,9 @@ export default function OwnerSidebar({ ownerName, notifState }) {
         ))}
       </nav>
 
-      <Link href="/owner/logout" className="owner-nav-link">
+      <button type="button" onClick={handleLogout} className="owner-nav-link" style={{ background: "none", border: "none", width: "100%", textAlign: "start", cursor: "pointer" }}>
         <span>🚪</span> تسجيل الخروج
-      </Link>
+      </button>
       <Link href="/" className="owner-sidebar-back">
         ← رجوع للموقع
       </Link>

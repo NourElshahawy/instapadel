@@ -26,7 +26,7 @@ export default async function CourtsPage({ searchParams }) {
           addressLocality: "المنصورة",
           addressCountry: "EG",
         },
-        url: `https://instapadel.tech/booking/${court.slug}`,
+        url: `https://instapadel.tech/booking/${court.slug}?subCourtId=${court.subCourtId}`,
         image: court.image?.startsWith("http") ? court.image : `https://instapadel.tech${court.image}`,
         ...(court.rating > 0 &&
           court.reviewCount > 0 && {

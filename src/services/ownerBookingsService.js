@@ -31,5 +31,6 @@ export async function getOwnerBookings(ownerId) {
     customerEmail: b.profiles?.email, // ← جديد
     groupId: b.group_id || b.id,
     paymentProofUrl: b.payment_proof_url,
+    userId: b.user_id,
   }));
 }

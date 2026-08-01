@@ -46,6 +46,18 @@ export default async function BookingInvoicePage({ params }) {
   const first = sorted[0];
   const last = sorted[sorted.length - 1];
 
+  // حالة المجموعة كلها: لو كل الصفوف بنفس الحالة نعرضها عادي، لو مختلطة (بعضها اتلغى وبعضها لأ) نعتبرها "مؤكد" لأن فيها ساعات لسه شغالة
+  const statuses = new Set(sorted.map((r) => r.status));
+  const overallStatus = statuses.size === 1 ? [...statuses][0] : "confirmed";
+  const isFullyCancelled = overallStatus === "cancelled";
+
+  // الأسعار والدفع بيتحسبوا بس على الصفوف اللي لسه شغالة (مش ملغية)
+  const activeRows = sorted.filter((r) => r.status !== "cancelled");
+  const paymentBasisRows = activeRows.length ? activeRows : sorted;
+  const totalPrice = activeRows.reduce((sum, r) => sum + Number(r.price), 0) || sorted.reduce((sum, r) => sum + Number(r.price), 0);
+
+
+  const isPastBooking = new Date(last.date) < new Date(new Date().toISOString().split("T")[0]);
   const { data: courtRow } = await supabase.from("courts").select("images, venue_id, venues(address)").eq("id", baseRow.court_id).maybeSingle();
 
   const booking = {
@@ -53,20 +65,21 @@ export default async function BookingInvoicePage({ params }) {
     groupId: groupKey,
     displayId: `#IP-${groupKey.slice(0, 8).toUpperCase()}`,
     venueName: first.venue_name,
-    venueImage: courtRow?.images?.[0] || "/assets/imgs/img1.jpg",
+    venueImage: courtRow?.images?.[0] || "/assets/imgs/courts-bg.png",
     location: courtRow?.venues?.address || "—",
     locationLink: null,
     subCourtName: first.court_name,
     date: first.date === last.date ? first.date : `${first.date} → ${last.date}`,
     time: sorted.length === 1 ? first.time : `${first.time.split(" الي ")[0]} الي ${last.time.split(" الي ")[1]}`,
-    price: sorted.reduce((sum, r) => sum + Number(r.price), 0),
+    price: totalPrice,
     email: user.email,
     createdAt: new Date(first.created_at).toLocaleDateString("ar-EG"),
-    status: first.status,
+    status: overallStatus,
     courtId: baseRow.court_id,
     reviewed: first.reviewed || false,
-    paymentStatus: first.status !== "cancelled" ? first.payment_status || "pending" : null,
-    paymentClaimedAt: first.payment_claimed_at || null,
+    isPastBooking,
+    paymentStatus: !isFullyCancelled ? paymentBasisRows[0]?.payment_status || "pending" : null,
+    paymentClaimedAt: !isFullyCancelled ? paymentBasisRows[0]?.payment_claimed_at || null : null,
   };
 
   return <BookingConfirmationPage booking={booking} userId={user.id} />;

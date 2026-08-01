@@ -27,20 +27,25 @@ function resolveStage(tournament) {
   return "registration";
 }
 
-export default function TournamentDashboard({ tournament: initialTournament, currentUser = {}, onManage, onCreateNew }) {
-  const [tournament, setTournament] = useState(initialTournament);
-  const [joinOpen, setJoinOpen] = useState(false);
-
-  const stage = useMemo(() => resolveStage(tournament), [tournament]);
-
-  const handleJoinSubmit = async (teamData) => {
+const handleJoinSubmit = async (teamData) => {
     const supabase = createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) return;
 
-    const newTeamRow = await joinTournament(tournament.id, { ...teamData, captainPhone: currentUser.phone }, user.id);
+    let newTeamRow;
+    try {
+      newTeamRow = await joinTournament(tournament.id, { ...teamData, captainPhone: currentUser.phone }, user.id);
+    } catch (err) {
+      if (err.code === "TOURNAMENT_FULL") {
+        alert("للأسف البطولة اكتملت، مفيش أماكن فاضية.");
+      } else {
+        alert("حصل خطأ أثناء التسجيل في البطولة، حاول تاني");
+      }
+      return;
+    }
+
     const updatedTeams = [
       ...tournament.teams,
       {

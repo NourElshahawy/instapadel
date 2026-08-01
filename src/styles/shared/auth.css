@@ -15,7 +15,7 @@ body.auth-page {
     position: relative;
     flex-direction: column;
     padding: 200px 24px 50px;
-    background: linear-gradient(180deg, rgba(11, 16, 32, .4), rgba(11, 16, 32, .94)), url(/assets/imgs/img1.jpg) center / cover no-repeat;
+    background: linear-gradient(180deg, rgba(11, 16, 32, .4), rgba(11, 16, 32, .94)), url(/assets/imgs/courts-bg.png) center / cover no-repeat;
 }
 
 .auth-visual-content h2 {

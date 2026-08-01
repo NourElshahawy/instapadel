@@ -12,7 +12,7 @@ export default function BookingConfirmationPage({ booking, userId }) {
   const [isPaid, setIsPaid] = useState(booking.paymentStatus === "paid");
   const [isClaimed, setIsClaimed] = useState(!!booking.paymentClaimedAt);
   const [isCancelled, setIsCancelled] = useState(booking.status === "cancelled");
-  const [showReview, setShowReview] = useState(!booking.reviewed);
+  const [showReview, setShowReview] = useState(!booking.reviewed && !!booking.isPastBooking);
 
   const groupKey = booking.groupId || booking.id;
 

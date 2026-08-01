@@ -19,7 +19,8 @@ export async function createVenueWithCourts({ ownerId, venue, courts, photosByCo
       friday_open: hours.fridayOpen,
       friday_close: hours.fridayClose === "24:00" ? "23:59" : hours.fridayClose,
       cancellation_policy: cancellationPolicy,
-      status: "pending",
+      status: "approved",
+    
     })
     .select()
     .single();

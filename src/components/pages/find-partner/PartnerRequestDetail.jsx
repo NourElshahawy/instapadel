@@ -32,32 +32,41 @@ export default function PartnerRequestDetail({ initialRequest, currentUserId }) 
     }
   };
 
-  const handleRespond = async (player, accept) => {
+const handleRespond = async (player, accept) => {
+  try {
     await respondToJoin(player.joinId, request.id, accept, request.playersNeeded);
-
-    if (accept && player.email) {
-      // ← تحقق قبل الإرسال
-      fetch("/api/notifications/partner-accepted", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: player.email,
-          userName: player.name,
-          courtName: request.courtName,
-          date: request.dateLabel,
-          time: request.time,
-          hostName: "أنت",
-          hostPhone: request.hostPhone || "",
-        }),
-      }).catch(() => {});
+  } catch (err) {
+    if (err.code === "REQUEST_FULL") {
+      alert("الفريق مكتمل بالفعل، متقدرش تقبل لاعب زيادة.");
+    } else {
+      alert("حصل خطأ، حاول تاني");
     }
+    return;
+  }
 
-    setRequest((r) => {
-      const updatedPlayers = r.playersJoined.map((p) => (p.id === player.id ? { ...p, status: accept ? "accepted" : "rejected" } : p));
-      const acceptedNow = updatedPlayers.filter((p) => p.status === "accepted").length;
-      return { ...r, playersJoined: updatedPlayers, status: acceptedNow >= r.playersNeeded ? "matched" : "partially_filled" };
-    });
-  };
+  if (accept && player.email) {
+    // ← تحقق قبل الإرسال
+    fetch("/api/notifications/partner-accepted", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: player.email,
+        userName: player.name,
+        courtName: request.courtName,
+        date: request.dateLabel,
+        time: request.time,
+        hostName: "أنت",
+        hostPhone: request.hostPhone || "",
+      }),
+    }).catch(() => {});
+  }
+
+  setRequest((r) => {
+    const updatedPlayers = r.playersJoined.map((p) => (p.id === player.id ? { ...p, status: accept ? "accepted" : "rejected" } : p));
+    const acceptedNow = updatedPlayers.filter((p) => p.status === "accepted").length;
+    return { ...r, playersJoined: updatedPlayers, status: acceptedNow >= r.playersNeeded ? "matched" : "partially_filled" };
+  });
+};
 
   return (
     <section className="section" style={{ paddingTop: 140 }}>

@@ -39,6 +39,7 @@
 .brand img {
   width: auto;
   height: 80px;
+  border-radius: 50%;
 }
 
 .nav-links {
@@ -69,10 +70,11 @@
 .nav-links a::before {
   content: "";
   position: absolute;
-  width: 40px;
+  width: 20px;
   height: 20px;
+  border-radius: 50%;
   background-image: url(/assets/imgs/logo1-removebg-preview.png);
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   top: 4px;
@@ -85,7 +87,7 @@
 .nav-links a:hover::before {
   opacity: 1;
   transform: rotate(5deg) translateY(0px);
-  right: -30px;
+  right: -24px;
 }
 
 .nav-links a:hover {

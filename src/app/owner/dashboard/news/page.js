@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import OwnerNewsForm from "@/components/owner-dashboard/OwnerNewsForm";
+import OwnerNewsList from "@/components/owner-dashboard/OwnerNewsList";
 
 export default async function OwnerNewsPage() {
   const supabase = await createClient();
@@ -16,18 +17,7 @@ export default async function OwnerNewsPage() {
 
       <div className="owner-card">
         <h2 className="owner-card-title">أخباري</h2>
-        {(myNews || []).length === 0 ? (
-          <p className="owner-table-empty">لسه معملتش أي خبر.</p>
-        ) : (
-          myNews.map((n) => (
-            <div key={n.id} className="owner-venue-row">
-              <span className="owner-venue-row-name">{n.title}</span>
-              <span className={`owner-status-badge ${n.status === "published" ? "approved" : "pending"}`}>
-                {n.status === "published" ? "منشور" : n.status === "rejected" ? "مرفوض" : "قيد المراجعة"}
-              </span>
-            </div>
-          ))
-        )}
+        <OwnerNewsList initialNews={myNews || []} />
       </div>
     </>
   );

@@ -68,7 +68,7 @@ export async function getAllCourts({ date } = {}) {
           name: venue.courts.length > 1 ? court.name : venue.name,
           venueName: venue.name,
           venueId: venue.id,
-          image: court.images?.[0] || "/assets/imgs/img1.jpg",
+          image: court.images?.[0] || "/assets/imgs/courts-bg.png",
           location: venue.address,
           locationLink: null,
           isLive: true,
@@ -97,7 +97,7 @@ export async function getAllCourtsFlat() {
     (venue.courts || []).map((court) => ({
       id: court.id,
       name: venue.courts.length > 1 ? `${venue.name} — ${court.name}` : venue.name,
-      image: court.images?.[0] || "/assets/imgs/img1.jpg",
+      image: court.images?.[0] || "/assets/imgs/courts-bg.png",
       location: venue.address,
       rating: 4.7,
     })),

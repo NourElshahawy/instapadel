@@ -71,6 +71,17 @@ export async function respondToJoin(joinId, requestId, accept, playersNeeded) {
 
   const { data: joinRow } = await supabase.from("partner_request_joins").select("player_id").eq("id", joinId).single();
 
+  // نمنع القبول لو الفريق مكتمل بالفعل
+  if (accept) {
+    const { count: acceptedCount } = await supabase.from("partner_request_joins").select("*", { count: "exact", head: true }).eq("request_id", requestId).eq("status", "accepted");
+
+    if ((acceptedCount || 0) >= playersNeeded) {
+      const err = new Error("الفريق مكتمل بالفعل");
+      err.code = "REQUEST_FULL";
+      throw err;
+    }
+  }
+
   const { error } = await supabase
     .from("partner_request_joins")
     .update({ status: accept ? "accepted" : "rejected" })

@@ -5,7 +5,8 @@ import { tournamentInviteEmail } from "./email-templates/tournamentInvite";
 import { partnerRequestAcceptedEmail } from "./email-templates/partnerRequestAccepted";
 import { tournamentFullEmail } from "./email-templates/tournamentFull";
 import { tournamentStartedEmail } from "./email-templates/tournamentStarted";
-
+import { bookingCancelledEmail } from "./email-templates/bookingCancelled";
+import { newsPublishedEmail } from "./email-templates/newsPublished";
 export async function sendBookingConfirmationEmail(to, data) {
   if (!resend) {
     console.warn("Resend not configured, skipping email");
@@ -88,5 +89,32 @@ export async function sendTournamentStartedEmail(to, data) {
     });
   } catch (err) {
     console.error("Failed to send tournament started email:", err);
+  }
+}
+export async function sendBookingCancelledEmail(to, data) {
+  if (!resend) return;
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `تم إلغاء حجزك في ${data.venueName}`,
+      html: bookingCancelledEmail(data),
+    });
+  } catch (err) {
+    console.error("Failed to send booking cancelled email:", err);
+  }
+}
+
+export async function sendNewsPublishedEmail(to, data) {
+  if (!resend) return;
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `خبر جديد: ${data.title}`,
+      html: newsPublishedEmail(data),
+    });
+  } catch (err) {
+    console.error("Failed to send news email:", err);
   }
 }

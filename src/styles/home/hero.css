@@ -11,7 +11,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-image: url(/assets/imgs/img1.jpg);
+    background-image: url(/assets/imgs/courts-bg.png);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

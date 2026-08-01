@@ -53,6 +53,19 @@ export async function joinTournament(tournamentId, teamData, captainId) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  // نتأكد الأول إن فيه مكان فاضي قبل أي إضافة
+  const { data: tournament, error: tError } = await supabase.from("tournaments").select("name, organizer_id, max_teams").eq("id", tournamentId).single();
+  if (tError) throw tError;
+
+  const { count: currentCount } = await supabase.from("tournament_teams").select("*", { count: "exact", head: true }).eq("tournament_id", tournamentId);
+
+  if (tournament.max_teams && (currentCount || 0) >= tournament.max_teams) {
+    const err = new Error("البطولة اكتملت بالفعل، مفيش أماكن فاضية");
+    err.code = "TOURNAMENT_FULL";
+    throw err;
+  }
+
   const { data, error } = await supabase
     .from("tournament_teams")
     .insert({
@@ -69,8 +82,6 @@ export async function joinTournament(tournamentId, teamData, captainId) {
 
   if (error) throw error;
 
-  const { data: tournament } = await supabase.from("tournaments").select("name, organizer_id, max_teams").eq("id", tournamentId).single();
-
   if (tournament?.organizer_id) {
     await insertNotification(supabase, {
       userId: tournament.organizer_id,
@@ -81,9 +92,9 @@ export async function joinTournament(tournamentId, teamData, captainId) {
     });
 
     // لو اكتمل عدد الفرق، نبلّغ المنظم وكل الكباتن
-    const { count } = await supabase.from("tournament_teams").select("*", { count: "exact", head: true }).eq("tournament_id", tournamentId);
+    const newCount = (currentCount || 0) + 1;
 
-    if (tournament.max_teams && count >= tournament.max_teams) {
+    if (tournament.max_teams && newCount >= tournament.max_teams) {
       const { data: teams } = await supabase.from("tournament_teams").select("captain_id").eq("tournament_id", tournamentId);
 
       const recipientIds = [tournament.organizer_id, ...(teams || []).map((t) => t.captain_id)];

@@ -29,7 +29,7 @@ function mapNews(n) {
     title: n.title,
     excerpt: n.body?.slice(0, 120) || "",
     date: new Date(n.created_at).toLocaleDateString("ar-EG", { day: "numeric", month: "long", year: "numeric" }),
-    image: n.image_url || "/assets/imgs/img1.jpg",
+    image: n.image_url || "/assets/imgs/courts-bg.png",
     featured: false,
     meta: {},
     body: [{ type: "paragraph", text: n.body || "" }],

@@ -41,6 +41,7 @@ export default async function ConfirmationPage({ params, searchParams }) {
     reviewed: bookingRow?.reviewed || false,
     paymentStatus: bookingRow?.status !== "cancelled" ? bookingRow?.payment_status || "pending" : null,
     paymentClaimedAt: bookingRow?.payment_claimed_at || null,
+    isPastBooking: false,
   };
 
   return <BookingConfirmationPage booking={booking} userId={user?.id} />;

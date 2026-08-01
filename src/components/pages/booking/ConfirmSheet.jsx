@@ -83,7 +83,7 @@ export default function ConfirmSheet({ isOpen, onClose, onConfirm, confirming, r
 
           <div className="deposit-notice">
             <i className="fa-solid fa-circle-info"></i>
-            <span>الحجز بيتأكد بس بعد دفع الديبوزيت. لو خرجت من غير دفع، المواعيد دي تفضل متاحة لحد تاني فورًا.</span>
+            <span>الحجز بيتأكد بس بعد إرسال المبلغ. لو خرجت من غير دفع، المواعيد دي تفضل متاحة لحد تاني فورًا.</span>{" "}
           </div>
 
           <div className="instapay-number-box">
@@ -104,7 +104,7 @@ export default function ConfirmSheet({ isOpen, onClose, onConfirm, confirming, r
             ) : (
               <>
                 <i className="fa-solid fa-camera"></i>
-                <span>ارفع صورة إثبات تحويل الديبوزيت (إجباري)</span>
+                <span>ارفع صورة إثبات التحويل (إجباري)</span>
               </>
             )}
           </label>

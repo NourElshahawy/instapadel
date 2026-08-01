@@ -151,11 +151,28 @@ export default function BookingsTable({ initialBookings, courtIds = [] }) {
     setBookings((prev) => prev.map((b) => (ids.includes(b.id) ? { ...b, paymentStatus: "paid" } : b)));
   };
 
-  const handleUpdate = async (groupId, ids, status) => {
+  const handleUpdate = async (groupId, ids, status, rowData) => {
     setLoadingId(groupId);
     try {
       await updateBookingStatus(ids, status);
       applyStatusLocally(ids, status);
+
+      if (status === "cancelled" && rowData?.customerEmail && rowData.customerEmail !== "—") {
+        fetch("/api/notifications/booking-cancelled", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: rowData.customerEmail,
+            userId: rowData.userId,
+            userName: rowData.customerName || "لاعب PadelGo",
+            venueName: rowData.venueName,
+            courtName: rowData.courtName,
+            date: rowData.date,
+            time: rowData.time,
+            price: rowData.price,
+          }),
+        }).catch(() => {});
+      }
     } catch {
       alert("حصل خطأ أثناء تحديث الحجز");
     } finally {
@@ -245,7 +262,7 @@ export default function BookingsTable({ initialBookings, courtIds = [] }) {
               <button onClick={() => handleUpdate(b.groupId, b.confirmedIds, "completed")} disabled={loadingId === b.groupId} className="owner-btn-complete">
                 إتمام
               </button>
-              <button onClick={() => handleUpdate(b.groupId, b.confirmedIds, "cancelled")} disabled={loadingId === b.groupId} className="owner-btn-cancel-booking">
+              <button onClick={() => handleUpdate(b.groupId, b.confirmedIds, "cancelled", b)} disabled={loadingId === b.groupId} className="owner-btn-cancel-booking">
                 إلغاء
               </button>
             </div>

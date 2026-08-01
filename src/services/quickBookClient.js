@@ -14,7 +14,7 @@ export async function getAvailableCourtsForSlots(slots) {
       venueName: v.name,
       venueId: v.id,
       pricePerHour: c.price_per_hour,
-      image: c.images?.[0] || "/assets/imgs/img1.jpg",
+      image: c.images?.[0] || "/assets/imgs/courts-bg.png",
     })),
   );
 

@@ -27,7 +27,13 @@ function resolveStage(tournament) {
   return "registration";
 }
 
-const handleJoinSubmit = async (teamData) => {
+export default function TournamentDashboard({ tournament: initialTournament, currentUser = {}, onManage, onCreateNew }) {
+  const [tournament, setTournament] = useState(initialTournament);
+  const [joinOpen, setJoinOpen] = useState(false);
+
+  const stage = useMemo(() => resolveStage(tournament), [tournament]);
+
+  const handleJoinSubmit = async (teamData) => {
     const supabase = createClient();
     const {
       data: { user },

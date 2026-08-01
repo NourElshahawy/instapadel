@@ -73,6 +73,7 @@ export async function getAllCourts({ date } = {}) {
           locationLink: null,
           isLive: true,
           rating: avgRating ? Number(avgRating) : 0,
+          reviewCount: courtRatings.length,
           pricePerHour: court.price_per_hour,
           priceRangeLabel: `${court.price_per_hour}`,
           typeLabel: TYPE_LABELS[court.type] || court.type,

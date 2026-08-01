@@ -28,13 +28,15 @@ export default async function CourtsPage({ searchParams }) {
         },
         url: `https://instapadel.tech/booking/${court.slug}`,
         image: court.image?.startsWith("http") ? court.image : `https://instapadel.tech${court.image}`,
-        ...(court.rating > 0 && {
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: court.rating,
-            bestRating: 5,
-          },
-        }),
+        ...(court.rating > 0 &&
+          court.reviewCount > 0 && {
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: court.rating,
+              reviewCount: court.reviewCount,
+              bestRating: 5,
+            },
+          }),
       },
     })),
   };

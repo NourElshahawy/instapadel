@@ -8,7 +8,7 @@ export const metadata = {
 
 const FEATURES = [
   { icon: "bolt", text: "حجز فوري، بدون مكالمات هاتفية" },
-  { icon: "users", text: "أكثر من 1,000 لاعب نشط" },
+  { icon: "verified_user", text: "لاعبين بيحجزوا كل يوم" },
   { icon: "star", text: "متوسط تقييم الملاعب 4.9" },
 ];
 

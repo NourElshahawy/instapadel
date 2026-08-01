@@ -5,14 +5,14 @@ export const metadata = { title: "استعادة كلمة المرور — Padel
 
 const FEATURES = [
   { icon: "bolt", text: "توفر المواعيد في الوقت الفعلي" },
-  { icon: "verified_user", text: "أكثر من 100 ملعب موثّق" },
+  { icon: "verified_user", text: "ملعبين احترافيين معتمدين" },
   { icon: "lock", text: "دفع إلكتروني آمن" },
 ];
 
 export default function ForgotPasswordPage() {
   return (
     <div className="auth-shell">
-      <AuthVisual heading="جميع ملاعب المنصورة، بلمسة واحدة." features={FEATURES} />
+      <AuthVisual heading="ملعب PadelGo، بلمسة واحدة." features={FEATURES} />
       <ForgotPasswordForm />
     </div>
   );

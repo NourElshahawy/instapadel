@@ -17,7 +17,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 export const metadata = {
   title: "PadelGo | احجز ملعبك في أقل من دقيقة",
-  description: "اكتشف جميع ملاعب البادل، اعرف المواعيد المتاحة واحجز ملعبك بسهولة وفي ثوانٍ.",
+  description: "PadelGo — ملعبين بادل احترافيين في المنصورة. اعرف المواعيد المتاحة واحجز ملعبك بسهولة وفي ثوانٍ.",
 };
 
 export default function RootLayout({ children }) {

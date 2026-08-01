@@ -57,17 +57,17 @@ export default function Hero() {
       <div className="container hero-content">
         <span className="hero-badge" data-aos="fade-up">
           <Image src="/assets/imgs/logo1-removebg-preview.png" className="pulse-img" alt="" width={20} height={20} />
-          إمكانية الوصول المباشر إلى أكثر من 10 ملاعب
+          ملعب احترافي في قلب المنصورة
         </span>
 
         <h1 data-aos="fade-up" data-aos-delay="80">
-          جميع ملاعب البادل في
+          احجز ملعبك في
           <br />
-          <span className="accent-underline">مكان واحد</span>
+          <span className="accent-underline">PadelGo</span>
         </h1>
 
         <p className="hero-sub" data-aos="fade-up" data-aos-delay="160">
-          وفر وقتك في البحث والتواصل، واعثر على الملعب المناسب والمواعيد المتاحة فورًا.
+          ملعبين بادل احترافيين، شوف المواعيد المتاحة فورًا واحجز مكانك في ثوانٍ.
         </p>
 
         <div className="search-card" data-aos="fade-up" data-aos-delay="240">

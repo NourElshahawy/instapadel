@@ -62,8 +62,7 @@ export default function CourtsListing({ courts , searchFilters }) {
 // const PERIOD_LABELS = { morning: "صباحًا", noon: "ظهرًا", afternoon: "عصرًا", evening: "مساءً", night: "ليلاً" };
   return (
     <>
-      <ListingHero title="جميع ملاعب البادل في المنصورة" count={filteredCourts.length} breadcrumbLabel="الملاعب" />
-
+      <ListingHero title="ملاعب PadelGo" count={filteredCourts.length} breadcrumbLabel="الملاعب" />
       {searchFilters?.date && (
         <div className="container" style={{ marginTop: -20, marginBottom: 20 }}>
           <div style={{ background: "var(--accent-soft)", border: "1px solid rgba(0,214,143,.3)", borderRadius: "var(--r-md)", padding: "12px 18px", fontSize: ".88rem", color: "var(--white)" }}>

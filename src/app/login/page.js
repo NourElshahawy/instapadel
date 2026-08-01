@@ -8,7 +8,7 @@ export const metadata = {
 
 const FEATURES = [
   { icon: "bolt", text: "توفر المواعيد في الوقت الفعلي" },
-  { icon: "user", text: "أكثر من 100 ملعب موثّق" },
+  { icon: "verified_user", text: "ملعبين احترافيين معتمدين" },
   { icon: "lock", text: "دفع إلكتروني آمن" },
 ];
 
@@ -20,11 +20,7 @@ const QUOTE = {
 export default function LoginPage() {
   return (
     <div className="auth-shell">
-      <AuthVisual
-        heading="جميع ملاعب المنصورة، بلمسة واحدة."
-        features={FEATURES}
-        quote={QUOTE}
-      />
+      <AuthVisual heading="ملعب PadelGo، بلمسة واحدة." features={FEATURES} />
       <Suspense fallback={<div>Loading...</div>}>
         <LoginForm />
       </Suspense>

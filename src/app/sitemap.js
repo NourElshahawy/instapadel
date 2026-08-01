@@ -40,12 +40,13 @@ export default async function sitemap() {
     },
   ];
 
-  const courtRoutes = courts.map((court) => ({
-    url: `${BASE_URL}/booking/${court.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "daily",
-    priority: 0.7,
-  }));
+const uniqueSlugs = [...new Set(courts.map((c) => c.slug))];
+const courtRoutes = uniqueSlugs.map((slug) => ({
+  url: `${BASE_URL}/booking/${slug}`,
+  lastModified: new Date(),
+  changeFrequency: "daily",
+  priority: 0.7,
+}));
 
   const newsRoutes = news.map((article) => ({
     url: `${BASE_URL}/news/${article.slug}`,

@@ -29,7 +29,7 @@ export default function BookingSummarySidebar({ booking, isPaid, isClaimed }) {
     const shareText = `حجزي في ${booking.venueName} — ${booking.date}، ${booking.time}`;
     if (navigator.share) {
       try {
-        await navigator.share({ title: "InstaPadel — تفاصيل الحجز", text: shareText, url: window.location.href });
+        await navigator.share({ title: "PadelGo — تفاصيل الحجز", text: shareText, url: window.location.href });
       } catch {}
     } else if (navigator.clipboard) {
       await navigator.clipboard.writeText(`${shareText}\n${window.location.href}`);

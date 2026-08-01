@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata = { title: "طلبك مرفوض — InstaPadel" };
+export const metadata = { title: "طلبك مرفوض — PadelGo" };
 
 export default async function OwnerRejectedPage() {
   const supabase = await createClient();

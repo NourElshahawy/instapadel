@@ -96,7 +96,7 @@ export default function CourtsListing({ courts , searchFilters }) {
                   ))}
                 </div>
               ) : (
-                <EmptyState title="لا توجد ملاعب تطابق هذه الفلترة" text="حاول توسيع نطاق السعر أو إلغاء أحد الفلاتر — يتم إضافة ملاعب جديدة إلى InstaPadel كل أسبوع." onClear={clearAll} />
+                <EmptyState title="لا توجد ملاعب تطابق هذه الفلترة" text="حاول توسيع نطاق السعر أو إلغاء أحد الفلاتر — يتم إضافة ملاعب جديدة إلى PadelGo كل أسبوع." onClear={clearAll} />
               )}
 
               <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />

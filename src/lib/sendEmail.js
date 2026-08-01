@@ -28,7 +28,7 @@ export async function sendPaymentReceivedEmail(to, data) {
     await resend.emails.send({
       from: FROM_EMAIL,
       to,
-      subject: "تم تأكيد دفعتك — InstaPadel",
+      subject: "تم تأكيد دفعتك — PadelGo",
       html: paymentReceivedEmail(data),
     });
   } catch (err) {
@@ -54,7 +54,7 @@ export async function sendPartnerRequestAcceptedEmail(to, data) {
     await resend.emails.send({
       from: FROM_EMAIL,
       to,
-      subject: "تم قبول طلب انضمامك — InstaPadel",
+      subject: "تم قبول طلب انضمامك — PadelGo",
       html: partnerRequestAcceptedEmail(data),
     });
   } catch (err) {

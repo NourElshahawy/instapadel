@@ -48,42 +48,42 @@ export async function getAllCourts({ date } = {}) {
     ratingByCourtId[r.court_id].push(r.rating);
   });
 
+  const TYPE_LABELS = { regular: "عادي", indoor: "مغطى", outdoor: "مفتوح", panoramic: "بانورامي" };
+
   return venues
-    .filter((v) => v.courts.length > 0)
-    .filter((venue) => {
-      if (!date) return true;
-      return venue.courts.some((court) => {
-        const bookedTimesForCourt = bookingsForDate.filter((b) => b.court_id === court.id).map((b) => b.time);
-        return bookedTimesForCourt.length < 12;
-      });
-    })
-    .map((venue) => {
-      const prices = venue.courts.map((c) => c.price_per_hour);
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-      const totalBookings = venue.courts.reduce((sum, c) => sum + (countByCourtId[c.id] || 0), 0);
+    .flatMap((venue) =>
+      venue.courts.map((court) => {
+        if (date) {
+          const bookedTimesForCourt = bookingsForDate.filter((b) => b.court_id === court.id).map((b) => b.time);
+          if (bookedTimesForCourt.length >= 12) return null;
+        }
 
-      const venueRatings = venue.courts.flatMap((c) => ratingByCourtId[c.id] || []);
-      const avgRating = venueRatings.length > 0 ? (venueRatings.reduce((a, b) => a + b, 0) / venueRatings.length).toFixed(1) : null;
+        const courtRatings = ratingByCourtId[court.id] || [];
+        const avgRating = courtRatings.length > 0 ? (courtRatings.reduce((a, b) => a + b, 0) / courtRatings.length).toFixed(1) : null;
 
-      return {
-        id: venue.id,
-        slug: `${slugify(venue.name)}-${venue.id.slice(0, 8)}`,
-        name: venue.name,
-        venueId: venue.id,
-        image: venue.courts[0]?.images?.[0] || "/assets/imgs/img1.jpg",
-        location: venue.address,
-        locationLink: null,
-        isLive: true,
-        rating: avgRating ? Number(avgRating) : 0,
-        pricePerHour: minPrice,
-        priceRangeLabel: minPrice === maxPrice ? `${minPrice}` : `${minPrice}-${maxPrice}`,
-        courtsCount: venue.courts.length,
-        bookingsCount: formatBookingsCount(totalBookings),
-        featured: false,
-        todaySlots: [],
-      };
-    });
+        return {
+          id: court.id,
+          slug: `${slugify(venue.name)}-${venue.id.slice(0, 8)}`,
+          subCourtId: court.id,
+          name: venue.courts.length > 1 ? court.name : venue.name,
+          venueName: venue.name,
+          venueId: venue.id,
+          image: court.images?.[0] || "/assets/imgs/img1.jpg",
+          location: venue.address,
+          locationLink: null,
+          isLive: true,
+          rating: avgRating ? Number(avgRating) : 0,
+          pricePerHour: court.price_per_hour,
+          priceRangeLabel: `${court.price_per_hour}`,
+          typeLabel: TYPE_LABELS[court.type] || court.type,
+          courtsCount: venue.courts.length,
+          bookingsCount: formatBookingsCount(countByCourtId[court.id] || 0),
+          featured: false,
+          todaySlots: [],
+        };
+      }),
+    )
+    .filter(Boolean);
 }
 
 export async function getAllCourtsFlat() {

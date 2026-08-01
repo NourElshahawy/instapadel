@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 import BookingConfirmationPage from "@/components/pages/confirmation/BookingConfirmationPage";
 
-export const metadata = { title: "فاتورة الحجز — InstaPadel" };
+export const metadata = { title: "فاتورة الحجز — PadelGo" };
 
 function timeToMinutes(label) {
   const match = label.trim().match(/^(\d{1,2}):(\d{2})\s*(ص|م)$/);

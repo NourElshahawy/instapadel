@@ -1,8 +1,8 @@
 import { TERMS_SECTIONS, PRIVACY_SECTIONS } from "@/services/legalContent";
 
 export const metadata = {
-  title: "الشروط والخصوصية — InstaPadel",
-  description: "شروط الخدمة وسياسة الخصوصية الخاصة بمنصة InstaPadel.",
+  title: "الشروط والخصوصية — PadelGo",
+  description: "شروط الخدمة وسياسة الخصوصية الخاصة بمنصة PadelGo.",
 };
 
 export default function LegalPage() {
@@ -42,7 +42,7 @@ export default function LegalPage() {
           </div>
           <div className="legal-intro-box">
             <i className="fa-solid fa-circle-info"></i>
-            <p>باستخدامك لمنصة InstaPadel، فإنك توافق على شروط الخدمة وسياسة الخصوصية الموضحة أدناه. يرجى قراءتها بعناية قبل إنشاء حسابك.</p>
+            <p>باستخدامك لمنصة PadelGo، فإنك توافق على شروط الخدمة وسياسة الخصوصية الموضحة أدناه. يرجى قراءتها بعناية قبل إنشاء حسابك.</p>
           </div>
         </div>
 

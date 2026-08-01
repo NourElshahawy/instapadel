@@ -35,13 +35,14 @@ function slotSortKey(s) {
   return `${s.date}_${String(timeToMinutes(s.start)).padStart(4, "0")}`;
 }
 
-export default function BookingPage({ court }) {
+export default function BookingPage({ court, preselectedSubCourtId }) {
   const [showGuide, setShowGuide] = useState(false);
   const daysSectionRef = useRef(null);
   const slotsSectionRef = useRef(null);
   const router = useRouter();
 
-  const [subCourt, setSubCourt] = useState(null);
+  const preselected = preselectedSubCourtId ? (court.subCourts || []).find((c) => c.id === preselectedSubCourtId) : null;
+  const [subCourt, setSubCourt] = useState(preselected || null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedSlots, setSelectedSlots] = useState([]); // array of slot objects
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -55,7 +56,6 @@ export default function BookingPage({ court }) {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
   }, []);
-
 
   useEffect(() => {
     try {
@@ -275,7 +275,7 @@ export default function BookingPage({ court }) {
         email: user.email,
         userId: user.id,
         courtId: subCourt.id,
-        userName: user.user_metadata?.name || "لاعب InstaPadel",
+        userName: user.user_metadata?.name || "لاعب PadelGo",
         venueName: court.name,
         courtName: subCourt.name,
         date: summary.dateLabel,
@@ -320,8 +320,7 @@ export default function BookingPage({ court }) {
         {/* <HeroImageSlider images={court.heroImages} /> */}
         <StepBar hasCourtSub={!!subCourt} hasDate={!!selectedDay} hasTime={selectedSlots.length > 0} />
 
-        <CourtGallerySelector subCourts={court.subCourts || []} selectedId={subCourt?.id} onSelect={handleSelectSubCourt} />
-
+        {!preselected && <CourtGallerySelector subCourts={court.subCourts || []} selectedId={subCourt?.id} onSelect={handleSelectSubCourt} />}
         <div ref={daysSectionRef}>
           <DaySelector days={court.days || []} selectedDate={selectedDay?.date} onSelect={handleSelectDay} locked={!subCourt} daysWithSelections={daysWithSelections} />
         </div>

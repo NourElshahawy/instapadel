@@ -83,7 +83,7 @@ export async function createVenue(ownerId, venueData, courts) {
       email: venueData.email,
       description: venueData.description,
       amenities: venueData.amenities,
-      status: "pending",
+      status: "approved",
     })
     .select()
     .single();

@@ -16,7 +16,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata = {
-  title: "InstaPadel | احجز ملعبك في أقل من دقيقة",
+  title: "PadelGo | احجز ملعبك في أقل من دقيقة",
   description: "اكتشف جميع ملاعب البادل، اعرف المواعيد المتاحة واحجز ملعبك بسهولة وفي ثوانٍ.",
 };
 

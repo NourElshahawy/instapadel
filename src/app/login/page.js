@@ -3,7 +3,7 @@ import AuthVisual from "@/components/shared/AuthVisual";
 import LoginForm from "@/_pages/login/LoginForm";
 
 export const metadata = {
-  title: "تسجيل الدخول — InstaPadel",
+  title: "تسجيل الدخول — PadelGo",
 };
 
 const FEATURES = [
@@ -13,7 +13,7 @@ const FEATURES = [
 ];
 
 const QUOTE = {
-  text: "كنت أتصل بثلاثة أندية قبل أن أجد ملعبًا متاحًا. الآن أتحقق من InstaPadel وألعب بعد عشرين دقيقة.",
+  text: "كنت أتصل بثلاثة أندية قبل أن أجد ملعبًا متاحًا. الآن أتحقق من PadelGo وألعب بعد عشرين دقيقة.",
   author: "أحمد سعيد، لاعب أسبوعي",
 };
 

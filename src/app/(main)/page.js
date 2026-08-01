@@ -5,8 +5,8 @@ import CtaBand from "@/components/home/CtaBand";
 import WhyUs from "@/components/home/WhyUs";
 
 export const metadata = {
-  title: "حجز ملعب بادل في المنصورة | InstaPadel",
-  description: "احجز ملعب بادل في المنصورة أونلاين في ثوانٍ. قارن أسعار كل ملاعب وكورتات البادل، شوف المواعيد المتاحة فورًا، واحجز أقرب ملعب بادل من موقعك مع InstaPadel.",
+  title: "حجز ملعب بادل في المنصورة | PadelGo",
+  description: "احجز ملعب بادل في المنصورة أونلاين في ثوانٍ. قارن أسعار كل ملاعب وكورتات البادل، شوف المواعيد المتاحة فورًا، واحجز أقرب ملعب بادل من موقعك مع PadelGo.",
   keywords: [
     "حجز ملعب بادل المنصورة",
     "ملاعب بادل المنصورة",

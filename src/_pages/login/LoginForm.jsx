@@ -43,9 +43,7 @@ export default function LoginForm() {
       if (redirectTo) {
         router.push(redirectTo);
       } else if (profile?.role === "owner") {
-        router.push(profile.owner_status === "approved" ? "/owner/dashboard" : "/owner/pending-approval");
-      } else if (profile?.role === "admin") {
-        router.push("/admin/dashboard");
+        router.push("/owner/dashboard");
       } else {
         router.push("/");
       }
@@ -72,7 +70,7 @@ export default function LoginForm() {
     <div className="auth-form-col">
       <div className="auth-topbar d-flex d-lg-none">
         <Link href="/" className="brand">
-          <Image src="/assets/imgs/logo1-removebg-preview.png" alt="InstaPadel" width={100} height={56} />
+          <Image src="/assets/imgs/logo1-removebg-preview.png" alt="PadelGo" width={56} height={56} />
         </Link>
       </div>
 

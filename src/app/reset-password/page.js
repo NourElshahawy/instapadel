@@ -1,7 +1,7 @@
 import AuthVisual from "@/components/shared/AuthVisual";
 import ResetPasswordForm from "@/components/pages/login/ResetPasswordForm";
 
-export const metadata = { title: "إعادة تعيين كلمة المرور — InstaPadel" };
+export const metadata = { title: "إعادة تعيين كلمة المرور — PadelGo" };
 
 const FEATURES = [
   { icon: "bolt", text: "توفر المواعيد في الوقت الفعلي" },

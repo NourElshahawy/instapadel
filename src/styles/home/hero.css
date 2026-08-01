@@ -136,10 +136,6 @@
     border-color: var(--border-glass-strong);
 }
 
-.search-submit {
-    background: var(--grad);
-}
-
 .submit-icon,
 .submit-text {
     color: #fff;

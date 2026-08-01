@@ -24,7 +24,7 @@ export default function DownloadReceiptButton({ booking }) {
 
     const doc = new jsPDF({ unit: "mm", format: [pdfWidth, pdfHeight] });
     doc.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    doc.save(`InstaPadel-${booking.id}.pdf`);
+    doc.save(`PadelGo-${booking.id}.pdf`);
   };
 
   return (
@@ -46,7 +46,7 @@ export default function DownloadReceiptButton({ booking }) {
             width: "480px",
             boxSizing: "border-box",
           }}>
-          <h2 style={{ color: "#7c3aed", marginBottom: 4 }}>InstaPadel</h2>
+          <h2 style={{ color: "#7c3aed", marginBottom: 4 }}>PadelGo</h2>
           <p style={{ color: "#94a3b8", fontSize: 13, marginBottom: 24 }}>إيصال الحجز</p>
 
           <div style={{ borderTop: "1px solid rgba(255,255,255,.15)", paddingTop: 16 }}>

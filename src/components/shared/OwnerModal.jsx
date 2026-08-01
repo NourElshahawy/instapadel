@@ -36,7 +36,7 @@ export default function OwnerModal({ isOpen, onClose }) {
               <i className="fa-solid fa-shop"></i>
             </span>
             <span className="eyebrow">لأصحاب الملاعب</span>
-            <h3 className="mt-2">املأ ساعاتك الفارغة. أدرج ملعبك على InstaPadel.</h3>
+            <h3 className="mt-2">املأ ساعاتك الفارغة. أدرج ملعبك على PadelGo.</h3>
             <p className="owner-modal-sub">آلاف اللاعبين في المنصورة يبحثون عن ملعب الآن — اترك تفاصيلك وسيتصل بك فريقنا خلال 24 ساعة لإدراجك.</p>
 
             <form className="owner-form" onSubmit={handleSubmit}>

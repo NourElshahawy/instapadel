@@ -101,13 +101,13 @@ export default function RegisterForm() {
     <div className="auth-form-col">
       <div className="auth-topbar d-flex d-lg-none">
         <Link href="/" className="brand">
-          <Image src="/assets/imgs/logo1-removebg-preview.png" alt="InstaPadel" width={100} height={56} />
+          <Image src="/assets/imgs/logo1-removebg-preview.png" alt="PadelGo" width={56} height={56} />
         </Link>
       </div>
 
       <div className="auth-card">
         <h1>أنشئ حسابك</h1>
-        <p className="auth-sub">انضم إلى InstaPadel واحجز ملعبك الأول في دقائق.</p>
+        <p className="auth-sub">انضم إلى PadelGo واحجز ملعبك الأول في دقائق.</p>
 
         <AccountTypeSelector />
 
@@ -174,7 +174,7 @@ export default function RegisterForm() {
               <Link href="/legal#privacy" className="auth-link">
                 سياسة الخصوصية
               </Link>{" "}
-              الخاصة بـ InstaPadel.
+              الخاصة بـ PadelGo.
             </label>
           </div>
 

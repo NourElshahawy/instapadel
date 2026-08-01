@@ -14,11 +14,7 @@ export async function GET(request) {
       const { data: profile } = await supabase.from("profiles").select("role, owner_status, avatar_url").eq("id", user.id).single();
 
       if (profile?.role === "owner") {
-        const redirectPath = profile.owner_status === "approved" ? "/owner/dashboard" : "/owner/pending-approval";
-        return NextResponse.redirect(`${origin}${redirectPath}`);
-      }
-      if (profile?.role === "admin") {
-        return NextResponse.redirect(`${origin}/admin/dashboard`);
+        return NextResponse.redirect(`${origin}/owner/dashboard`);
       }
       return NextResponse.redirect(`${origin}/`);
     }

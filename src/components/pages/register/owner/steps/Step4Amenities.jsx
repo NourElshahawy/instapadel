@@ -14,7 +14,7 @@ export default function Step4Amenities({ amenities, toggleAmenity, hours, update
     <div className="wizard-step is-active">
       <div className="step-header">
         <span className="eyebrow">الخطوة 4 من 5</span>
-        <h2 className="mt-2">المرافق وساعات العمل</h2>
+        <h2 className="mt-2">المرافق</h2>
         <p>دع اللاعبين يعرفون ما يمكن توقعه عند وصولهم.</p>
       </div>
 
@@ -29,32 +29,6 @@ export default function Step4Amenities({ amenities, toggleAmenity, hours, update
               </span>
             </label>
           ))}
-        </div>
-      </div>
-
-      <div className="field-group">
-        <label>ساعات العمل</label>
-        <div className="hours-grid">
-          <div className="hours-row">
-            <span className="day-label">السبت – الخميس</span>
-            <div className="field-input-wrap flex-1">
-              <input className="field-input" type="time" value={hours.weekdayOpen} onChange={(e) => updateHours({ weekdayOpen: e.target.value })} />
-            </div>
-            <span className="hours-sep">إلى</span>
-            <div className="field-input-wrap flex-1">
-              <input className="field-input" type="time" value={hours.weekdayClose} onChange={(e) => updateHours({ weekdayClose: e.target.value })} />
-            </div>
-          </div>
-          <div className="hours-row">
-            <span className="day-label">الجمعة</span>
-            <div className="field-input-wrap flex-1">
-              <input className="field-input" type="time" value={hours.fridayOpen} onChange={(e) => updateHours({ fridayOpen: e.target.value })} />
-            </div>
-            <span className="hours-sep">إلى</span>
-            <div className="field-input-wrap flex-1">
-              <input className="field-input" type="time" value={hours.fridayClose} onChange={(e) => updateHours({ fridayClose: e.target.value })} />
-            </div>
-          </div>
         </div>
       </div>
 

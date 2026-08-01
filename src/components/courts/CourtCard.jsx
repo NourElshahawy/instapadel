@@ -37,8 +37,8 @@ export default function CourtCard({ court }) {
 
         <div className="court-stats">
           <div className="stat">
-            <b>{court.courtsCount}</b>
-            <span>الملاعب</span>
+            <b>{court.typeLabel || "—"}</b>
+            <span>النوع</span>
           </div>
           <div className="stat">
             <b>{court.rating > 0 ? court.rating : "جديد"}</b>
@@ -73,7 +73,7 @@ export default function CourtCard({ court }) {
         </div>
 
         <div className="court-foot">
-          <Link href={`/booking/${court.slug}`} className="btn btn-accent btn-sm btn-block">
+          <Link href={`/booking/${court.slug}?subCourtId=${court.subCourtId}`} className="btn btn-accent btn-sm btn-block">
             احجز الان
           </Link>
         </div>

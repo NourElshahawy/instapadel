@@ -3,7 +3,7 @@
 const WHATSAPP_NUMBER = "201065801252"; // ← رقم إنستا بادل بصيغة دولية بدون +
 
 export default function WhatsAppFloatButton() {
-  const message = encodeURIComponent("مرحبًا، عندي استفسار بخصوص InstaPadel");
+  const message = encodeURIComponent("مرحبًا، عندي استفسار بخصوص PadelGo");
   const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
 
   return (

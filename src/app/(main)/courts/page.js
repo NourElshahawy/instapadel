@@ -2,7 +2,7 @@ import CourtsListing from "@/_pages/courts/CourtsListing";
 import { getAllCourts } from "@/services/courtService";
 
 export const metadata = {
-  title: "ملاعب وكورتات البادل في المنصورة | InstaPadel",
+  title: "ملاعب وكورتات البادل في المنصورة | PadelGo",
   description: "قارن كل ملاعب وكورتات البادل في المنصورة، الأسعار، والمواعيد المتاحة فورًا. دور على أقرب نادي بادل من موقعك واحجز في ثوانٍ.",
   keywords: ["ملاعب البادل", "كورت بادل المنصورة", "نادي بادل المنصورة", "Padel Club Mansoura", "Padel Court Near Me"],
 };

@@ -1,4 +1,7 @@
 export default function Step1VenueInfo({ venue, updateVenue }) {
+  const phoneValid = !venue.phone || /^01[0125]\d{8}$/.test(venue.phone.trim());
+  const emailValid = !venue.email || /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(venue.email.trim());
+
   return (
     <div className="wizard-step is-active">
       <div className="step-header">
@@ -31,6 +34,7 @@ export default function Step1VenueInfo({ venue, updateVenue }) {
               <i className="fa-solid fa-phone field-icon"></i>
               <input className="field-input phone-rtl-fix" type="tel" placeholder="01xx xxx xxxx" value={venue.phone} onChange={(e) => updateVenue({ phone: e.target.value })} required />
             </div>
+            {!phoneValid && <span style={{ color: "#ff6b6b", fontSize: ".76rem", marginTop: 4, display: "block" }}>رقم مصري غير صحيح (لازم يبدأ بـ 010، 011، 012، أو 015 ويكون 11 رقم)</span>}
           </div>
         </div>
         <div className="col-md-6">
@@ -38,8 +42,9 @@ export default function Step1VenueInfo({ venue, updateVenue }) {
             <label>البريد الإلكتروني</label>
             <div className="field-input-wrap">
               <i className="fa-solid fa-envelope field-icon"></i>
-              <input className="field-input" type="email" placeholder="النادي@.com" value={venue.email} onChange={(e) => updateVenue({ email: e.target.value })} />
+              <input className="field-input" type="email" placeholder="name@example.com" value={venue.email} onChange={(e) => updateVenue({ email: e.target.value })} required />
             </div>
+            {!emailValid && <span style={{ color: "#ff6b6b", fontSize: ".76rem", marginTop: 4, display: "block" }}>الإيميل غير صحيح</span>}
           </div>
         </div>
       </div>

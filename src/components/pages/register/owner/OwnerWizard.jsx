@@ -49,8 +49,11 @@ export default function OwnerWizard() {
   const toggleAmenity = (value) => setAmenities((a) => (a.includes(value) ? a.filter((x) => x !== value) : [...a, value]));
   const updateHours = (patch) => setHours((h) => ({ ...h, ...patch }));
 
+  const isValidEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.trim());
+  const isValidEgyptianPhone = (phone) => /^01[0125]\d{8}$/.test(phone.trim());
+
   const canGoNext = () => {
-    if (currentStep === 1) return venue.name.trim().length >= 2 && venue.phone.trim().length >= 8;
+    if (currentStep === 1) return venue.name.trim().length >= 2 && isValidEgyptianPhone(venue.phone) && isValidEmail(venue.email);
     if (currentStep === 2) return courts.every((c) => c.name.trim() && c.price);
     return true;
   };
@@ -82,7 +85,7 @@ export default function OwnerWizard() {
       });
 
       setSubmitted(true);
-      setTimeout(() => router.push("/owner/pending-approval"), 1800);
+      setTimeout(() => router.push("/owner/dashboard"), 1800);
     } catch (err) {
       setSubmitError("حصل خطأ أثناء إنشاء الحساب: " + err.message);
     } finally {

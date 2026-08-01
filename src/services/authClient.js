@@ -3,6 +3,10 @@ import { createClient } from "@/lib/supabase/client";
 import { resizeImageFile } from "@/lib/resizeImage";
 export async function signUpPlayer({ name, email, phone, password, avatarFile }) {
   const supabase = createClient();
+
+  const { data: exists } = await supabase.rpc("email_exists", { check_email: email });
+  if (exists) throw new Error("الإيميل ده مسجل بالفعل على الموقع، جرب تسجيل الدخول بدل كده");
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -27,6 +31,10 @@ export async function signUpPlayer({ name, email, phone, password, avatarFile })
 }
 export async function signUpOwner({ name, email, phone, password }) {
   const supabase = createClient();
+
+  const { data: exists } = await supabase.rpc("email_exists", { check_email: email });
+  if (exists) throw new Error("الإيميل ده مسجل بالفعل على الموقع، جرب تسجيل الدخول بدل كده");
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,

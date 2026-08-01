@@ -50,6 +50,10 @@ export default function RegisterForm() {
       setError("رقم الهاتف لازم يكون رقم مصري صحيح (01 وبعده 9 أرقام)");
       return;
     }
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email.trim())) {
+      setError("الإيميل غير صحيح، اكتب إيميل حقيقي (زي name@example.com)");
+      return;
+    }
 
     setStatus("loading");
     try {
@@ -68,7 +72,7 @@ export default function RegisterForm() {
         setStatus("check-email");
       }
     } catch (err) {
-      if (err.message?.includes("already registered") || err.message?.includes("already exists")) {
+      if (err.message?.includes("already registered") || err.message?.includes("already exists") || err.message?.includes("مسجل بالفعل")) {
         setError("الإيميل ده مسجل بالفعل، جرب تسجل الدخول بدل كده.");
       } else {
         setError("حصل خطأ أثناء إنشاء الحساب، حاول تاني.");

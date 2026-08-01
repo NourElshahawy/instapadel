@@ -18,6 +18,20 @@ export default function BookingSummarySidebar({ booking, isPaid, isClaimed }) {
     try {
       await cancelBooking(booking.groupId || booking.id);
       setCancelled(true);
+
+      fetch("/api/notifications/booking-cancelled", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: booking.email,
+          userName: "لاعب PadelGo",
+          venueName: booking.venueName,
+          courtName: booking.subCourtName,
+          date: booking.date,
+          time: booking.time,
+          price: booking.price,
+        }),
+      }).catch(() => {});
     } catch {
       alert("حصل خطأ أثناء الإلغاء");
     } finally {

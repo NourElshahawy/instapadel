@@ -199,6 +199,6 @@
 }
 
 .owner-shell .notif-panel{
-    right: -100px;
+    right: 50px;
     left: unset;
 }

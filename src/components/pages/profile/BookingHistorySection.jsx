@@ -5,6 +5,7 @@ import ReviewPrompt from "@/components/pages/booking/confirmation/ReviewPrompt";
 import ConfirmModal from "@/components/shared/ConfirmModal";
 import { useToast } from "@/components/shared/ToastProvider";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 // بيحول "3:00 م" أو "11:00 ص" لعدد دقايق من نص الليل، عشان نرتب صح
 function timeToMinutes(label) {
   const match = label.trim().match(/^(\d{1,2}):(\d{2})\s*(ص|م)$/);
@@ -65,8 +66,31 @@ export default function BookingHistorySection({ bookings: initialBookings, curre
     setCancellingId(id);
     try {
       await cancelBooking(id);
+      const cancelledRows = bookings.filter((b) => (b.group_id || b.id) === id);
       setBookings((prev) => prev.map((b) => ((b.group_id || b.id) === id ? { ...b, status: "cancelled" } : b)));
       showToast("تم إلغاء الحجز بنجاح", "success");
+
+      if (cancelledRows.length > 0) {
+        const first = cancelledRows[0];
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        fetch("/api/notifications/booking-cancelled", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: user?.email,
+            userName: "لاعب PadelGo",
+            venueName: first.venue_name,
+            courtName: first.court_name,
+            date: first.date,
+            time: first.time,
+            price: cancelledRows.reduce((sum, r) => sum + Number(r.price), 0),
+          }),
+        }).catch(() => {});
+      }
     } catch {
       showToast("حصل خطأ أثناء الإلغاء", "error");
     } finally {

@@ -18,6 +18,15 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const metadata = {
   title: "PadelGo | احجز ملعبك في أقل من دقيقة",
   description: "PadelGo — ملعبين بادل احترافيين في المنصورة. اعرف المواعيد المتاحة واحجز ملعبك بسهولة وفي ثوانٍ.",
+  applicationName: "PadelGo",
+  openGraph: {
+    siteName: "PadelGo",
+    title: "PadelGo | احجز ملعبك في أقل من دقيقة",
+    description: "PadelGo — ملعب بادل احترافي في المنصورة.",
+    url: "https://instapadel.tech",
+    locale: "ar_EG",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {

@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/client";import { useReactTable, get
 import TablePagination from "./TablePagination";
 import { updateBookingStatus, confirmPaymentReceived } from "@/services/ownerBookingsClient";
 import ExportButtons from "./ExportButtons";
+import { exportMonthlyBookingsPDF } from "@/lib/exportUtils";
+
 
 const columnHelper = createColumnHelper();
 const STATUS_LABELS = { confirmed: "مؤكد", cancelled: "ملغي", completed: "منتهي", mixed: "مختلطة" };
@@ -296,13 +298,21 @@ export default function BookingsTable({ initialBookings, courtIds = [] }) {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 14 }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginBottom: 14 }}>
         <ExportButtons
           title="سجل الحجوزات"
           headers={["العميل", "الهاتف", "الإيميل", "الملعب", "المكان", "التاريخ", "الوقت", "السعر (ج.م)", "الحالة", "الدفع"]}
           rows={exportRows}
           filenameBase="سجل-الحجوزات"
         />
+        <button
+          type="button"
+          className="owner-btn-cancel"
+          style={{ border: "1px solid var(--border-glass)", borderRadius: "var(--r-sm)", padding: "6px 12px" }}
+          onClick={() => exportMonthlyBookingsPDF("التقرير الشهري للحجوزات", ["العميل", "الهاتف", "الملعب", "التاريخ", "الوقت", "السعر", "الحالة", "الدفع"], grouped)}>
+          <i className="fa-solid fa-file-invoice-dollar" style={{ marginLeft: 6 }}></i>
+          تقرير شهري PDF
+        </button>
       </div>
 
       {grouped.length === 0 ? (

@@ -5,7 +5,7 @@
   --primary-3: #5416e0;
   --accent: #00E5A8;
   --accent-2: #00b98a;
-  --grad: linear-gradient(120deg, #6D28FF 0%, #8B5CFF 46%, #00E5A8 118%);
+  --grad: linear-gradient(120deg, #6D28FF 0%, #8B5CFF 100%);
   --grad-text: linear-gradient(120deg, #8B5CFF 0%, #6D28FF 40%, #00E5A8 120%);
 
   /* ===== نص القيم القديمة، عشان الكلاسات الحالية متتكسرش ===== */

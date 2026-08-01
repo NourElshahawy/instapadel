@@ -131,9 +131,8 @@ export async function getCourtDetails(slug) {
   // لازم تتفلتر برضو هنا عشان العميل ميقدرش يحجز ساعة مقفولة من صفحة الحجز العامة
   const { data: blockedSlots } = await supabase
     .from("blocked_slots")
-    .select("court_id, date, time")
+    .select("id, court_id, date, time, reason")
     .in("court_id", courtIds.length ? courtIds : ["00000000-0000-0000-0000-000000000000"]);
-
   const todayISO = getEgyptISODate();
 
   return {

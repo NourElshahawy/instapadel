@@ -95,19 +95,17 @@ export default function BookingPage({ court, preselectedSubCourtId }) {
       .on("postgres_changes", { event: "*", schema: "public", table: "blocked_slots" }, (payload) => {
         const row = payload.new && Object.keys(payload.new).length ? payload.new : payload.old;
         if (!row || !courtIds.includes(row.court_id)) return;
+setLiveBlockedSlots((prev) => {
+  if (payload.eventType === "DELETE") {
+    return prev.filter((b) => b.id !== row.id);
+  }
 
-        setLiveBlockedSlots((prev) => {
-          const sameSlot = (b) => b.court_id === row.court_id && b.date === row.date && b.time === row.time;
-
-          if (payload.eventType === "DELETE") {
-            return prev.filter((b) => !sameSlot(b));
-          }
-
-          if (prev.some(sameSlot)) {
-            return prev.map((b) => (sameSlot(b) ? { ...b, reason: row.reason } : b));
-          }
-          return [...prev, { court_id: row.court_id, date: row.date, time: row.time, reason: row.reason }];
-        });
+  const exists = prev.some((b) => b.id === row.id);
+  if (exists) {
+    return prev.map((b) => (b.id === row.id ? { ...b, reason: row.reason } : b));
+  }
+  return [...prev, { id: row.id, court_id: row.court_id, date: row.date, time: row.time, reason: row.reason }];
+});
       })
       .subscribe();
 
@@ -178,8 +176,8 @@ export default function BookingPage({ court, preselectedSubCourtId }) {
 
   const daySlots = useMemo(() => {
     if (!subCourt || !selectedDay) return [];
-const bookedStartTimes = liveBookings.filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date).map((b) => b.time.split(" الي ")[0]); // ناخد أول جزء بس (وقت البداية) للمقارنة
-const blockedForDay = liveBlockedSlots.filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date);
+    const bookedStartTimes = liveBookings.filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date).map((b) => b.time.split(" الي ")[0]); // ناخد أول جزء بس (وقت البداية) للمقارنة
+    const blockedForDay = liveBlockedSlots.filter((b) => b.court_id === subCourt.id && b.date === selectedDay.date);
     const now = new Date();
     const todayISO = getEgyptISODate(now);
     const isToday = selectedDay.date === todayISO;

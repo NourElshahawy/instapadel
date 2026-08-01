@@ -26,15 +26,16 @@ export default function SlotsGrid({ slots, selectedTimes, onToggle, locked }) {
       <div className="slots-grid">
         {slots.map((slot) => {
           const isBooked = slot.status === "booked";
+          const isBlocked = slot.status === "blocked";
           const isPast = slot.status === "past";
-          const isDisabled = isBooked || isPast;
+          const isDisabled = isBooked || isBlocked || isPast;
           const isSelected = selectedTimes.includes(slot.start);
 
           return (
             <button
               key={slot.start}
               type="button"
-              className={`slot-card ${isBooked ? "booked" : isPast ? "past" : "available"} ${isSelected ? "selected" : ""}`}
+              className={`slot-card ${isBooked ? "booked" : isBlocked ? "booked" : isPast ? "past" : "available"} ${isSelected ? "selected" : ""}`}
               disabled={isDisabled}
               onClick={() => onToggle(slot)}>
               <span className="slot-status" />
@@ -47,6 +48,7 @@ export default function SlotsGrid({ slots, selectedTimes, onToggle, locked }) {
               <h3>الي</h3>
               <h3>{slot.end}</h3>
               {isBooked && <p>محجوز</p>}
+              {isBlocked && <p>{slot.blockReason || "غير متاح"}</p>}
               {isPast && <p>فات الموعد</p>}
             </button>
           );
@@ -56,7 +58,8 @@ export default function SlotsGrid({ slots, selectedTimes, onToggle, locked }) {
       {showCrossDayHint && (
         <div className="cross-day-hint">
           <i className="fa-solid fa-moon"></i>
-          عايز تكمل حجزك بعد نص الليل؟ تقدر تختار الساعة اللي بعدها من تاب اليوم اللي جاي        </div>
+          عايز تكمل حجزك بعد نص الليل؟ تقدر تختار الساعة اللي بعدها من تاب اليوم اللي جاي
+        </div>
       )}
     </section>
   );

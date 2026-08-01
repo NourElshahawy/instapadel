@@ -11,12 +11,15 @@ export async function GET(request) {
 
     if (!error) {
       const { data: { user } } = await supabase.auth.getUser();
-      const { data: profile } = await supabase.from("profiles").select("role, owner_status, avatar_url").eq("id", user.id).single();
+      const { data: profile } = await supabase.from("profiles").select("role, owner_status, avatar_url, phone").eq("id", user.id).single();
 
-      if (profile?.role === "owner") {
-        return NextResponse.redirect(`${origin}/owner/dashboard`);
+      const destination = profile?.role === "owner" ? "/owner/dashboard" : "/";
+
+      if (!profile?.phone) {
+        return NextResponse.redirect(`${origin}/complete-profile?redirect=${encodeURIComponent(destination)}`);
       }
-      return NextResponse.redirect(`${origin}/`);
+
+      return NextResponse.redirect(`${origin}${destination}`);
     }
   }
 

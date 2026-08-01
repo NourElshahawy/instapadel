@@ -9,6 +9,7 @@
 @import "./shared/common.css";
 @import "./shared/form-fields.css";
 @import "./shared/auth.css";
+@import "./shared/owner-modal.css";
 
 /* ============================================
    3. الـ Layout (navbar, footer, profile menu)

@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
 import { cancelBooking } from "@/services/bookingClient";
+import { createClient } from "@/lib/supabase/client";
 import DownloadReceiptButton from "../booking/confirmation/DownloadReceiptButton";
-// import DownloadReceiptButton from "./DownloadReceiptButton";
-
 export default function BookingSummarySidebar({ booking, isPaid, isClaimed }) {
   const [cancelled, setCancelled] = useState(booking.status === "cancelled");
   const [cancelling, setCancelling] = useState(false);
@@ -19,11 +18,17 @@ export default function BookingSummarySidebar({ booking, isPaid, isClaimed }) {
       await cancelBooking(booking.groupId || booking.id);
       setCancelled(true);
 
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       fetch("/api/notifications/booking-cancelled", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: booking.email,
+          userId: user?.id,
           userName: "لاعب PadelGo",
           venueName: booking.venueName,
           courtName: booking.subCourtName,

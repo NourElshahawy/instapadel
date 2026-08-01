@@ -82,6 +82,7 @@ export default function BookingHistorySection({ bookings: initialBookings, curre
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email: user?.email,
+            userId: user?.id,
             userName: "لاعب PadelGo",
             venueName: first.venue_name,
             courtName: first.court_name,

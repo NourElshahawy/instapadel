@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
+import { formatSlotRanges } from "@/services/courtLogic";
 import BookingConfirmationPage from "@/components/pages/confirmation/BookingConfirmationPage";
 
 export const metadata = { title: "فاتورة الحجز — PadelGo" };
@@ -70,7 +71,7 @@ export default async function BookingInvoicePage({ params }) {
     locationLink: null,
     subCourtName: first.court_name,
     date: first.date === last.date ? first.date : `${first.date} → ${last.date}`,
-    time: sorted.length === 1 ? first.time : `${first.time.split(" الي ")[0]} الي ${last.time.split(" الي ")[1]}`,
+    time: formatSlotRanges(sorted.map((r) => ({ date: r.date, start: r.time.split(" الي ")[0], end: r.time.split(" الي ")[1] }))),
     price: totalPrice,
     email: user.email,
     createdAt: new Date(first.created_at).toLocaleDateString("ar-EG"),

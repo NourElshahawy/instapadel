@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";import { useReactTable, getCoreRowModel, getPaginationRowModel, flexRender, createColumnHelper } from "@tanstack/react-table";
 import TablePagination from "./TablePagination";
+import { formatSlotRanges } from "@/services/courtLogic";
 import { updateBookingStatus, confirmPaymentReceived } from "@/services/ownerBookingsClient";
 import ExportButtons from "./ExportButtons";
 import { exportMonthlyBookingsPDF } from "@/lib/exportUtils";
@@ -65,7 +66,7 @@ function groupRows(bookings) {
       courtName: first.courtName,
       venueName: first.venueName,
       date: first.date === last.date ? first.date : `${first.date} → ${last.date}`,
-      time: sorted.length === 1 ? first.time : `${first.time.split(" الي ")[0]} الي ${last.time.split(" الي ")[1]}`,
+      time: formatSlotRanges(sorted.map((b) => ({ date: b.date, start: b.time.split(" الي ")[0], end: b.time.split(" الي ")[1] }))),
       price: sorted.reduce((sum, b) => sum + Number(b.price), 0),
       status,
       cancelledCount,

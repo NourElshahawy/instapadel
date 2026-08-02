@@ -36,3 +36,43 @@ export const TIME_PERIODS = {
   evening: ["6:00 م", "7:00 م", "8:00 م", "9:00 م", "10:00 م", "11:00 م"],
   night: ["12:00 ص", "1:00 ص", "2:00 ص", "3:00 ص", "4:00 ص", "5:00 ص"],
 };
+
+function timeToMinutesShared(label) {
+  const match = label.trim().match(/^(\d{1,2}):(\d{2})\s*(ص|م)$/);
+  if (!match) return 0;
+  let [, h, m, period] = match;
+  h = parseInt(h, 10);
+  m = parseInt(m, 10);
+  if (period === "ص") {
+    if (h === 12) h = 0;
+  } else if (h !== 12) {
+    h += 12;
+  }
+  return h * 60 + m;
+}
+
+// بتاخد سلوتات مرتبة زمنيًا وترجّع نص واضح: لو متصلة بتبقى "من - لحد"،
+// لو فيها فجوة (مش متصلة) بتبقى كذا نطاق منفصل بعلامة "+" بينهم بدل ما توهم إنها متصلة
+export function formatSlotRanges(sortedSlots) {
+  if (!sortedSlots || sortedSlots.length === 0) return "";
+  if (sortedSlots.length === 1) return `${sortedSlots[0].start} الي ${sortedSlots[0].end}`;
+
+  const segments = [];
+  let segStart = sortedSlots[0];
+  let segEnd = sortedSlots[0];
+
+  for (let i = 1; i < sortedSlots.length; i++) {
+    const slot = sortedSlots[i];
+    const isContiguous = slot.date === segEnd.date && slot.start === segEnd.end;
+    if (isContiguous) {
+      segEnd = slot;
+    } else {
+      segments.push({ start: segStart, end: segEnd });
+      segStart = slot;
+      segEnd = slot;
+    }
+  }
+  segments.push({ start: segStart, end: segEnd });
+
+  return segments.map((seg) => (seg.start.date === seg.end.date ? `${seg.start.start} الي ${seg.end.end}` : `${seg.start.start} (${seg.start.date}) الي ${seg.end.end} (${seg.end.date})`)).join(" + ");
+}

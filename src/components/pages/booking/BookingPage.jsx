@@ -12,7 +12,7 @@ import SlotsGrid from "./SlotsGrid";
 import BookingSummaryFooter from "./BookingSummaryFooter";
 import ConfirmSheet from "./ConfirmSheet";
 import BookingSuccessToast from "./BookingSuccessToast";
-import { buildDefaultSlots } from "@/services/courtLogic";
+import { buildDefaultSlots, formatSlotRanges } from "@/services/courtLogic";
 import { createClient } from "@/lib/supabase/client";
 import BookingGuideModal from "./BookingGuideModal";
 import { getEgyptISODate } from "@/services/courtLogic";
@@ -95,17 +95,17 @@ export default function BookingPage({ court, preselectedSubCourtId }) {
       .on("postgres_changes", { event: "*", schema: "public", table: "blocked_slots" }, (payload) => {
         const row = payload.new && Object.keys(payload.new).length ? payload.new : payload.old;
         if (!row || !courtIds.includes(row.court_id)) return;
-setLiveBlockedSlots((prev) => {
-  if (payload.eventType === "DELETE") {
-    return prev.filter((b) => b.id !== row.id);
-  }
+        setLiveBlockedSlots((prev) => {
+          if (payload.eventType === "DELETE") {
+            return prev.filter((b) => b.id !== row.id);
+          }
 
-  const exists = prev.some((b) => b.id === row.id);
-  if (exists) {
-    return prev.map((b) => (b.id === row.id ? { ...b, reason: row.reason } : b));
-  }
-  return [...prev, { id: row.id, court_id: row.court_id, date: row.date, time: row.time, reason: row.reason }];
-});
+          const exists = prev.some((b) => b.id === row.id);
+          if (exists) {
+            return prev.map((b) => (b.id === row.id ? { ...b, reason: row.reason } : b));
+          }
+          return [...prev, { id: row.id, court_id: row.court_id, date: row.date, time: row.time, reason: row.reason }];
+        });
       })
       .subscribe();
 
@@ -158,13 +158,8 @@ setLiveBlockedSlots((prev) => {
       const lastDay = dayInfo(last.date);
       const label = (d, day) => (day ? `${day.dow} ${day.dom} ${day.month}` : d);
 
-      if (spansMultipleDays) {
-        time = `${first.start} (${label(first.date, firstDay)}) الي ${last.end} (${label(last.date, lastDay)})`;
-        dateLabel = `${label(first.date, firstDay)} → ${label(last.date, lastDay)}`;
-      } else {
-        time = `${first.start} الي ${last.end}`;
-        dateLabel = label(first.date, firstDay);
-      }
+      time = formatSlotRanges(sorted);
+      dateLabel = spansMultipleDays ? `${label(first.date, firstDay)} → ${label(last.date, lastDay)}` : label(first.date, firstDay);
       dateISO = first.date;
     } else if (selectedDay) {
       dateLabel = `${selectedDay.dow} ${selectedDay.dom} ${selectedDay.month}`;

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import { getAvailableCourtsForSlots } from "@/services/quickBookClient";
@@ -105,8 +106,8 @@ export default function QuickBookModal({ slots, onClose }) {
 
   // خطوة دفع الديبوزيت بعد اختيار ملعب
   if (selectedCourt) {
-    const deposit = selectedCourt.totalPrice;
-    return (
+    const deposit = Math.round(selectedCourt.totalPrice / 2);
+    return createPortal(
       <div className="booking-guide-overlay" onClick={onClose}>
         <div className="quick-book-modal" onClick={(e) => e.stopPropagation()}>
           <button
@@ -169,12 +170,13 @@ export default function QuickBookModal({ slots, onClose }) {
             {confirming ? "جاري التأكيد..." : "تأكيد الحجز"}
           </button>
         </div>
-      </div>
+      </div>,
+      document.body,
     );
   }
 
   // ليستة الملاعب المتاحة (زي ما كانت)
-  return (
+  return createPortal(
     <div className="booking-guide-overlay" onClick={onClose}>
       <div className="quick-book-modal" onClick={(e) => e.stopPropagation()}>
         <button className="booking-guide-skip" onClick={onClose}>
@@ -210,6 +212,7 @@ export default function QuickBookModal({ slots, onClose }) {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

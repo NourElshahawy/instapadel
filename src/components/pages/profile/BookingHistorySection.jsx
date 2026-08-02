@@ -3,6 +3,7 @@ import { useState } from "react";
 import { cancelBooking } from "@/services/bookingClient";
 import ReviewPrompt from "@/components/pages/booking/confirmation/ReviewPrompt";
 import ConfirmModal from "@/components/shared/ConfirmModal";
+import { formatSlotRanges } from "@/services/courtLogic";
 import { useToast } from "@/components/shared/ToastProvider";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -47,7 +48,7 @@ const sortKey = (b) => `${b.date}_${String(startMinutes(b.time)).padStart(4, "0"
       status: first.status,
       reviewed: first.reviewed,
       price: sorted.reduce((sum, x) => sum + x.price, 0),
-      time: sorted.length === 1 ? first.time : `${first.time.split(" الي ")[0]} الي ${last.time.split(" الي ")[1]}`,
+      time: formatSlotRanges(sorted.map((b) => ({ date: b.date, start: b.time.split(" الي ")[0], end: b.time.split(" الي ")[1] }))),
     };
   });
 }

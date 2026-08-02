@@ -138,6 +138,7 @@ export async function getCourtDetails(slug) {
 
   return {
     ...court,
+    name: venue?.name || court.name,
     logo: court.image,
     coverImage: court.image,
     reviewsCount: "0",

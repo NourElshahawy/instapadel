@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import { updateCourt } from "@/services/ownerVenuesClient";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import "../../styles/shared/owner-modal.css";
 
 export default function EditCourtModal({ court, venueId, onClose, onSaved }) {
+  useLockBodyScroll(true);
   const [name, setName] = useState(court.name);
   const [type, setType] = useState(court.type || "regular");
   const [price, setPrice] = useState(String(court.price_per_hour));

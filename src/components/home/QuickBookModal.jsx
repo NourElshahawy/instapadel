@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import { getAvailableCourtsForSlots } from "@/services/quickBookClient";
-import { createBookingWithDeposit } from "@/services/depositBookingClient";
+// import { createBookingWithDeposit } from "@/services/depositBookingClient";
 
 const INSTAPAY_NUMBER = "01065801252";
 
 export default function QuickBookModal({ slots, onClose }) {
+  useLockBodyScroll(true);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [courts, setCourts] = useState([]);

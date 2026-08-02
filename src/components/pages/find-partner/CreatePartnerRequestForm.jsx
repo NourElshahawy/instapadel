@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { createPartnerRequest } from "@/services/partnerRequestClient";
 import GuideModal from "@/components/shared/GuideModal";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 
 const LEVELS = ["مبتدئ", "متوسط", "محترف"];
 

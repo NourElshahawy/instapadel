@@ -1,11 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPromptModal() {
   const [show, setShow] = useState(false);
   const router = useRouter();
+  useLockBodyScroll(show);
 
   useEffect(() => {
     const check = async () => {

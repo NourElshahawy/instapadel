@@ -22,6 +22,7 @@ export const metadata = {
 export default function HomePage() {
   return (
     <>
+      <link rel="preload" as="image" href="/assets/imgs/courts-bg.png" fetchPriority="high" />
       <Hero />
       <FeaturedCourts />
       <CtaBand />

@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
+
 
 const STEPS = [
   { icon: "fa-table-tennis-paddle-ball", title: "اختار الملعب", text: "دوس على الملعب الفرعي اللي عايز تلعب فيه." },
@@ -8,6 +10,7 @@ const STEPS = [
 ];
 
 export default function BookingGuideModal({ onClose }) {
+    useLockBodyScroll(true);
   const [step, setStep] = useState(0);
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const isLast = step === STEPS.length - 1;

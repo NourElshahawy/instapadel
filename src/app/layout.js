@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
 import { Urbanist, Plus_Jakarta_Sans } from "next/font/google";
+import FontAwesomeLoader from "@/components/shared/FontAwesomeLoader";
 
 const urbanist = Urbanist({
   subsets: ["latin"],
@@ -32,6 +32,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ar" dir="rtl" className={`${urbanist.variable} ${plusJakarta.variable}`}>
+      <head>
+        <FontAwesomeLoader />
+        <noscript>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        </noscript>
+      </head>
       <body suppressHydrationWarning>{children}</body>
     </html>
   );

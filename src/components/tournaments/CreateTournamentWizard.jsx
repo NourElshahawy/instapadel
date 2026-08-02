@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { createTournament } from "@/services/tournamentClient";
 import GuideModal from "@/components/shared/GuideModal";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 
 // import "@/styles/pages/tournament-wizard.css";
 
@@ -37,6 +38,8 @@ const INITIAL_DATA = {
 };
 
 export default function CreateTournamentWizard({ courts = [], organizerId }) {
+      useLockBodyScroll(true);
+
   const [step, setStep] = useState(1);
   const [data, setData] = useState(INITIAL_DATA);
   const [submitting, setSubmitting] = useState(false);

@@ -1,6 +1,8 @@
 "use client";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 
 export default function ConfirmModal({ isOpen, title, message, confirmLabel = "تأكيد", cancelLabel = "إلغاء", danger = false, onConfirm, onCancel }) {
+  useLockBodyScroll(isOpen);
   if (!isOpen) return null;
 
   return (

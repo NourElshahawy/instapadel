@@ -1,7 +1,10 @@
 "use client";
+"use client";
 import { useState } from "react";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 
 export default function BlockSlotModal({ count, onConfirm, onCancel, submitting }) {
+  useLockBodyScroll(true);
   const [reason, setReason] = useState("");
 
   return (

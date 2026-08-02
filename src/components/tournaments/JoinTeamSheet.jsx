@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 
 export default function JoinTeamSheet({ tournament, phone, onClose, onSubmit }) {
+    useLockBodyScroll(true);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({ captainName: "", partnerName: "" });
   const isDouble = tournament.type === "double";

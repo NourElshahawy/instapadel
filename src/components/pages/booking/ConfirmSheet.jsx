@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 
 const INSTAPAY_NUMBER = "01065801252";
 
 export default function ConfirmSheet({ isOpen, onClose, onConfirm, confirming, review }) {
+  useLockBodyScroll(isOpen);
   const [proofFile, setProofFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [copied, setCopied] = useState(false);

@@ -2,10 +2,6 @@
 import { useState } from "react";
 import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 
-export default function GuideModal({ steps, onClose, finalLabel = "يلا نبدأ" }) {
-  useLockBodyScroll(true);
-  const [step, setStep] = useState(0);
-
 /**
  * كومبوننت عام قابل لإعادة الاستخدام لأي بوب أب إرشادي بخطوات،
  * بنفس شكل وسلوك BookingGuideModal بالظبط.
@@ -14,6 +10,7 @@ export default function GuideModal({ steps, onClose, finalLabel = "يلا نبد
  * <GuideModal steps={[{ icon: "fa-...", title: "...", text: "..." }]} onClose={...} finalLabel="يلا نبدأ" />
  */
 export default function GuideModal({ steps, onClose, finalLabel = "يلا نبدأ" }) {
+  useLockBodyScroll(true);
   const [step, setStep] = useState(0);
   const isLast = step === steps.length - 1;
 

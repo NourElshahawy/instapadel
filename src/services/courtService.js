@@ -33,7 +33,7 @@ export async function getAllCourts({ date } = {}) {
       .select("court_id, time")
       .in("court_id", allCourtIds.length ? allCourtIds : ["00000000-0000-0000-0000-000000000000"])
       .eq("date", date)
-      .eq("status", "confirmed");
+      .in("status", ["confirmed", "completed"]);
     bookingsForDate = data || [];
   }
 
@@ -126,7 +126,7 @@ export async function getCourtDetails(slug) {
     .from("booking_slots")
     .select("court_id, date, time")
     .in("court_id", courtIds.length ? courtIds : ["00000000-0000-0000-0000-000000000000"])
-    .eq("status", "confirmed");
+    .in("status", ["confirmed", "completed"]);
 
   // نفس الـ blocked_slots اللي الأونر بيقفلها من صفحته (ownerScheduleService)
   // لازم تتفلتر برضو هنا عشان العميل ميقدرش يحجز ساعة مقفولة من صفحة الحجز العامة

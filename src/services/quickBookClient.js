@@ -23,7 +23,7 @@ export async function getAvailableCourtsForSlots(slots) {
   const dates = [...new Set(slots.map((s) => s.date))];
 
   const [{ data: booked }, { data: blocked }] = await Promise.all([
-    supabase.from("booking_slots").select("court_id, date, time").in("court_id", courtIds).in("date", dates).eq("status", "confirmed"),
+    supabase.from("booking_slots").select("court_id, date, time").in("court_id", courtIds).in("date", dates).in("status", ["confirmed", "completed"]),
     supabase.from("blocked_slots").select("court_id, date, time").in("court_id", courtIds).in("date", dates),
   ]);
 

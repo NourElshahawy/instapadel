@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import { getAvailableCourtsForSlots } from "@/services/quickBookClient";
-// import { createBookingWithDeposit } from "@/services/depositBookingClient";
+import { createBookingWithDeposit } from "@/services/depositBookingClient";
 
 const INSTAPAY_NUMBER = "01065801252";
 

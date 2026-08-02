@@ -87,7 +87,7 @@ export default function BookingPage({ court, preselectedSubCourtId }) {
             return prev.filter((b) => !sameSlot(b));
           }
 
-          if (row.status !== "confirmed") return prev;
+          if (row.status !== "confirmed" && row.status !== "completed") return prev;
           if (prev.some(sameSlot)) return prev;
           return [...prev, { court_id: row.court_id, date: row.date, time: row.time }];
         });

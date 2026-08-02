@@ -17,8 +17,13 @@ export async function getOwnerScheduleData(ownerId) {
     return { courts: [], days, bookings: [], blockedSlots: [] };
   }
 
-  const { data: bookings } = await supabase.from("booking_slots").select("court_id, date, time").in("court_id", courtIds).gte("date", fromDate).lte("date", toDate).eq("status", "confirmed");
-
+const { data: bookings } = await supabase
+  .from("booking_slots")
+  .select("court_id, date, time")
+  .in("court_id", courtIds)
+  .gte("date", fromDate)
+  .lte("date", toDate)
+  .in("status", ["confirmed", "completed"]);
   const { data: blockedSlots } = await supabase.from("blocked_slots").select("id, court_id, date, time, reason").in("court_id", courtIds).gte("date", fromDate).lte("date", toDate);
 
   return { courts, days, bookings: bookings || [], blockedSlots: blockedSlots || [] };

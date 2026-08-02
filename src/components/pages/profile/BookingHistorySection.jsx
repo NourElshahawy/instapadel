@@ -115,7 +115,7 @@ export default function BookingHistorySection({ bookings: initialBookings, curre
       ) : (
         groupBookings(bookings).map((b) => {
           const isPast = new Date(b.date) < new Date();
-          const needsReview = isPast && b.status === "confirmed" && !b.reviewed;
+          const needsReview = isPast && (b.status === "confirmed" || b.status === "completed") && !b.reviewed;
 
           return (
             <div key={b.groupId}>

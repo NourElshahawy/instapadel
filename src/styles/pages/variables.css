@@ -1,17 +1,16 @@
 :root {
-  /* ===== الألوان الأساسية الجديدة ===== */
-  --primary: #6D28FF;
-  --primary-2: #8B5CFF;
-  --primary-3: #5416e0;
-  --accent: #00E5A8;
-  --accent-2: #00b98a;
-  --grad: linear-gradient(120deg, #6D28FF 0%, #8B5CFF 100%);
-  --grad-text: linear-gradient(120deg, #8B5CFF 0%, #6D28FF 40%, #00E5A8 120%);
-
+  /* ===== الألوان الأساسية الجديدة (كحلي + مرجاني) ===== */
+  --primary: #3B82F6;
+  --primary-2: #60A5FA;
+  --primary-3: #2563EB;
+  --accent: #E0857A;
+    --accent-2: #C96B5F;
+  --grad: linear-gradient(120deg, #3B82F6 0%, #60A5FA 100%);
+--grad-text: linear-gradient(120deg, #60A5FA 0%, #3B82F6 40%, #E0857A 120%);
   /* ===== نص القيم القديمة، عشان الكلاسات الحالية متتكسرش ===== */
   --accent-dark: var(--accent-2);
-  --accent-glow: rgba(0, 229, 168, .35);
-  --accent-soft: rgba(0, 229, 168, .14);
+  --accent-glow: rgba(224, 133, 122, .3);
+    --accent-soft: rgba(224, 133, 122, .12);
 
   --r-lg: 24px;
   --r-md: 18px;
@@ -22,22 +21,22 @@
   --ease: cubic-bezier(.22, 1, .36, 1);
 
   /* ===== الوضع الداكن (افتراضي) ===== */
-  --bg-primary: #0F1115;
-  --bg-secondary: #14171F;
-  --bg-elevated: #171A21;
-  --bg-elevated-2: #1C212B;
+  --bg-primary: #0F1729;
+  --bg-secondary: #16213A;
+  --bg-elevated: #1A2740;
+  --bg-elevated-2: #202D4A;
   --white: #F8FAFC;
   --light-gray: #F8FAFC;
   --text-muted: rgba(248, 250, 252, .66);
   --text-faint: rgba(248, 250, 252, .44);
   --border-glass: rgba(255, 255, 255, .09);
   --border-glass-strong: rgba(255, 255, 255, .16);
-  --glass-fill: rgba(20, 23, 31, .6);
+  --glass-fill: rgba(22, 33, 58, .6);
   --glass-fill-light: rgba(255, 255, 255, .05);
   --shadow-card: 0 14px 34px rgba(0, 0, 0, .42);
   --shadow-lift: 0 28px 70px rgba(0, 0, 0, .55);
   --shadow-glow: 0 10px 40px var(--accent-glow);
-  --nav-bg: rgba(15, 17, 21, .66);
+  --nav-bg: rgba(15, 23, 41, .66);
   --primary-soft: rgba(109, 40, 255, .16);
 }
 

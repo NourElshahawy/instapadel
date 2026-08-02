@@ -4,15 +4,8 @@ import "../../styles/home/hero.css";
 import "../../styles/home/search.css";
 import ParallaxBg from "../ui/ParallaxBg";
 import { useState, useMemo } from "react";
-import { buildDefaultSlots } from "@/services/courtLogic";
+import { buildDefaultSlots, buildNextSevenDays } from "@/services/courtLogic";
 import QuickBookModal from "./QuickBookModal";
-
-function getTodayISO() {
-  const d = new Date();
-  const offset = d.getTimezoneOffset();
-  const local = new Date(d.getTime() - offset * 60000);
-  return local.toISOString().split("T")[0];
-}
 
 function addDaysISO(iso, days) {
   const [y, m, d] = iso.split("-").map(Number);
@@ -21,28 +14,43 @@ function addDaysISO(iso, days) {
 }
 
 const SLOTS = buildDefaultSlots(0);
+// نرتب المواعيد تبدأ من 12 الضهر لحد 11 صباح اليوم اللي بعده، عشان أغلب حجوزات البادل بالليل
+const ROTATED_SLOTS = [...SLOTS.slice(12), ...SLOTS.slice(0, 12)];
+
+const DAYS = buildNextSevenDays(14);
 
 export default function Hero() {
-  const [date, setDate] = useState(getTodayISO());
-  const [startIndex, setStartIndex] = useState(16);
-  const [endIndex, setEndIndex] = useState(17);
+  const [dayIndex, setDayIndex] = useState(0);
+  const [startIndex, setStartIndex] = useState(null);
+  const [endIndex, setEndIndex] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  // لو "لحد الساعة" أصغر من "من الساعة"، معناها الامتداد لليوم اللي بعده
-  const crossesMidnight = endIndex < startIndex;
+  const selectedDay = DAYS[dayIndex];
+  const hasValidRange = startIndex !== null && endIndex !== null;
+  const spansNextDay = hasValidRange && endIndex >= 12;
 
   const selectedSlots = useMemo(() => {
-    if (!crossesMidnight) {
-      return SLOTS.slice(startIndex, endIndex + 1).map((s) => ({ ...s, date }));
-    }
-    const day1 = SLOTS.slice(startIndex).map((s) => ({ ...s, date }));
-    const nextDate = addDaysISO(date, 1);
-    const day2 = SLOTS.slice(0, endIndex + 1).map((s) => ({ ...s, date: nextDate }));
-    return [...day1, ...day2];
-  }, [date, startIndex, endIndex, crossesMidnight]);
+    if (!selectedDay || !hasValidRange) return [];
+    return ROTATED_SLOTS.slice(startIndex, endIndex + 1).map((s, i) => {
+      const rotatedIndex = startIndex + i;
+      const slotDate = rotatedIndex >= 12 ? addDaysISO(selectedDay.date, 1) : selectedDay.date;
+      return { ...s, date: slotDate };
+    });
+  }, [selectedDay, startIndex, endIndex, hasValidRange]);
+
+  const handleStartChange = (value) => {
+    const i = value === "" ? null : Number(value);
+    setStartIndex(i);
+    if (i !== null && (endIndex === null || endIndex < i)) setEndIndex(i);
+  };
+
+  const handleEndChange = (value) => {
+    setEndIndex(value === "" ? null : Number(value));
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
+    if (!hasValidRange) return;
     setShowModal(true);
   };
 
@@ -79,17 +87,26 @@ export default function Hero() {
           <div className="search-grid">
             <div className="search-field">
               <label>
-                <i className="fa-solid fa-calendar-days" /> التاريخ
+                <i className="fa-solid fa-calendar-days" /> اليوم
               </label>
-              <input type="date" value={date} min={getTodayISO()} onChange={(e) => setDate(e.target.value)} />
+              <select value={dayIndex} onChange={(e) => setDayIndex(Number(e.target.value))}>
+                {DAYS.map((d, i) => (
+                  <option key={d.date} value={i}>
+                    {i === 0 ? "النهاردة" : i === 1 ? "بكرة" : `${d.dow} ${d.dom} ${d.month}`}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="search-field">
               <label>
                 <i className="fa-solid fa-clock" /> من الساعة
               </label>
-              <select value={startIndex} onChange={(e) => setStartIndex(Number(e.target.value))}>
-                {SLOTS.map((s, i) => (
+              <select value={startIndex ?? ""} onChange={(e) => handleStartChange(e.target.value)}>
+                <option value="" disabled>
+                  اختر الساعة
+                </option>
+                {ROTATED_SLOTS.map((s, i) => (
                   <option key={s.start} value={i}>
                     {s.start}
                   </option>
@@ -101,17 +118,20 @@ export default function Hero() {
               <label>
                 <i className="fa-solid fa-clock" /> لحد الساعة
               </label>
-              <select value={endIndex} onChange={(e) => setEndIndex(Number(e.target.value))}>
-                {SLOTS.map((s, i) => (
-                  <option key={s.end} value={i}>
+              <select value={endIndex ?? ""} onChange={(e) => handleEndChange(e.target.value)}>
+                <option value="" disabled>
+                  اختر الساعة
+                </option>
+                {ROTATED_SLOTS.map((s, i) => (
+                  <option key={s.end} value={i} disabled={startIndex !== null && i < startIndex}>
                     {s.end}
                   </option>
                 ))}
               </select>
-              {crossesMidnight && <span className="search-field-hint">هيمتد لليوم اللي بعده</span>}
+              {spansNextDay && <span className="search-field-hint">هيمتد بعد نص الليل لليوم اللي بعده</span>}
             </div>
 
-            <button type="button" className="search-submit" onClick={handleSearch}>
+            <button type="button" className="search-submit" onClick={handleSearch} disabled={!hasValidRange}>
               <i className="fa-solid fa-table-tennis-paddle-ball submit-icon"></i>
               <span className="submit-text">دور على ملعب</span>
             </button>

@@ -88,6 +88,24 @@ export default function QuickBookModal({ slots, onClose }) {
 
       const rowsWithUser = rows.map((r) => ({ ...r, user_id: user.id }));
       const bookingRows = await createBookingWithDeposit({ rows: rowsWithUser, proofFile });
+
+      fetch("/api/notifications/booking-confirmed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: user.email,
+          userId: user.id,
+          courtId: selectedCourt.courtId,
+          userName: user.user_metadata?.name || "لاعب PadelGo",
+          venueName: selectedCourt.venueName,
+          courtName: selectedCourt.courtName,
+          date: rangeLabel,
+          time: rangeLabel,
+          price: selectedCourt.totalPrice,
+          bookingId: bookingRows[0].id,
+        }),
+      }).catch(() => {});
+
       onClose();
       router.push(`/bookings/${bookingRows[0].id}`);
     } catch (err) {

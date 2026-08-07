@@ -2,6 +2,7 @@ import CourtsListing from "@/_pages/courts/CourtsListing";
 import { getAllCourts } from "@/services/courtService";
 
 export const metadata = {
+  alternates: { canonical: "/courts" },
   title: "ملاعب وكورتات البادل في المنصورة | PadelGo",
   description: "ملعبين بادل احترافيين في PadelGo بالمنصورة. شوف الأسعار والمواعيد المتاحة فورًا واحجز مكانك في ثوانٍ.",
   keywords: ["ملاعب البادل", "كورت بادل المنصورة", "نادي بادل المنصورة", "Padel Club Mansoura", "Padel Court Near Me"],

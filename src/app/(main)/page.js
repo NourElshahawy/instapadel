@@ -7,6 +7,7 @@ import WhyUs from "@/components/home/WhyUs";
 export const metadata = {
   title: "حجز ملعب بادل في المنصورة | PadelGo",
   description: "احجز ملعبك في PadelGo أونلاين في ثوانٍ. ملعبين بادل احترافيين في المنصورة، شوف المواعيد المتاحة فورًا واحجز مكانك بدفع آمن.",
+  alternates: { canonical: "/" },
   keywords: [
     "حجز ملعب بادل المنصورة",
     "ملاعب بادل المنصورة",
@@ -22,7 +23,6 @@ export const metadata = {
 export default function HomePage() {
   return (
     <>
-      <link rel="preload" as="image" href="/assets/imgs/courts-bg.png" fetchPriority="high" />
       <Hero />
       <FeaturedCourts />
       <CtaBand />

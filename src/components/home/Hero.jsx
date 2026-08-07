@@ -2,7 +2,6 @@
 import Image from "next/image";
 import "../../styles/home/hero.css";
 import "../../styles/home/search.css";
-import ParallaxBg from "../ui/ParallaxBg";
 import { useState, useMemo } from "react";
 import { buildDefaultSlots, buildNextSevenDays } from "@/services/courtLogic";
 import QuickBookModal from "./QuickBookModal";
@@ -60,7 +59,6 @@ export default function Hero() {
       <span className="hero-shape s2" />
       <span className="hero-shape s3" />
       <span className="hero-shape s4" />
-      <ParallaxBg image="/assets/imgs/courts-bg.png" />
 
       <div className="container hero-content">
         <span className="hero-badge" data-aos="fade-up">

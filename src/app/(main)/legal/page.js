@@ -1,6 +1,7 @@
 import { TERMS_SECTIONS, PRIVACY_SECTIONS } from "@/services/legalContent";
 
 export const metadata = {
+  alternates: { canonical: "/legal" },
   title: "الشروط والخصوصية — PadelGo",
   description: "شروط الخدمة وسياسة الخصوصية الخاصة بمنصة PadelGo.",
 };

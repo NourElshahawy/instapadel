@@ -15,6 +15,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://instapadel.tech"),
   title: "PadelGo | احجز ملعبك في أقل من دقيقة",
   description: "PadelGo — ملعبين بادل احترافيين في المنصورة. اعرف المواعيد المتاحة واحجز ملعبك بسهولة وفي ثوانٍ.",
   applicationName: "PadelGo",

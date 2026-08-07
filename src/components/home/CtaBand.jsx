@@ -1,11 +1,9 @@
 import Link from "next/link";
 import "../../styles/home/cta.css"
-import ParallaxBg from "../ui/ParallaxBg";
 
 export default function CtaBand() {
   return (
     <section className="news-section section">
-      <ParallaxBg image="/assets/imgs/courts-bg.png" />
       <div className="container">
         <div className="cta-band" data-aos="zoom-in">
           <span className="eyebrow justify-content-center">جاهزون عندما تكون أنت جاهزاً</span>

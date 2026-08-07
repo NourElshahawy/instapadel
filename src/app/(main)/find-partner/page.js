@@ -3,6 +3,7 @@ import { getAllPartnerRequests } from "@/services/partnerRequestService";
 import { getAllCourts } from "@/services/courtService";
 
 export const metadata = {
+  alternates: { canonical: "/find-partner" },
   title: "ابحث عن شريك بادل في المنصورة | PadelGo",
   description: "دور على لاعب بادل يكمل معاك الفريق في ملعب PadelGo بالمنصورة، تواصل مع لاعبين تانيين وانضم بسهولة.",
   keywords: ["ابحث عن لاعب بادل", "شريك بادل", "لاعبين بادل المنصورة", "Find Padel Partner", "Padel Players Mansoura"],

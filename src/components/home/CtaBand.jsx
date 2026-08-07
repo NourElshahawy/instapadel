@@ -1,5 +1,4 @@
 import Link from "next/link";
-import "../../styles/home/cta.css"
 
 export default function CtaBand() {
   return (

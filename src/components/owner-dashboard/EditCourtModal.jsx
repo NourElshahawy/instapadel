@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { updateCourt } from "@/services/ownerVenuesClient";
 import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
-import "../../styles/shared/owner-modal.css";
 
 export default function EditCourtModal({ court, venueId, onClose, onSaved }) {
   useLockBodyScroll(true);

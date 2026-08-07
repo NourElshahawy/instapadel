@@ -1,4 +1,3 @@
-import "../../styles/home/why-us.css";
 
 const FEATURES = [
   { icon: "bolt", title: "التوافر في الوقت الفعلي", text: "يتم تحديث الجداول فور حجز أي شخص، لذلك لن تحضر أبدًا إلى ملعب مشغول بالفعل." },

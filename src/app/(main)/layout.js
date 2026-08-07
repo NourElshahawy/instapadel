@@ -21,7 +21,7 @@ export default function MainLayout({ children }) {
   return (
     <ToastProvider>
       <Navbar />
-      {children}
+      <main>{children}</main>
       <WhatsAppFloatButton />
       <Footer />
       <LoginPromptModal />

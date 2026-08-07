@@ -1,7 +1,5 @@
 "use client";
 import Image from "next/image";
-import "../../styles/home/hero.css";
-import "../../styles/home/search.css";
 import { useState, useMemo } from "react";
 import { buildDefaultSlots, buildNextSevenDays } from "@/services/courtLogic";
 import QuickBookModal from "./QuickBookModal";
@@ -87,7 +85,8 @@ export default function Hero() {
               <label>
                 <i className="fa-solid fa-calendar-days" /> اليوم
               </label>
-              <select value={dayIndex} onChange={(e) => setDayIndex(Number(e.target.value))}>
+              <select aria-label="اختر اليوم" value={dayIndex} onChange={(e) => setDayIndex(Number(e.target.value))}>
+                {" "}
                 {DAYS.map((d, i) => (
                   <option key={d.date} value={i}>
                     {i === 0 ? "النهاردة" : i === 1 ? "بكرة" : `${d.dow} ${d.dom} ${d.month}`}
@@ -100,7 +99,8 @@ export default function Hero() {
               <label>
                 <i className="fa-solid fa-clock" /> من الساعة
               </label>
-              <select value={startIndex ?? ""} onChange={(e) => handleStartChange(e.target.value)}>
+              <select aria-label="اختر ساعة البداية" value={startIndex ?? ""} onChange={(e) => handleStartChange(e.target.value)}>
+                {" "}
                 <option value="" disabled>
                   اختر الساعة
                 </option>
@@ -116,7 +116,8 @@ export default function Hero() {
               <label>
                 <i className="fa-solid fa-clock" /> لحد الساعة
               </label>
-              <select value={endIndex ?? ""} onChange={(e) => handleEndChange(e.target.value)}>
+              <select aria-label="اختر ساعة النهاية" value={endIndex ?? ""} onChange={(e) => handleEndChange(e.target.value)}>
+                {" "}
                 <option value="" disabled>
                   اختر الساعة
                 </option>

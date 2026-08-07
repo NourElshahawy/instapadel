@@ -1,7 +1,6 @@
 import Link from "next/link";
 import CourtCard from "@/components/courts/CourtCard";
 import { getFeaturedCourts } from "@/services/courtService";
-import "../../styles/home/featured-courts.css";
 
 export default async function FeaturedCourts() {
   const courts = await getFeaturedCourts();

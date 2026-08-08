@@ -9,6 +9,7 @@ export async function generateMetadata({ params }) {
   const tournament = await getTournamentById(id);
   return {
     title: tournament ? `${tournament.name} — PadelGo` : "بطولة غير موجودة",
+    alternates: { canonical: `/tournaments/${id}` },
   };
 }
 

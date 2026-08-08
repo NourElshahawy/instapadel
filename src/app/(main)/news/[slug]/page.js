@@ -14,6 +14,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${article.title} — PadelGo`,
     description: article.excerpt,
+    alternates: { canonical: `/news/${slug}` },
   };
 }
 
